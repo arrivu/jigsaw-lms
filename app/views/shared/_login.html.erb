@@ -100,7 +100,7 @@ $(document).ready(function() {
           <span class=" field-with-fancyplaceholder"><%= f.label :password, :en => "Password" %><%= f.password_field :password, :class => "text" %></span>
         </div>
         <div>
-          <div class="login-options">
+          <div class="login-options">                                                                          gi
             <% unless session_timeout_enabled %>
               <%= f.check_box :remember_me, :checked => session[:used_remember_me_token] %>
               <%= f.label :remember_me, :en => "Stay signed in" %>
