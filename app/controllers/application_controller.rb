@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
   # This method is available in controllers and views
   #
   # example:
-  #
+  #                                                  n
   #     # ruby
   #     js_env :FOO_BAR => [1,2,3], :COURSE => @course
   #

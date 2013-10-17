@@ -415,6 +415,7 @@ module ApplicationHelper
     include_stylesheets :vendor, :common, media: "all"
   end
 
+  # the side menu of the home page are added here progrmatically using :tabs_available
   def section_tabs
     @section_tabs ||= begin
       if @context

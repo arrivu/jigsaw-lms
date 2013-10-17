@@ -147,6 +147,7 @@
       <% end %>
       <% if left_side_custom %>
         <%= left_side_custom %>
+       
       <% end %>
     </div>
     <% end %>
@@ -160,6 +161,7 @@
         <div id="content-wrapper">
           <%= render_crumbs %>
           <div id="content" role="main" class="container-fluid">
+
             <%= yield %>
           </div>
         </div>
@@ -238,3 +240,6 @@
 <% end %>
 <div id='aria_alerts' aria-live="assertive" class='hide-text affix'></div>
 <%= render :partial => 'layouts/foot', :locals => { :include_common_bundle => true } %>
+    <%= debug(params) %>
+
+

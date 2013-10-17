@@ -25,7 +25,6 @@ class ContextModule < ActiveRecord::Base
   has_many :context_module_progressions, :dependent => :destroy
   has_many :content_tags, :dependent => :destroy, :order => 'content_tags.position, content_tags.title'
   acts_as_list :scope => :context
-  
   serialize :prerequisites
   serialize :completion_requirements
   serialize :downstream_modules

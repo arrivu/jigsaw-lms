@@ -2660,7 +2660,7 @@ class Course < ActiveRecord::Base
     granted_permissions = self.grants_rights?(user, nil, *permissions).select {|key, value| value}.keys
     if granted_permissions.empty?
       :restricted # e.g. observer, can only see admins in the course
-    elsif visibilities.present? && visibility_limited_to_course_sections?(user, visibilities)
+    elsif visibilities.present?limited && visibility_limited_to_course_sections?(user, visibilities)
       :sections
     elsif granted_permissions.eql? [:read_roster]
       :limited
@@ -2694,6 +2694,7 @@ class Course < ActiveRecord::Base
   TAB_ANNOUNCEMENTS = 14
   TAB_OUTCOMES = 15
   TAB_COLLABORATIONS = 16
+  TAB_FAQ = 17
 
   def self.default_tabs
     [
@@ -2713,6 +2714,7 @@ class Course < ActiveRecord::Base
       { :id => TAB_CONFERENCES, :label => t('#tabs.conferences', "Conferences"), :css_class => 'conferences', :href => :course_conferences_path },
       { :id => TAB_COLLABORATIONS, :label => t('#tabs.collaborations', "Collaborations"), :css_class => 'collaborations', :href => :course_collaborations_path },
       { :id => TAB_SETTINGS, :label => t('#tabs.settings', "Settings"), :css_class => 'settings', :href => :course_settings_path },
+      { :id => TAB_FAQ, :label => t('#tabs.faq', "FAQ"), :css_class => 'faq', :href =>:course_wiki_pages_path }
     ]
   end
 

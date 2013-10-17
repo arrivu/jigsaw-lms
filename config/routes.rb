@@ -170,6 +170,44 @@ FakeRails3Routes.draw do
     match 'wiki/:id' => 'wiki_pages#show', :as => :named_wiki_page, :id => /[^\/]+/
   end
 
+  concern :FAQ do
+    get 'FAQ' => 'wiki_pages#pages_index'
+    get 'FAQ/:wiki_page_id' => 'wiki_pages#show_page', :wiki_page_id => /[^\/]+/, :as => :named_page
+    get 'FAQ/:wiki_page_id/edit' => 'wiki_pages#edit_page', :wiki_page_id => /[^\/]+/, :as => :edit_named_page
+
+    resources :wiki_pages, :path => :wiki do
+      match 'revisions/latest' => 'wiki_page_revisions#latest_version_number', :as => :latest_version_number
+      resources :wiki_page_revisions, :path => :revisions
+    end
+
+    ####
+    ##This will cause the helper functions to generate /pages urls, but will still allow /wiki routes to work properly
+    ####
+    #match 'pages/:id' => 'wiki_pages#show', :id => /[^\/]+/, :as => :named_wiki_page
+
+    match 'FAQ/:id' => 'wiki_pages#show', :as => :named_wiki_page, :id => /[^\/]+/
+
+  end
+
+  concern :career do
+  #  get 'pages' => 'wiki_pages#pages_index'
+  #  get 'pages/:wiki_page_id' => 'wiki_pages#show_page', :wiki_page_id => /[^\/]+/, :as => :named_page
+  #  get 'pages/:wiki_page_id/edit' => 'wiki_pages#edit_page', :wiki_page_id => /[^\/]+/, :as => :edit_named_page
+  #
+  #  resources :wiki_pages, :path => :wiki do
+  #    match 'revisions/latest' => 'wiki_page_revisions#latest_version_number', :as => :latest_version_number
+  #    resources :wiki_page_revisions, :path => :revisions
+  #  end
+  #
+  #  ####
+  #  ## This will cause the helper functions to generate /pages urls, but will still allow /wiki routes to work properly
+  #  ####
+  #  #match 'pages/:id' => 'wiki_pages#show', :id => /[^\/]+/, :as => :named_wiki_page
+  #
+  #  match 'career/:id' => 'wiki_pages#show', :as => :named_wiki_page, :id => /[^\/]+/
+  #
+  end
+
   concern :conferences do
     resources :conferences do
       match 'join' => 'conferences#join', :as => :join
@@ -305,6 +343,8 @@ FakeRails3Routes.draw do
     concerns :files, :file_images, :relative_files, :folders
     concerns :groups
     concerns :wikis
+    concerns :FAQ
+    concerns :career
     concerns :conferences
     concerns :question_banks
 
@@ -495,6 +535,7 @@ FakeRails3Routes.draw do
     end
 
     concerns :wikis
+    concerns :FAQ
     concerns :conferences
     concerns :media
 
@@ -1363,4 +1404,6 @@ FakeRails3Routes.draw do
 
   # in rails 2 this was Jammit::Routes.draw(map)
   match '/assets/:package.:extension' => 'jammit#package', :as => :jammit if defined?(Jammit)
+
+
 end
