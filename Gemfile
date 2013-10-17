@@ -1,4 +1,4 @@
-source 'https://rubygems.org/'
+source 'http://rubygems.org/'
 
 if RUBY_VERSION < "1.9.3" || RUBY_VERSION >= "2.0"
   raise "Canvas requires Ruby 1.9.3"

@@ -1,9 +1,10 @@
 class AddTypeToWikipages < ActiveRecord::Migration
+  tag :predeploy
   def self.up
-    add_column :wikipages, :type, :string
+    add_column :wiki_pages, :type, :string
   end
 
   def self.down
-    remove_column :wikipages, :type
+    remove_column :wiki_pages, :type
   end
 end
