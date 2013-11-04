@@ -2,7 +2,7 @@
 <% if course_home %>
   <div class="h2"><%= @context.name %></div>
 <% end %>
-<a href="<%= context_url(@context, :context_wiki_page_wiki_page_revision_path, @page.new_record? ? @page : @page.id, 'latest') %>" id="latest_page_version" style="display: none;">&nbsp;</a>
+<a href="<%= context_url(@context, :context_wiki_page_wiki_page_revision_path, @page.wiki_type, @page.new_record? ? @page : @page.id, 'latest') %>" id="latest_page_version" style="display: none;">&nbsp;</a>
 <div id="wiki_show_view_main">
   <% if @page.new_record? %>
     <div class="someone_else_edited" style="display: none; font-size: 0.8em;">
@@ -45,14 +45,14 @@ course will see this page first.  You can change that from [the course home page
     <% end %>
     <div class="button-container" style="margin-bottom:10px;">
       <% if can_do(@page, @current_user, :update_content) %>
-        <%= link_to t('buttons.start_editing', "Start Editing It now"), context_url(@context, :edit_context_wiki_page_url, @page), :id => "page_doesnt_exist_so_start_editing_it_now", :class => ("btn btn-large " + (@wiki.wiki_pages.length > 2 || !course_home ? "" : "dont_click")) %>
+        <%= link_to t('buttons.start_editing', "Start Editing It now"), context_url(@context, :edit_context_wiki_page_url, @page.wiki_type, @page), :id => "page_doesnt_exist_so_start_editing_it_now", :class => ("btn btn-large " + (@wiki.wiki_pages.length > 2 || !course_home ? "" : "dont_click")) %>
       <% end %>
     </div>
   <% else %>
     <div id="last_edited_by" class="clearfix">
       <% last_version = @page.versions.current.model rescue @page %>
       <% if can_do(@page, @current_user, :update_content) %>
-        <a href="<%= context_url(@context, :context_wiki_page_wiki_page_revisions_path, @page) %>" id="page_history"><i class="icon-clock"></i> <%= t 'links.page_history', 'Page history' %></a>
+        <a href="<%= context_url(@context, :context_wiki_page_wiki_page_revisions_path, @page.wiki_type, @page) %>" id="page_history"><i class="icon-clock"></i> <%= t 'links.page_history', 'Page history' %></a>
       <% end %>
       <% if @page.user %>
         <%= t 'labels.last_edited', 'Last edited by %{name} %{time_ago} ago', :name => @page.user_name, :time_ago => (time_ago_in_words(last_version.updated_at) rescue "???") %>
@@ -91,7 +91,7 @@ course will see this page first.  You can change that from [the course home page
     <a href="#" class="wiki_switch_views_link"><%= t '#editor.switch_views', "Switch Views" %></a>
   </div>
   <div class="clear"></div>
-  <% form_for(@page, :url => (@page.new_record?) ? context_url(@context, :context_wiki_pages_url) : context_url(@context, :context_wiki_page_url, @page)) do |f| -%>
+  <% form_for(@page, :url => (@page.new_record?) ? context_url(@context, :context_wiki_pages_url,:type => @page.wiki_type) : context_url(@context, :context_wiki_page_url, :type => @page.wiki_type, :id => @page)) do |f| -%>
     <%= f.hidden_field :title %>
     <%= f.text_area :body, :style => "width:99%;" %>
     <% if course_home %>

@@ -51,6 +51,7 @@ class ApplicationController < ActionController::Base
   before_filter :init_body_classes
   after_filter :set_response_headers
   after_filter :update_enrollment_last_activity_at
+  before_filter :get_wiki_type
   include Tour
 
   add_crumb(proc {
@@ -700,7 +701,7 @@ class ApplicationController < ActionController::Base
   end
   
   def cache_buster
-    # Annoying problem.  If I set the cache-control to anything other than "no-cache, no-store" 
+    # Annoying problem.  If I set the cache-control to anything other than "no-cache, no-store"
     # then the local cache is used when the user clicks the 'back' button.  I don't know how
     # to tell the browser to ALWAYS check back other than to disable caching...
     return true if @cancel_cache_buster || request.xhr? || api_request?
@@ -1005,6 +1006,8 @@ class ApplicationController < ActionController::Base
     @wiki.check_has_front_page
 
     page_name = params[:wiki_page_id] || params[:id] || (params[:wiki_page] && params[:wiki_page][:title])
+    page_name ||= WikiPage::DEFAULT_FAQ_FRONT_PAGE_URL if (@wiki_type ==  WikiPage::WIKI_TYPE_FAQS)
+    page_name ||= WikiPage::DEFAULT_CAREER_FRONT_PAGE_URL if (@wiki_type ==  WikiPage::WIKI_TYPE_CAREERS)
     page_name ||= (@wiki.get_front_page_url || Wiki::DEFAULT_FRONT_PAGE_URL) unless @context.draft_state_enabled?
     if(params[:format] && !['json', 'html'].include?(params[:format]))
       page_name += ".#{params[:format]}"
@@ -1017,9 +1020,10 @@ class ApplicationController < ActionController::Base
               @wiki.wiki_pages.deleted_last.find_by_url(page_name.to_s.to_url) ||
               @wiki.wiki_pages.find_by_id(page_name.to_i)
     end
+
     @page ||= @wiki.wiki_pages.new(
       :title => page_name.titleize,
-      :url => page_name.to_url
+      :url => page_name.to_url, :wiki_type => @wiki_type
     )
     if @page.new_record?
       @page.wiki = @wiki
@@ -1604,4 +1608,19 @@ class ApplicationController < ActionController::Base
       js_env hash
     end
   end
+
+  def get_wiki_type
+    @wiki_type = params[:type]
+  end
+
+  def has_any_wiki_page_for_wiki_type?
+    if @wiki_type ==  WikiPage::WIKI_TYPE_FAQS
+      @context.wiki.wiki_pages.faqs.count == 0
+    elsif @wiki_type ==  WikiPage::WIKI_TYPE_CAREERS
+        @context.wiki.wiki_pages.careers.count == 0
+    else
+       @context.wiki.wiki_pages.pages.count == 0
+    end
+  end
+
 end

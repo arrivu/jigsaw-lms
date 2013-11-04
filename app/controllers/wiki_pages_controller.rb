@@ -18,7 +18,6 @@
 class WikiPagesController < ApplicationController
   include Api::V1::WikiPage
   include KalturaHelper
-
   before_filter :require_context
   before_filter :get_wiki_page
   before_filter :set_js_rights, :only => [:pages_index, :show_page, :edit_page]
@@ -31,7 +30,7 @@ class WikiPagesController < ApplicationController
       if context.draft_state_enabled?
         url = c.send :polymorphic_path, [context, :pages]
       else
-        url = c.send :named_context_url, c.instance_variable_get("@context"), :context_wiki_pages_url
+        url = c.send :named_context_url, c.instance_variable_get("@context"), :context_wiki_pages_url, :type => c.instance_variable_get("@wiki_type")
       end
     end
     url
@@ -61,7 +60,7 @@ class WikiPagesController < ApplicationController
       return
     end
     if is_authorized_action?(@page, @current_user, :read)
-      add_crumb(@page.title)
+      add_crumb(@wiki_type)
       @page.increment_view_count(@current_user, @context)
       log_asset_access(@page, "wiki", @wiki)
       respond_to do |format|
@@ -74,12 +73,12 @@ class WikiPagesController < ApplicationController
   end
 
   def index
-    return unless tab_enabled?(@context.class::TAB_PAGES)
+    return unless tab_enabled?(tab_type(@wiki_type))
 
     if @context.draft_state_enabled?
       front_page
     else
-      redirect_to named_context_url(@context, :context_wiki_page_url, @context.wiki.get_front_page_url || Wiki::DEFAULT_FRONT_PAGE_URL)
+      redirect_to named_context_url(@context, :context_wiki_page_url, :type => @wiki_type, :id => @context.wiki.get_front_page_url || Wiki::DEFAULT_FRONT_PAGE_URL)
     end
   end
 
@@ -102,7 +101,6 @@ class WikiPagesController < ApplicationController
       end
     end
   end
-
   def perform_update
     initialize_wiki_page
 
@@ -152,7 +150,7 @@ class WikiPagesController < ApplicationController
   end
 
   def front_page
-    return unless tab_enabled?(@context.class::TAB_PAGES)
+    return unless tab_enabled?(tab_type(@wiki_type))
 
     if @context.wiki.has_front_page?
       redirect_to polymorphic_url([@context, :named_page], :wiki_page_id => @context.wiki.front_page)
@@ -247,5 +245,15 @@ class WikiPagesController < ApplicationController
     end
 
     js_env hash
+  end
+
+  def tab_type(wiki_type='wiki')
+    if wiki_type == 'faq'
+       @context.class::TAB_FAQS
+    elsif wiki_type == 'career'
+       @context.class::TAB_CAREERS
+    else
+       @context.class::TAB_PAGES
+    end
   end
 end

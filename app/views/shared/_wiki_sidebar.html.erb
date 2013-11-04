@@ -36,14 +36,14 @@
     <%= t('click_links', %{Click any page to insert a link to that page.}) %>
     <div id="pages_accordion">
       <% if @context.respond_to?(:wiki) %>
-      <a href="<%= context_url(@context, :context_wiki_page_url, '{{ page_url }}') %>" id="wiki_sidebar_wiki_url" style="display: none;">&nbsp;</a>
+
       <div>
         <div class="header"><a href="#"><%= t('links_to.wiki_pages', %{Wiki Pages}) %></a></div>
         <div>
             <ul class="wiki_pages page_list">
               <% (@wiki_sidebar_data[:wiki_pages]).each do |wiki_page|  %>
                 <% if can_do(@wiki, @current_user, :manage) || (!wiki_page.hide_from_students && wiki_page.active?) %>
-                  <li title="<%= t('insert.wiki_pages', %{Click to insert a link to this page}) %>"><%= link_to wiki_page.title.titleize, context_url(@context, :context_wiki_page_url, wiki_page.url) rescue "" %></li>
+                  <li title="<%= t('insert.wiki_pages', %{Click to insert a link to this page}) %>"><%= link_to wiki_page.title.titleize, context_url(@context, :context_wiki_page_url, wiki_page.wiki_type, wiki_page.url) rescue "" %></li>
                 <% end %>
               <% end %>
             </ul>

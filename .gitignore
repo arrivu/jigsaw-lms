@@ -43,6 +43,13 @@
 /public/javascripts/plugins/
 /public/plugins/
 /spec/coffeescripts/plugins/
+<<<<<<< HEAD
 /.idea/*
 /.rvmrc
 /vendor/bundle
+=======
+.idea/*
+.idea/workspace.xml
+/.idea/*
+/.idea/workspace.xml
+>>>>>>> a5ef42f4a9c889cc9d4c2595a28cbfc585476929

@@ -18,7 +18,7 @@
       <% end %>
       <li>
         <div>
-          <a href="<%= context_url(@context, :context_wiki_page_url, @page) %>" class="forward"><%= t 'links.go_to_latest', 'Go to Latest Version' %></a>
+          <a href="<%= context_url(@context, :context_wiki_page_url,  @page.wiki_type, @page) %>" class="forward"><%= t 'links.go_to_latest', 'Go to Latest Version' %></a>
           <ul class="item_list" style='line-height: 14px; font-size: 11px; padding-left:21px; '>
             <% if @revision.model.user %>
               <li><%= t 'labels.by_user', 'by %{user}', :user => context_user_name(@context, @page.user) %></li>
