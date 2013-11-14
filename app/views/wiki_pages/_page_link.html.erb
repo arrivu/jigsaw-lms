@@ -6,8 +6,7 @@
   <% if can_do(@context, @current_user, :manage_content) || (!wiki_page.hide_from_students && wiki_page.active?) %>
   <li class="ellipsis" style="<%= 'display: none;' if hidden %><%= 'font-weight: bold;' if @page && wiki_page == @page %><%= 'font-style: italic;' if wiki_page.hide_from_students %>" title="<%= t(:link_hidden_from_students_warning, "Students won't see this link") if wiki_page.hide_from_students %>"><%= link_to wiki_page.title,  context_url(
             @context,
-            :context_wiki_page_url,
-            wiki_page.wiki_type,
+            :context_wiki_page_url, wiki_page.wiki_type,
             wiki_page.url
       ) rescue "" %>
   </li>

@@ -586,8 +586,8 @@ class WikiPage < ActiveRecord::Base
   end
 
   WIKI_TYPE_FAQS ='faq'
-  WIKI_TYPE_CAREERS='career'
-  WIKI_TYPE_PAGES='wiki'
+  WIKI_TYPE_CAREERS ='career'
+  WIKI_TYPE_PAGES ='wiki'
 
   DEFAULT_FAQ_FRONT_PAGE_URL = 'faq-front-page'
   DEFAULT_CAREER_FRONT_PAGE_URL = 'career-front-page'

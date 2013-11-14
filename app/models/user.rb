@@ -29,8 +29,9 @@ class User < ActiveRecord::Base
   attr_accessible :name, :short_name, :sortable_name, :time_zone, :show_user_services, :gender, :visible_inbox_types,
                   :avatar_image, :subscribe_to_emails, :locale, :bio, :birthdate, :terms_of_use, :self_enrollment_code,
                   :initial_enrollment_type,:avatar_image_url,:avatar_image_source,:avatar_image_updated_at,
-                  :workflow_state
+                  :workflow_state,:phone
   attr_accessor :original_id, :menu_data
+  cattr_accessor :is_active
 
   before_save :infer_defaults
   serialize :preferences
@@ -859,6 +860,7 @@ class User < ActiveRecord::Base
     state :registered
 
     state :deleted
+    state :inactive
   end
 
   def unavailable?
@@ -1589,7 +1591,7 @@ class User < ActiveRecord::Base
     rid = in_root_account.id
     accts = self.associated_accounts.where("accounts.id = ? OR accounts.root_account_id = ?", rid, rid)
     return [] if accts.blank?
-    children = accts.inject({}) do |hash,acct| 
+    children = accts.inject({}) do |hash,acct|
       pid = acct.parent_account_id
       if pid.present?
         hash[pid] ||= []
@@ -2098,7 +2100,7 @@ class User < ActiveRecord::Base
       self.class.default_storage_quota :
       accounts.sum(&:default_user_storage_quota)
   end
-  
+
   def self.default_storage_quota
     Setting.get_cached('user_default_quota', 50.megabytes.to_s).to_i
   end

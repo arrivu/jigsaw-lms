@@ -41,8 +41,8 @@ describe AuthenticationMethods do
         controller.redirects.should == ['cas_login_url']
       end
 
-      it 'can be overriden by passing the canvas_login parameter' do
-        controller = Spec::MockController.new(domain_root_account, request, :canvas_login => true)
+      it 'can be overriden by passing the lms_login parameter' do
+        controller = Spec::MockController.new(domain_root_account, request, :lms_login => true)
         controller.initiate_delegated_login.should be_false
         controller.redirects.should == []
       end
@@ -80,8 +80,8 @@ describe AuthenticationMethods do
         controller.redirects.should == ['discovery_url']
       end
 
-      it 'can be overriden by passing the canvas_login parameter' do
-        controller = Spec::MockController.new(domain_root_account, request, :canvas_login => true)
+      it 'can be overriden by passing the lms_login parameter' do
+        controller = Spec::MockController.new(domain_root_account, request, :lms_login => true)
         controller.initiate_delegated_login.should be_false
         controller.redirects.should == []
       end

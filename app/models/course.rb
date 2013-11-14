@@ -22,6 +22,8 @@ class Course < ActiveRecord::Base
   include Workflow
   include TextHelper
 
+  acts_as_tagger
+
   attr_accessible :name,
                   :section,
                   :account,
@@ -2761,6 +2763,10 @@ class Course < ActiveRecord::Base
           tab[:args] = default_tab[:args]
           tab[:visibility] = default_tab[:visibility]
           tab[:external] = default_tab[:external]
+          #for add wiki type
+          if default_tab[:type]
+            tab[:type] = default_tab[:type]
+          end
           default_tabs.delete_if {|t| t[:id] == tab[:id] }
           external_tabs.delete_if {|t| t[:id] == tab[:id] }
           tab

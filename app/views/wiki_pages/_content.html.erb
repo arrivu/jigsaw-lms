@@ -60,7 +60,7 @@ course will see this page first.  You can change that from [the course home page
       <% if (@context.context.is_a?(Course) rescue false) %>
         <div><%= image_tag "warning.png", :style => "height: 10px;" %>
           <%= mt :group_wiki_warning, "This page is part of the group wiki, *not* your course wiki. If you're looking for the course wiki, [click here](%{link}).",
-            :link => context_url(@context.context, :context_wiki_pages_url) %>
+            :link => context_url(@context.context, :context_wiki_pages_url, @page.wiki_type) %>
         </div>
       <% end %>
     </div>
@@ -91,7 +91,7 @@ course will see this page first.  You can change that from [the course home page
     <a href="#" class="wiki_switch_views_link"><%= t '#editor.switch_views', "Switch Views" %></a>
   </div>
   <div class="clear"></div>
-  <% form_for(@page, :url => (@page.new_record?) ? context_url(@context, :context_wiki_pages_url,:type => @page.wiki_type) : context_url(@context, :context_wiki_page_url, :type => @page.wiki_type, :id => @page)) do |f| -%>
+  <% form_for(@page, :url => (@page.new_record?) ? context_url(@context, :context_wiki_pages_url, @page.wiki_type) : context_url(@context, :context_wiki_page_url, @page.wiki_type, @page)) do |f| -%>
     <%= f.hidden_field :title %>
     <%= f.text_area :body, :style => "width:99%;" %>
     <% if course_home %>

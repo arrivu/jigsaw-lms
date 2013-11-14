@@ -1,4 +1,4 @@
-<% add_crumb t('crumbs.users', "Users") %>
+<% add_crumb t('crumbs.users', "Activate Users") %>
 <% @active_tab = "users" %>
 <% content_for :page_title do %>
   <% if @query %>
@@ -8,11 +8,13 @@
   <% end %>
 <% end %>
 
+
 <% content_for :right_side do %>
   <div class="rs-margin-lr rs-margin-top" style="padding-bottom: 20px;">
     <a href="<%= context_url(@context, :context_groups_url) %>" class="btn button-sidebar-wide user_groups"><i class="icon-group"></i> <%= t('buttons.user_groups', 'View User Groups') %></a>
     <a href="<%= context_url(@context, :context_avatars_url) %>" class="btn button-sidebar-wide manage_profile_pictures"><i class="icon-student-view"></i> <%= t('buttons.manage_profile_pictures', 'Manage Profile Pictures') %></a>
-    <a href="<%= context_url(@context, :context_activate_user_url) %>" class="btn button-sidebar-wide manage_profile_pictures"><i class="icon-syllabus"></i> <%= t('buttons.activate_user', 'User Activation') %></a>
+
+
   </div>
 
   <% if @enrollment_terms.size > 1 %>
@@ -34,34 +36,63 @@
   <%= render :partial => 'accounts/add_course_or_user', :locals => {:hide_add_course => true} %>
 <% end %>
 
-<% if @query %>
-  <h2><%= t('titles.search_results', 'Search results for "%{search_term}"', :search_term => (params[:user][:name] rescue '')) %></h2>
-  <%= t('no_results_found', "No Results Found") if @users.empty? %>
-<% else %>
-  <h2><%= t('titles.all_users', 'All Users') %></h2>
-<% end %>
+<table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+   <thead>
+   <th>SNo.</th>
+   <th>Profile</th>
+   <th >Name</th>
+   <th >Email</th>
+   <th >State</th>
+   </thead>
+       <% @users.each_with_index do |user,i| %>
+        <tr><td><%= i+=1 %> </td>
+           <td><%= image_tag(user.avatar_image_url,:size=>"30x30") unless user.avatar_image_url.nil?%></td>
+           <td><%= user.name %></td>
+           <td><%= user.pseudonyms.first.email unless user.pseudonyms.first.nil?%></td>
+                <% form_for user,  :url => url_for(:controller => 'users', :action => 'activate_user')  ,
+                   :html => {:id => "user"} do |f| %>
 
-<%= will_paginate(@users, :style=>"margin-bottom: 1em;") %>
-
-<ul class="users">
-  <% @users.each do |user| %>
-    <% content_tag_for(:li, user) do %>
-      <%= link_to(user.last_name_first_or_unnamed, context_url(@context, :context_user_url, user)) %>
-    <% end %>
+     <% if user.workflow_state != "inactive" %>
+              <td><%= f.check_box :is_active, :class => "activate", :checked => "checked", :id =>user.id %></td>
+          <% else %>
+              <td><%= f.check_box :is_active, :class => "activate", :id =>user.id %></td>
+          <% end %>
+      <% end %>
+        </tr>
   <% end %>
-</ul>
+
+</table>
 
 <%= will_paginate(@users, :style=>"margin-top: 1em;") %>
 
 <% js_block do %>
 <script type="text/javascript">
-require([
-  'jquery' /* $ */
-], function($) {
+    require([
+        'jquery' /* $ */
+    ], function($) {
+       var check_box_state;
+        $(".activate").click(function() {
+            var $self = $(this);
+           if ($(this).is(':checked')) {
+              check_box_state = 'checked';
+           } else {
+               check_box_state = 'unchecked';
+           }
+            $.ajax({
+                type: 'POST',
+                url: 'update_user',
+                data: {
+                    'id': $self.attr('id'),
+                    'state': check_box_state
+                },
+                complete: function(msg){
+                    $.flashMessage('User status updated!')
+                }
 
-  $(document).ready(function() {
-      $('#enrollment_term_id').change(function() { $(this).closest('form').submit(); });
-  });
-});
+
+            });
+        });
+    });
 </script>
 <% end %>
+

@@ -167,4 +167,16 @@ class Wiki < ActiveRecord::Base
       wiki
     end
   end
+
+  def make_sure_wiki_has_front_page
+    if  self.has_no_front_page
+      url = DEFAULT_FRONT_PAGE_URL
+      self.has_no_front_page = !self.wiki_pages.not_deleted.where(:url => url).exists?
+      self.front_page_url = url unless self.has_no_front_page
+      self.save
+      page = front_page
+      page.set_as_front_page!
+      self.has_no_front_page = false
+    end
+  end
 end

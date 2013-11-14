@@ -160,9 +160,9 @@ describe AccountsController do
       response.should redirect_to(@controller.delegated_auth_redirect_uri(cas_client.add_service_to_login_url(cas_login_url)))
     end
 
-    it "should respect canvas_login=1" do
+    it "should respect lms_login=1" do
       account = account_with_cas({:account => Account.default})
-      get 'show', :id => account.id, :canvas_login => '1'
+      get 'show', :id => account.id, :lms_login => '1'
       response.should render_template("shared/unauthorized")
     end
 

@@ -143,7 +143,7 @@
 #        }
 #      }
 class DiscussionTopicsController < ApplicationController
-  before_filter :require_context, :except => :public_feed
+  before_filter :require_context, :except => [:public_feed,:discussion_topic_tags]
 
   include Api::V1::DiscussionTopics
   include Api::V1::Assignment
@@ -169,7 +169,7 @@ class DiscussionTopicsController < ApplicationController
   #   The partial title of the discussion topics to match and return.
   #
   # @example_request
-  #     curl https://<canvas>/api/v1/courses/<course_id>/discussion_topics \ 
+  #     curl https://<canvas>/api/v1/courses/<course_id>/discussion_topics \
   #          -H 'Authorization: Bearer <token>'
   def index
     return unless authorized_action(@context.discussion_topics.new, @current_user, :read)
@@ -273,7 +273,8 @@ class DiscussionTopicsController < ApplicationController
                      reject { |category| category.student_organized? }.
                      map { |category| { :id => category.id, :name => category.name } },
                  :CONTEXT_ID => @context.id,
-                 :CONTEXT_ACTION_SOURCE => :discussion_topic}
+                 :CONTEXT_ACTION_SOURCE => :discussion_topic,
+                 :TOPIC_TAGS => @topic.tags.map(&:attributes).to_json}
       append_sis_data(js_hash)
       js_env(js_hash)
       render :action => "edit"
@@ -430,17 +431,17 @@ class DiscussionTopicsController < ApplicationController
   #   when they are listed.
   #
   # @example_request
-  #     curl https://<canvas>/api/v1/courses/<course_id>/discussion_topics \ 
-  #         -F title='my topic' \ 
-  #         -F message='initial message' \ 
-  #         -F podcast_enabled=1 \ 
+  #     curl https://<canvas>/api/v1/courses/<course_id>/discussion_topics \
+  #         -F title='my topic' \
+  #         -F message='initial message' \
+  #         -F podcast_enabled=1 \
   #         -H 'Authorization: Bearer <token>'
   #
   # @example_request
-  #     curl https://<canvas>/api/v1/courses/<course_id>/discussion_topics \ 
-  #         -F title='my assignment topic' \ 
-  #         -F message='initial message' \ 
-  #         -F assignment[points_possible]=15 \ 
+  #     curl https://<canvas>/api/v1/courses/<course_id>/discussion_topics \
+  #         -F title='my assignment topic' \
+  #         -F message='initial message' \
+  #         -F assignment[points_possible]=15 \
   #         -H 'Authorization: Bearer <token>'
   #
   def create
@@ -452,9 +453,9 @@ class DiscussionTopicsController < ApplicationController
   # Accepts the same parameters as create
   #
   # @example_request
-  #     curl https://<canvas>/api/v1/courses/<course_id>/discussion_topics/<topic_id> \ 
-  #         -F title='This will be positioned after Topic #1234' \ 
-  #         -F position_after=1234 \ 
+  #     curl https://<canvas>/api/v1/courses/<course_id>/discussion_topics/<topic_id> \
+  #         -F title='This will be positioned after Topic #1234' \
+  #         -F position_after=1234 \
   #         -H 'Authorization: Bearer <token>'
   #
   def update
@@ -467,7 +468,7 @@ class DiscussionTopicsController < ApplicationController
   # an assignment discussion.
   #
   # @example_request
-  #     curl -X DELETE https://<canvas>/api/v1/courses/<course_id>/discussion_topics/<topic_id> \ 
+  #     curl -X DELETE https://<canvas>/api/v1/courses/<course_id>/discussion_topics/<topic_id> \
   #          -H 'Authorization: Bearer <token>'
   def destroy
     @topic = @context.all_discussion_topics.find(params[:id] || params[:topic_id])
@@ -504,6 +505,56 @@ class DiscussionTopicsController < ApplicationController
   end
 
   def public_topic_feed
+  end
+
+  def discussion_topic_tags
+    respond_to do |format|
+      format.html
+      format.json { render json: tag_tokens(params[:q]) }
+    end
+
+  end
+
+  def tag_tokens(query)
+    tags = ActsAsTaggableOn::Tag.named_like(params[:q])
+    if tags.empty?
+      [{id: "<<<#{query}>>>", name: "New: \"#{query}\""}]
+    else
+      tags.map(&:attributes)
+    end
+  end
+
+  def tag_list(tag_tokens,topic)
+    tags_list= tag_tokens.gsub!(/<<<(.+?)>>>/) { ActsAsTaggableOn::Tag.find_or_create_by_name(name: $1).id }
+    if tags_list.nil?
+      delete_tags(topic,tag_tokens)
+      tag_tokens.split(",").map do |n|
+        ActsAsTaggableOn::Tagging.find_or_create_by_tag_id_and_taggable_id_and_taggable_type_and_context(tag_id: n.to_i,
+                                   taggable_id: topic.id, taggable_type: "DiscussionTopic",
+                                   context: "tags",tagger_id: @context.id,tagger_type: "course")
+      end
+    else
+      tags_list.split(",").map do |n|
+        ActsAsTaggableOn::Tagging.find_or_create_by_tag_id_and_taggable_id_and_taggable_type_and_context(tag_id: n.to_i,
+                                  taggable_id: topic.id, taggable_type: "DiscussionTopic",
+                                  context: "tags",tagger_id: @context.id,tagger_type: "course")
+      end
+    end
+
+  end
+
+  def delete_tags(topic,tag_tokens)
+    tag_id_arr = Array.new
+    topic.tags.each do |tag|
+      tag_id_arr  << tag.id.to_s
+    end
+    tag_array =tag_tokens.split(",")
+    deleted_tag=  tag_id_arr - tag_array
+    unless deleted_tag.nil?
+      deleted_tag.each do |tag_id|
+        topic.taggings.find_by_tag_id(tag_id).destroy
+      end
+    end
   end
 
   protected
@@ -561,6 +612,7 @@ class DiscussionTopicsController < ApplicationController
       apply_positioning_parameters
       apply_attachment_parameters
       apply_assignment_parameters
+      tag_list(params[:tag_tokens],@topic)  unless params[:tag_tokens].nil?
 
       render :json => discussion_topic_api_json(@topic, @context, @current_user, session)
     else

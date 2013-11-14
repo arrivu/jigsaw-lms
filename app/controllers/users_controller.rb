@@ -275,6 +275,81 @@ class UsersController < ApplicationController
   end
 
 
+  def activate_user
+   get_context
+    if authorized_action(@context, @current_user, :read_roster)
+      @root_account = @context.root_account
+      @query = (params[:user] && params[:user][:name]) || params[:term]
+      js_env :ACCOUNT => account_json(@domain_root_account, nil, session, ['registration_settings'])
+      Shackles.activate(:slave) do
+      @users= User.all
+        if api_request?
+          search_term = params[:search_term].presence
+
+          if search_term
+            users = UserSearch.for_user_in_context(search_term, @context, @current_user, session)
+          else
+            users = UserSearch.scope_for(@context, @current_user)
+          end
+
+          users = Api.paginate(users, self, api_v1_account_users_url)
+          user_json_preloads(users)
+          return render :json => users.map { |u| user_json(u, @current_user, session) }
+        else
+          @users ||= []
+          @users= User.order('created_at DESC').paginate(:page => params[:page], :per_page => @per_page, :total_entries => @users.size)
+        end
+
+        respond_to do |format|
+          if @users.length == 1 && params[:term]
+            format.html {
+              redirect_to(named_context_url(@context, :context_user_url, @users.first))
+            }
+          else
+            @enrollment_terms = []
+            if @root_account == @context
+              @enrollment_terms = @context.enrollment_terms.active
+            end
+            format.html
+          end
+          format.json {
+            cancel_cache_buster
+            expires_in 30.minutes
+            api_request? ?
+                render(:json => @users.map { |u| user_json(u, @current_user, session) }) :
+                render(:json => @users.map { |u| { :label => u.name, :id => u.id } })
+          }
+        end
+      end
+    end
+
+
+  end
+
+  def update_user
+    @user=User.find(params[:id])
+    respond_to do |format|
+    if params[:state] == "checked"
+      @user.workflow_state ="registered"
+       @user.save!
+      if @user.workflow_state == "registered"
+       Mailer.send_later(:deliver_user_activation_mail,@user)
+       format.json {
+          render(:json => @users)
+       }
+      end
+    elsif params[:state] == "unchecked"
+      @user.workflow_state ="inactive"
+      @user.save!
+      format.json {
+        render(:json => @users)
+      }
+    end
+    end
+  end
+
+
+
   before_filter :require_password_session, :only => [:masquerade]
   def masquerade
     @user = User.find_by_id(params[:user_id])

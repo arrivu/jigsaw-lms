@@ -1067,9 +1067,9 @@ describe PseudonymSessionsController do
       response.should redirect_to(login_url)
     end
 
-    it 'passes on canvas_login if provided' do
-      get :oauth2_auth, :client_id => key.id, :redirect_uri => Canvas::Oauth::Provider::OAUTH2_OOB_URI, :canvas_login => 1
-      response.should redirect_to(login_url(:canvas_login => 1))
+    it 'passes on lms_login if provided' do
+      get :oauth2_auth, :client_id => key.id, :redirect_uri => Canvas::Oauth::Provider::OAUTH2_OOB_URI, :lms_login => 1
+      response.should redirect_to(login_url(:lms_login => 1))
     end
   end
 

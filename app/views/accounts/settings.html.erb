@@ -271,7 +271,7 @@ Allowing Draft State here will allow teachers to enable it in their individual c
                     <div id="open_registration_delegated_warning_dialog" style="display: none;">
                         <%= t(:open_registration_delegated_warning_message,
                         "An external identity provider is enabled, and users created via open registration may not be able to log in unless
-                        the external identity provider's login form has a link back to %{url}.", :url => login_url(:canvas_login => 1)) %>
+                        the external identity provider's login form has a link back to %{url}.", :url => login_url(:lms_login => 1)) %>
                     </div>
                   <% end %>
                 </div>
