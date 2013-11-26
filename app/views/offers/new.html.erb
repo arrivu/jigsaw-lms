@@ -1,0 +1,74 @@
+<% add_crumb t('crumbs.offers', "Offers") %>
+<% content_for :right_side do %>
+    <%= render :partial => 'offers_right_side' %>
+<% end %>
+
+
+
+
+<% form_for(@offer) do |f| %>
+
+    <table id="dataTable" >
+      <tr>
+        <td>Coupon Name</td>
+        <td><%= f.text_field :name  %></td>
+      </tr>
+
+      <tr>
+        <td>Description</td>
+        <td><%= f.text_field :description  %></td>
+      </tr>
+
+
+      <tr>
+        <td>How Many</td>
+        <td><%= f.text_field :how_many  %></td>
+      </tr>
+
+      <tr><td>Referrer Amount  </td><td>
+        <%= f.text_field :referrer_amount %></td>
+      </tr>
+
+      <tr><td>Referrer Percentage  </td><td>
+        <%= f.text_field :referrer_percentage %></td>
+      </tr>
+
+      <tr><td>Referree Amount  </td><td>
+        <%= f.text_field :referree_amount %></td>
+      </tr>
+
+      <tr><td>Referree Percentage  </td><td>
+        <%= f.text_field :referree_percentage %></td>
+      </tr>
+
+      <tr><td>Email Subject </td><td>
+        <%= f.text_field :email_subject  %></td>
+      </tr>
+
+      <tr><td>Email Template Text </td><td>
+        <%= f.text_field :email_template_txt  %></td>
+      </tr>
+
+
+      <tr>
+        <td> Alpha mask</td>
+        <td><%= f.text_field :alpha_mask  %></td>
+      </tr>
+      <tr><td></td><td class="hint">  ["e.g., AA-AA-AA"]</td></tr>
+
+      <tr>
+        <td>Expiry Date</td>
+        <td><%= f.text_field :expiry_date, :class => 'datetime_field' %></td>
+      </tr>
+      <tr>
+        <td></td>
+       <td><button type="submit" class="btn btn-primary"><%= t "#buttons.submit", "Submit" %></button></td>
+      </tr>
+    </table>
+
+
+
+<% end %>
+
+
+

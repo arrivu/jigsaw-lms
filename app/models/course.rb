@@ -2698,6 +2698,7 @@ class Course < ActiveRecord::Base
   TAB_COLLABORATIONS = 16
   TAB_FAQS = 17
   TAB_CAREERS = 18
+
   def self.default_tabs
     [
       { :id => TAB_HOME, :label => t('#tabs.home', "Home"), :css_class => 'home', :href => :course_path },

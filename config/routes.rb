@@ -10,6 +10,7 @@
 FakeRails3Routes.draw do
   resources :submission_comments, :only => :destroy
 
+
   match 'inbox' => 'context#mark_inbox_as_read', :as => :mark_inbox_as_read, :via => :delete
   match 'inbox' => 'context#inbox', :as => :inbox
   match 'inbox/:id' => 'context#destroy_inbox_item', :as => :destroy_inbox_item, :via => :delete
@@ -520,6 +521,9 @@ FakeRails3Routes.draw do
         delete :remove_role
       end
     end
+    resources :offers, :controller => :offers
+    match 'index', :to => 'offers#index'
+    match 'accounts/:account_id' => 'accounts#offers#index'
 
     resources :role_overrides, :only => [:index, :create] do
       collection do

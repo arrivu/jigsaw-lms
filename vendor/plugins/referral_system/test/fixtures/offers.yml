@@ -1,0 +1,37 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyText
+  description: MyText
+  expiry_date: 2013-11-14 19:27:04
+  how_many: 
+  referrer_amount: 
+  referrer_percentage: 
+  referree_amount: 
+  referree_percentage: 
+  email_subject: MyText
+  email_template_txt: MyText
+  alpha_mask: MyText
+  metadata: MyText
+  referrar_expiry_date: 2013-11-14 19:27:04
+  account_id: 1
+  user_id: 1
+  pseudonym_id: 1
+
+two:
+  name: MyText
+  description: MyText
+  expiry_date: 2013-11-14 19:27:04
+  how_many: 
+  referrer_amount: 
+  referrer_percentage: 
+  referree_amount: 
+  referree_percentage: 
+  email_subject: MyText
+  email_template_txt: MyText
+  alpha_mask: MyText
+  metadata: MyText
+  referrar_expiry_date: 2013-11-14 19:27:04
+  account_id: 1
+  user_id: 1
+  pseudonym_id: 1

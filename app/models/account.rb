@@ -1029,6 +1029,7 @@ class Account < ActiveRecord::Base
   TAB_JOBS = 15
   TAB_DEVELOPER_KEYS = 16
   TAB_ADMIN_TOOLS = 17
+  TAB_OFFERS = 18
 
   def external_tool_tabs(opts)
     tools = ContextExternalTool.active.find_all_for(self, :account_navigation)
@@ -1055,12 +1056,15 @@ class Account < ActiveRecord::Base
       tabs << { :id => TAB_PLUGINS, :label => t("#account.tab_plugins", "Plugins"), :css_class => "plugins", :href => :plugins_path, :no_args => true } if self.grants_right?(user, nil, :manage_site_settings)
       tabs << { :id => TAB_JOBS, :label => t("#account.tab_jobs", "Jobs"), :css_class => "jobs", :href => :jobs_path, :no_args => true } if self.grants_right?(user, nil, :view_jobs)
       tabs << { :id => TAB_DEVELOPER_KEYS, :label => t("#account.tab_developer_keys", "Developer Keys"), :css_class => "developer_keys", :href => :developer_keys_path, :no_args => true } if self.grants_right?(user, nil, :manage_developer_keys)
+
+
     else
       tabs = []
       tabs << { :id => TAB_COURSES, :label => t('#account.tab_courses', "Courses"), :css_class => 'courses', :href => :account_path } if user && self.grants_right?(user, nil, :read_course_list)
       tabs << { :id => TAB_USERS, :label => t('#account.tab_users', "Users"), :css_class => 'users', :href => :account_users_path } if user && self.grants_right?(user, nil, :read_roster)
       tabs << { :id => TAB_STATISTICS, :label => t('#account.tab_statistics', "Statistics"), :css_class => 'statistics', :href => :statistics_account_path } if user && self.grants_right?(user, nil, :view_statistics)
       tabs << { :id => TAB_PERMISSIONS, :label => t('#account.tab_permissions', "Permissions"), :css_class => 'permissions', :href => :account_permissions_path } if user && self.grants_right?(user, nil, :manage_role_overrides)
+      tabs << { :id => TAB_OFFERS, :label => t("#account.tab_offers", "Referrals"), :css_class => "offers", :href => :account_offers_path }
       if user && self.grants_right?(user, nil, :manage_outcomes)
         tabs << { :id => TAB_OUTCOMES, :label => t('#account.tab_outcomes', "Outcomes"), :css_class => 'outcomes', :href => :account_outcomes_path }
         tabs << { :id => TAB_RUBRICS, :label => t('#account.tab_rubrics', "Rubrics"), :css_class => 'rubrics', :href => :account_rubrics_path }

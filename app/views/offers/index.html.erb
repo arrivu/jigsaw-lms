@@ -1,0 +1,19 @@
+<%
+   @body_classes << 'hide-content-while-scripts-not-loaded'
+   content_for :page_title, "Offers - #{@context.name}"
+   @show_left_side = true
+
+   js_bundle :offers
+   jammit_css :offers
+%>
+<% if show_user_create_course_button(@current_user) %>
+    <% content_for :right_side do %>
+        <div class="rs-margin-lr">
+          <button type="button"
+                  id="start_new_offer"
+                  class="element_toggler btn button-sidebar-wide"
+                  aria-controls="new_offer_form"><i class="icon-add"></i><%= t('create_offer', 'Create Offer') %></button>
+          <%= render :partial => 'shared/new_offer_form' %>
+        </div>
+    <% end %>
+<% end %>

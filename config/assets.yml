@@ -64,6 +64,8 @@ stylesheets:
     - public/stylesheets/compiled/conferences.css
   plugins:
     - public/stylesheets/compiled/plugins.css
+  offers:
+    - public/stylesheets/compiled/offers.css
   gradebook_uploads:
     - public/stylesheets/static/slick.grid.css
     - public/stylesheets/compiled/gradebook_uploads.css
