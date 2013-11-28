@@ -17,7 +17,7 @@
 #
 
 class WikiPage < ActiveRecord::Base
-  attr_accessible :title, :body, :url, :user_id, :hide_from_students, :editing_roles, :notify_of_update
+  attr_accessible :title, :body, :url, :user_id, :hide_from_students, :editing_roles, :notify_of_update,:wiki_type
   attr_readonly :wiki_id
   validates_length_of :body, :maximum => maximum_long_text_length, :allow_nil => true, :allow_blank => true
   validates_presence_of :wiki_id
@@ -204,6 +204,10 @@ class WikiPage < ActiveRecord::Base
   scope :deleted_last, order("workflow_state='deleted'")
 
   scope :not_deleted, where("wiki_pages.workflow_state<>'deleted'")
+
+  scope :pages, where(:wiki_type => 'wiki')
+  scope :faqs, where(:wiki_type => 'faq')
+  scope :careers, where(:wiki_type => 'career')
 
   # needed for ensure_unique_url
   def not_deleted
@@ -580,4 +584,12 @@ class WikiPage < ActiveRecord::Base
       end
     end
   end
+
+  WIKI_TYPE_FAQS ='faq'
+  WIKI_TYPE_CAREERS ='career'
+  WIKI_TYPE_PAGES ='wiki'
+
+  DEFAULT_FAQ_FRONT_PAGE_URL = 'faq-front-page'
+  DEFAULT_CAREER_FRONT_PAGE_URL = 'career-front-page'
+
 end

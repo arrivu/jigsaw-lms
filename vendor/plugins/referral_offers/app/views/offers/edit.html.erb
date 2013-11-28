@@ -1,0 +1,95 @@
+<% content_for :page_title, t(:page_title, "Offers") %>
+
+<% @show_left_side = true %>
+
+<% if flash[:offer_notice] %>
+    <div id="offer_notice" class="notice">
+      <%= flash[:offer_notice]%>
+    </div>
+<% end %>
+
+<% if flash[:offer_error] %>
+    <div id="offer_error" class="error">
+      <%= flash[:offer_error]%>
+    </div>
+<% end %>
+
+    <table id="dataTable" >
+
+      <% form_for @offer, :url=> edit_account_offer_path do |f| %>
+
+
+          <tr>
+          <td><%= f.blabel :name, :en => "Offer Name" %></td>
+          <td><%= f.text_field :name  %></td>
+        </tr>
+
+        <tr>
+          <td><%= f.blabel :description, :en => "Description" %></td>
+          <td><%= f.text_area(:description, :size => "5x10") %></td>
+        </tr>
+
+
+        <tr>
+
+          <td><%= f.blabel :how_many, :en => "How Many" %></td>
+          <td><%= f.text_field :how_many  %></td>
+        </tr>
+
+        <tr>
+          <td><%= f.blabel :referrer_amount, :en => "Referrer Amount" %></td>
+          <td><%= f.text_field :referrer_amount %></td>
+        </tr>
+
+        <tr>
+          <td><%= f.blabel :referrer_percentage, :en => "Referrer Percentage" %></td>
+          <td><%= f.text_field :referrer_percentage %></td>
+        </tr>
+        <tr>
+          <td><%= f.blabel :referrer_expiry_date, :en => "Referrer Expiry Date" %></td>
+          <td><%= f.text_field :referrer_expiry_date, :class => 'datetime_field' %></td>
+        </tr>
+
+        <tr>
+          <td><%= f.blabel :referree_amount, :en => "Referree Amount" %></td>
+          <td><%= f.text_field :referree_amount %></td>
+        </tr>
+
+        <tr>
+          <td><%= f.blabel :referree_percentage, :en => "Referree Percentage" %></td>
+          <td><%= f.text_field :referree_percentage %></td>
+        </tr>
+        <tr>
+          <td><%= f.blabel :referree_expiry_date, :en => "Referree Expiry Date" %></td>
+          <td><%= f.text_field :referree_expiry_date, :class => 'datetime_field' %></td>
+        </tr>
+
+        <tr>
+          <td><%= f.blabel :email_subject, :en => "Email Subject" %></td>
+          <td><%= f.text_field :email_subject  %></td>
+        </tr>
+
+        <tr>
+          <td><%= f.blabel :email_template_txt, :en => "Email Template Text" %></td>
+          <td><%= f.text_field :email_template_txt  %></td>
+        </tr>
+
+
+        <tr>
+          <td><%= f.blabel :alpha_mask, :en => "Alpha Mask" %></td>
+          <td><%= f.text_field :alpha_mask  %></td>
+        </tr>
+        <tr><td></td><td class="hint">  ["e.g., AA-AA-AA"]</td></tr>
+
+       <tr>
+          <td></td>
+        <td><%= f.submit "Update" %></td>
+      </tr>
+      <% end %>
+
+    </table>
+
+
+
+
+

@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+</head>
+<body>
+<div id="container"  style="width: 508px;background-color: ghostwhite">
+  <b><p>Dear <%= @user.name %>,</p>  </b>
+  <hr>
+  <p>Your account is processed and its activated, You can login now. </p>
+  <p>Email:<%= @user.pseudonyms.first.email %></p>
+
+  <p>   <%= link_to  "Click here to login -" ,"#{HostUrl.protocol}" + "://" + "#{HostUrl.context_host(@user)}" %>
+  <p>If you have any questions about this process or any other matter, please feel free to <br>
+
+  <hr>
+  Sincerely, <br>
+  Jigsaw Academy
+
+</div>
+</body>
+</html>

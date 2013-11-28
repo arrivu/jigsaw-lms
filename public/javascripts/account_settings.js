@@ -89,6 +89,8 @@ define([
       });
     });
     $("#account_settings_tabs").tabs().show();
+
+
     $(".add_ip_filter_link").click(function(event) {
       event.preventDefault();
       var $filter = $(".ip_filter.blank:first").clone(true).removeClass('blank');

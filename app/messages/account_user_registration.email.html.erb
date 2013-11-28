@@ -3,7 +3,7 @@
 <% end %>
 
 <% define_content :subject do %>
-  <%= t :subject, "Canvas Account Admin Invitation" %>
+  <%= t :subject, "Jigsaw LMS Account Admin Invitation" %>
 <% end %>
 <% email = asset.user.email; login = (asset.user.pseudonym.unique_id rescue "none") %>
 
@@ -33,6 +33,6 @@
   <% end %>
 </table>
 
-<p><%= t(:url_info_label, "You'll need to register with Canvas before you can participate as an account admin.") %></p>
+<p><%= t(:url_info_label, "You'll need to register with Jigsaw LMS before you can participate as an account admin.") %></p>
 
 <p><a href="<%= content(:link) %>"><%= t(:click_to_finish_registration, "Click here to finish the registration process") %></a></p>

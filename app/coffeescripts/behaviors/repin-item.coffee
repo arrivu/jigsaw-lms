@@ -27,7 +27,7 @@ define [
       width: 700
       resizable: false
       modal: false
-      title: 'Pin To Canvas Network'
+      title: 'Pin To Jigsaw LMS Network'
 
     kollectionItemSaveView = new KollectionItemSaveView
       model: kollectionItem

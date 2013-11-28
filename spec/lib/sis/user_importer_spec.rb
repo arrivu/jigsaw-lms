@@ -34,9 +34,9 @@ describe SIS::UserImporter do
     end
 
     SIS::UserImporter.new(@account, {}).process(2, messages) do |importer|
-      importer.add_user(*"U001,user1,active,User,One,user1@example.com".split(','))
-      importer.add_user(*"U002,user2,active,User,Two,user2@example.com".split(','))
-      importer.add_user(*"U003,user3,active,User,Three,user3@example.com".split(','))
+      importer.add_user(*"U001,user1,active,User,One,user1@example.com,,,facebook".split(','))
+      importer.add_user(*"U002,user2,active,User,Two,user2@example.com,,,facebook".split(','))
+      importer.add_user(*"U003,user3,active,User,Three,user3@example.com,,,facebook".split(','))
     end
     Pseudonym.all.map(&:sis_user_id).sort.should == %w(U001 U002 U003)
 

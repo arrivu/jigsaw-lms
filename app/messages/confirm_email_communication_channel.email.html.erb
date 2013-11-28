@@ -2,7 +2,7 @@
   <%= HostUrl.protocol %>://<%= HostUrl.context_host(asset_context) || HostUrl.default_host %>/register/<%= asset.confirmation_code %>
 <% end %>
 <% define_content :subject do %>
-  <%= t :subject, "Confirm Email: Canvas" %>
+  <%= t :subject, "Confirm Email: Jigsaw LMS" %>
 <% end %>
 <p>
 <%= t :body,

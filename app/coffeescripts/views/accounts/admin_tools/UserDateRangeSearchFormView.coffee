@@ -70,7 +70,7 @@ define [
           [
             {
             type: 'required'
-            message: I18n.t('cant_be_blank', "Canvas User ID can't be blank")
+            message: I18n.t('cant_be_blank', "Jigsaw LMS User ID can't be blank")
             }
           ]
       # If have both start and end, check for values to make sense together.

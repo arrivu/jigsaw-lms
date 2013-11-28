@@ -2,7 +2,7 @@
 
 <% content_for :right_side do %>
     <div class="rs-margin-lr rs-margin-top">
-        <a href="<%= context_url(@context, :context_wiki_page_url, @page) %>" class="btn button-sidebar-wide"><i class="icon-arrow-left"></i> <%= t 'links.back_to_current_version', 'Back to Current Version' %></a>
+        <a href="<%= context_url(@context, :context_wiki_page_url,  @page.wiki_type, @page) %>" class="btn button-sidebar-wide"><i class="icon-arrow-left"></i> <%= t 'links.back_to_current_version', 'Back to Current Version' %></a>
     </div>
 <% end %>
 
@@ -13,7 +13,7 @@
   <% @page.versions.each do |version| %>
     <tr>
       <td>
-        <%= link_to (datetime_string(version.model.updated_at) || t('#time.unknown_date', "Unknown date")), context_url(@context, :context_wiki_page_wiki_page_revision_url, @page, version), :title => time_ago_in_words_with_ago(version.model.updated_at) %>
+        <%= link_to (datetime_string(version.model.updated_at) || t('#time.unknown_date', "Unknown date")), context_url(@context, :context_wiki_page_wiki_page_revision_url, @page.wiki_type, @page, version), :title => time_ago_in_words_with_ago(version.model.updated_at) %>
         <span style="font-size: 0.8em;">
         <% if version.model.user %>
           <%= mt :page_edited_by_with_link, 'by [%{user_name}](%{link})', :user_name => context_user_name(@context, version.model.user), :link => context_url(@context, :context_user_url, version.model.user) %>

@@ -11,6 +11,7 @@ require [
   'compiled/str/splitAssetString'
   'grading_standards'
   'manage_groups'
+  'jquery.tokeninput'
 ], ($, DiscussionTopic, Announcement, DueDateList, EditView,
 DueDateListView, OverrideView, AssignmentGroupCollection, SectionCollection,
 splitAssetString) ->
@@ -40,5 +41,9 @@ splitAssetString) ->
   $ ->
     view.render().$el.appendTo('#content')
     $('#discussion-title').focus()
+
+  $ ->
+    $('#discussion_tag_tokens').tokenInput '/discussion_topic_tags.json'
+    prePopulate: $('#discussion_tag_tokens').data('load')
 
   view

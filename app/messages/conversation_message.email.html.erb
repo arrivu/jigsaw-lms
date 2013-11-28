@@ -5,9 +5,9 @@
   <%= asset.author.short_name_with_shared_contexts(user) rescue t(:unknown_user, "Unknown User") %>
 <% end %>
 <% define_content :subject do %>
-  <%= t :subject, "%{user_name} just sent you a message in Canvas.", :user_name => content(:user_name) %>
+  <%= t :subject, "%{user_name} just sent you a message in Jigsaw LMS.", :user_name => content(:user_name) %>
 <% end %>
-<p><%= t :body, "%{user_name} just sent you a message in Canvas:", :user_name => content(:user_name) %></p>
+<p><%= t :body, "%{user_name} just sent you a message in Jigsaw LMS:", :user_name => content(:user_name) %></p>
 
 <hr style="border: 0;
     height: 1px;

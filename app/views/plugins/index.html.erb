@@ -1,4 +1,4 @@
-<% content_for :page_title do %><%= t :page_title, "Canvas Plugins" %><% end %>
+<% content_for :page_title do %><%= t :page_title, "Jigsaw LMS Plugins" %><% end %>
 
 <% 
   add_crumb t('#crumbs.plugins', "Plugins")
@@ -10,7 +10,7 @@
 </span>
 
 <h2>
-  <%= t :page_title, "Canvas Plugins" %>
+  <%= t :page_title, "Jigsaw LMS Plugins" %>
 </h2>
 
 <% if @plugins.any? %>
@@ -47,5 +47,5 @@
     <% end %>
   </table>
 <% else %>
-    <p class="nodata"><%= t :no_plugins, "There are no Canvas plugins installed" %></p>
+    <p class="nodata"><%= t :no_plugins, "There are no Jigsaw LMS plugins installed" %></p>
 <% end %>

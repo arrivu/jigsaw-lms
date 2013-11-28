@@ -44,7 +44,7 @@ $(document).ready(function() {
   $("#play_overview_video_link").click(function(){
     $("#video_wrapper").dialog({
       width: videoWidth,
-      title: <%= jt("overview_video", "Overview Video of Canvas") %>
+      title: <%= jt("overview_video", "Overview Video of Jigsaw LMS") %>
     });
     return false;
   });
@@ -92,8 +92,8 @@ var google_conversion_value = 0;
       <h3><%= t('while_you_wait', "While you're waiting...") %></h3>
       <p>
         <%= t('invite_to_read', 
-              "We invite you to watch this brief overview of Canvas.  You may also *read about how Canvas is helping* to bring students in 27 countries closer to lecture halls, instructors and classmates.", 
-              :wrapper => '<a href="http://www.instructure.com/images/case_study_byuh.pdf" title="' + h(t('links.download_pdf', 'download PDF')) + '" class="not_external">\1</a>') %>
+              "We invite you to watch this brief overview of Jigsaw LMS.  You may also *read about how Jigsaw LMS is helping* to bring students in 27 countries closer to lecture halls, instructors and classmates.", 
+              :wrapper => '<a href="http://www.jigsawacademy.com/images/case_study_byuh.pdf" title="' + h(t('links.download_pdf', 'download PDF')) + '" class="not_external">\1</a>') %>
       </p> 
     </div>
   </div>

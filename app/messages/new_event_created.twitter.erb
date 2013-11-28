@@ -1,7 +1,7 @@
 <% define_content :link do -%>
 <%= HostUrl.protocol %>://<%= HostUrl.context_host(asset.context) %>/<%= asset.context_type.underscore.pluralize %>/<%= asset.context_id %>/calendar_events/<%= asset.id %>
 <% end -%>
-<%= t('subject', 'Canvas Alert - Event: %{event_title}, %{course_name}', :event_title => asset.title, :course_name => asset.context.name) %>
+<%= t('subject', 'Jigsaw LMS Alert - Event: %{event_title}, %{course_name}', :event_title => asset.title, :course_name => asset.context.name) %>
 
 <% if !asset.start_at && !asset.end_at -%>
 <%= t('no_time_set', 'No Time Set') %>

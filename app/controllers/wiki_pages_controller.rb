@@ -18,7 +18,6 @@
 class WikiPagesController < ApplicationController
   include Api::V1::WikiPage
   include KalturaHelper
-
   before_filter :require_context
   before_filter :get_wiki_page
   before_filter :set_js_rights, :only => [:pages_index, :show_page, :edit_page]
@@ -31,12 +30,12 @@ class WikiPagesController < ApplicationController
       if context.draft_state_enabled?
         url = c.send :polymorphic_path, [context, :pages]
       else
-        url = c.send :named_context_url, c.instance_variable_get("@context"), :context_wiki_pages_url
+        url = c.send :named_context_url, c.instance_variable_get("@context"), :context_wiki_pages_url, c.instance_variable_get("@wiki_type")
       end
     end
     url
   end
-  before_filter { |c| c.active_tab = "pages" }
+  before_filter { |c|  c.active_tab = (c.instance_variable_get("@wiki_type") ==  WikiPage::WIKI_TYPE_PAGES) ?  "pages" : c.instance_variable_get("@wiki_type") }
 
   def js_rights
     [:wiki, :page]
@@ -54,14 +53,14 @@ class WikiPagesController < ApplicationController
     if @page.deleted?
       flash[:notice] = t('notices.page_deleted', 'The page "%{title}" has been deleted.', :title => @page.title)
       if @wiki.has_front_page? && !@page.is_front_page?
-        redirect_to named_context_url(@context, :context_wiki_page_url, @wiki.get_front_page_url)
+        redirect_to named_context_url(@context, :context_wiki_page_url, @page.wiki_type, @wiki.get_front_page_url)
       else
         redirect_to named_context_url(@context, :context_url)
       end
       return
     end
     if is_authorized_action?(@page, @current_user, :read)
-      add_crumb(@page.title)
+      add_crumb(@wiki_type)
       @page.increment_view_count(@current_user, @context)
       log_asset_access(@page, "wiki", @wiki)
       respond_to do |format|
@@ -74,12 +73,18 @@ class WikiPagesController < ApplicationController
   end
 
   def index
-    return unless tab_enabled?(@context.class::TAB_PAGES)
+    return unless tab_enabled?(tab_type(@wiki_type))
 
     if @context.draft_state_enabled?
       front_page
     else
-      redirect_to named_context_url(@context, :context_wiki_page_url, @context.wiki.get_front_page_url || Wiki::DEFAULT_FRONT_PAGE_URL)
+      if @page.wiki_type == WikiPage::WIKI_TYPE_FAQS
+        redirect_to named_context_url(@context, :context_wiki_page_url, @page.wiki_type, WikiPage::DEFAULT_FAQ_FRONT_PAGE_URL)
+      elsif @page.wiki_type == WikiPage::WIKI_TYPE_CAREERS
+        redirect_to named_context_url(@context, :context_wiki_page_url, @page.wiki_type, WikiPage::DEFAULT_CAREER_FRONT_PAGE_URL)
+       else
+      redirect_to named_context_url(@context, :context_wiki_page_url, @page.wiki_type, @context.wiki.get_front_page_url || Wiki::DEFAULT_FRONT_PAGE_URL)
+       end
     end
   end
 
@@ -102,7 +107,6 @@ class WikiPagesController < ApplicationController
       end
     end
   end
-
   def perform_update
     initialize_wiki_page
 
@@ -138,13 +142,13 @@ class WikiPagesController < ApplicationController
         @page.workflow_state = 'deleted'
         @page.save
         respond_to do |format|
-          format.html { redirect_to(named_context_url(@context, :context_wiki_pages_url)) }
+          format.html { redirect_to(named_context_url(@context, :context_wiki_pages_url, @page.wiki_type)) }
         end
       else #they dont have permissions to destroy this page
         respond_to do |format|
           format.html { 
             flash[:error] = t('errors.cannot_delete_front_page', 'You cannot delete the front page.')
-            redirect_to(named_context_url(@context, :context_wiki_pages_url))
+            redirect_to(named_context_url(@context, :context_wiki_pages_url, @page.wiki_type ))
           }
         end
       end
@@ -152,7 +156,7 @@ class WikiPagesController < ApplicationController
   end
 
   def front_page
-    return unless tab_enabled?(@context.class::TAB_PAGES)
+    return unless tab_enabled?(tab_type(@wiki_type))
 
     if @context.wiki.has_front_page?
       redirect_to polymorphic_url([@context, :named_page], :wiki_page_id => @context.wiki.front_page)
@@ -221,7 +225,7 @@ class WikiPagesController < ApplicationController
 
   def context_wiki_page_url(opts={})
     page_name = @page.url
-    res = named_context_url(@context, :context_wiki_page_url, page_name)
+    res = named_context_url(@context, :context_wiki_page_url, @page.wiki_type, page_name)
     if opts && opts[:edit]
       res += "#edit"
     end
@@ -247,5 +251,15 @@ class WikiPagesController < ApplicationController
     end
 
     js_env hash
+  end
+
+  def tab_type(wiki_type='wiki')
+    if wiki_type == 'faq'
+       @context.class::TAB_FAQS
+    elsif wiki_type == 'career'
+       @context.class::TAB_CAREERS
+    else
+       @context.class::TAB_PAGES
+    end
   end
 end

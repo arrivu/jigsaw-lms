@@ -89,8 +89,8 @@ class InfoController < ApplicationController
     Tempfile.open("heartbeat", ENV['TMPDIR'] || Dir.tmpdir) { |f| f.write("heartbeat"); f.flush }
 
     respond_to do |format|
-      format.html { render :text => 'canvas ok' }
-      format.json { render :json => { :status => 'canvas ok', :revision => Canvas.revision } }
+      format.html { render :text => 'Jigsaw LMS ok' }
+      format.json { render :json => { :status => 'Jigsaw LMS ok', :revision => Canvas.revision } }
     end
   end
 end

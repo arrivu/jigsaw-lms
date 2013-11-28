@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  email: 
+  name: MyText
+  phone: 
+  referral_id: 
+  referral_email: 
+  status: MyText
+  coupon_code: MyText
+  expiry_date: 2013-11-14 19:44:20
+
+two:
+  email: 
+  name: MyText
+  phone: 
+  referral_id: 
+  referral_email: 
+  status: MyText
+  coupon_code: MyText
+  expiry_date: 2013-11-14 19:44:20

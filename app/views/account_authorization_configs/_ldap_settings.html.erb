@@ -35,7 +35,7 @@
         <td style="vertical-align: top; width: 200px; white-space: nowrap;"><%= f.blabel :change_password_url, :en => "Forgot Password URL" %></td>
         <td style="vertical-align: top;" class="nobr">
           <%= f.text_field :change_password_url, :class => "auth_form", :style => "width: 300px;" %>
-          <div style="font-size: 0.8em;"><span class="auth_form"><%= t(:change_password_url_help, "Leave blank for default Canvas behavior") %></span></div>
+          <div style="font-size: 0.8em;"><span class="auth_form"><%= t(:change_password_url_help, "Leave blank for default Jigsaw behavior") %></span></div>
           <span class="auth_info auth_forgot_password_url"><%= @ldap_configs[0].change_password_url || t(:change_password_url_not_specified, "None specified") %></span>
         </td>
       </tr>

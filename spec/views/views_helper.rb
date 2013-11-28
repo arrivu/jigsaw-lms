@@ -18,6 +18,7 @@
 
 def view_context(context=@course, current_user=@user, real_current_user=nil)
   assigns[:context] = context
+  assigns[:wiki_type] = WikiPage::WIKI_TYPE_PAGES
   assigns[:current_user] = current_user
   assigns[:real_current_user] = real_current_user
   assigns[:domain_root_account] = Account.default

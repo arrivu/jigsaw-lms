@@ -150,7 +150,7 @@ class CollaborationsController < ApplicationController
 
   def require_collaborations_configured
     unless Collaboration.any_collaborations_configured?
-      flash[:error] = t 'errors.not_enabled', "Collaborations have not been enabled for this Canvas site"
+      flash[:error] = t 'errors.not_enabled', "Collaborations have not been enabled for this Jigsaw LMS site"
       redirect_to named_context_url(@context, :context_url)
       return false
     end

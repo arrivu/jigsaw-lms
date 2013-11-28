@@ -41,11 +41,11 @@ module SIS
       return importer.success_count
     end
 
-  private
+    private
     class Work
       attr_accessor :success_count, :users_to_set_sis_batch_ids,
-          :pseudos_to_set_sis_batch_ids, :users_to_add_account_associations,
-          :users_to_update_account_associations
+                    :pseudos_to_set_sis_batch_ids, :users_to_add_account_associations,
+                    :users_to_update_account_associations
 
       def initialize(batch_id, root_account, logger, updates_every, messages)
         @batch_id = batch_id
@@ -62,14 +62,14 @@ module SIS
         @users_to_update_account_associations = []
       end
 
-      def add_user(user_id, login_id, status, first_name, last_name, email=nil, password=nil, ssha_password=nil)
-        @logger.debug("Processing User #{[user_id, login_id, status, first_name, last_name, email, password, ssha_password].inspect}")
+      def add_user(user_id, login_id, first_name, last_name, email, status, provider, password=nil,  ssha_password=nil)
+        @logger.debug("Processing User #{[user_id, login_id, password, first_name, last_name, email, status, provider, ssha_password].inspect}")
 
         raise ImportError, "No user_id given for a user" if user_id.blank?
         raise ImportError, "No login_id given for user #{user_id}" if login_id.blank?
         raise ImportError, "Improper status for user #{user_id}" unless status =~ /\A(active|deleted)/i
 
-        @batched_users << [user_id.to_s, login_id, status, first_name, last_name, email, password, ssha_password]
+        @batched_users << [user_id.to_s, login_id, password, first_name, last_name, email, status, provider, ssha_password]
         process_batch if @batched_users.size >= @updates_every
       end
 
@@ -86,7 +86,7 @@ module SIS
           while !@batched_users.empty? && tx_end_time > Time.now
             user_row = @batched_users.shift
             @logger.debug("Processing User #{user_row.inspect}")
-            user_id, login_id, status, first_name, last_name, email, password, ssha_password = user_row
+            user_id, login_id, password, first_name, last_name, email, status , provider, ssha_password = user_row
 
             pseudo = @root_account.pseudonyms.find_by_sis_user_id(user_id.to_s)
             pseudo_by_login = @root_account.pseudonyms.active.by_unique_id(login_id).first
@@ -131,7 +131,6 @@ module SIS
                 should_update_account_associations = true
               end
             end
-
             pseudo ||= Pseudonym.new
             pseudo.unique_id = login_id unless pseudo.stuck_sis_fields.include?(:unique_id)
             pseudo.sis_user_id = user_id
@@ -226,7 +225,7 @@ module SIS
 
               if newly_active
                 other_ccs = ccs.reject { |other_cc| other_cc.user_id == user.id || other_cc.user.nil? || other_cc.user.pseudonyms.active.count == 0 ||
-                  !other_cc.user.pseudonyms.active.where("account_id=? AND sis_user_id IS NOT NULL", @root_account).empty? }
+                    !other_cc.user.pseudonyms.active.where("account_id=? AND sis_user_id IS NOT NULL", @root_account).empty? }
                 unless other_ccs.empty?
                   cc.send_merge_notification!
                 end
@@ -249,6 +248,16 @@ module SIS
               @success_count += 1
             end
 
+            if provider.present?
+              my_logger ||= Logger.new("#{Rails.root}/log/my.log")
+              #user.omniauth_authentications.bulid(:user_id => user_id, :provider => provider)
+              my_logger.info "Creating omniauth_authentications, #{user_id}"
+
+              oaa = OmniauthAuthentication.find_by_user_id(user.id)
+              oaa ||= OmniauthAuthentication.new(:user_id => user.id)
+              oaa.provider = provider
+              oaa.save!
+            end
           end
         end
       end

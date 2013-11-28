@@ -1,0 +1,98 @@
+<% add_crumb t('crumbs.users', "Activate Users") %>
+<% @active_tab = "users" %>
+<% content_for :page_title do %>
+  <% if @query %>
+    <%= t('search_for_user', 'User Search results for %{user_name}', :user_name => (params[:user][:name] rescue '')) %>
+  <% else %>
+    <%= t('all_users', 'All Users') %>
+  <% end %>
+<% end %>
+
+
+<% content_for :right_side do %>
+  <div class="rs-margin-lr rs-margin-top" style="padding-bottom: 20px;">
+    <a href="<%= context_url(@context, :context_groups_url) %>" class="btn button-sidebar-wide user_groups"><i class="icon-group"></i> <%= t('buttons.user_groups', 'View User Groups') %></a>
+    <a href="<%= context_url(@context, :context_avatars_url) %>" class="btn button-sidebar-wide manage_profile_pictures"><i class="icon-student-view"></i> <%= t('buttons.manage_profile_pictures', 'Manage Profile Pictures') %></a>
+
+
+  </div>
+
+  <% if @enrollment_terms.size > 1 %>
+    <h2><%= t('titles.choose_term', 'Choose Term') %></h2>
+    <div class="rs-margin-lr rs-margin-bottom">
+      <label for="enrollment_term"><%= before_label('show_users_for_term', 'Show users with enrollments in the term') %></label><br />
+      <% form_tag(account_users_path, :method => :get) do %>
+        <select id="enrollment_term_id" name="enrollment_term_id">
+          <option value=''>--</option>
+          <%= options_from_collection_for_select(@enrollment_terms,
+                                                 :id, :name,
+                                                 params[:enrollment_term_id].to_i) %>
+        </select>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= render :partial => 'shared/accounts_right_side_shared' %>
+  <%= render :partial => 'accounts/add_course_or_user', :locals => {:hide_add_course => true} %>
+<% end %>
+
+<table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+   <thead>
+   <th>SNo.</th>
+   <th>Profile</th>
+   <th >Name</th>
+   <th >Email</th>
+   <th >State</th>
+   </thead>
+       <% @users.each_with_index do |user,i| %>
+        <tr><td><%= i+=1 %> </td>
+           <td><%= image_tag(user.avatar_image_url,:size=>"30x30") unless user.avatar_image_url.nil?%></td>
+           <td><%= user.name %></td>
+           <td><%= user.pseudonyms.first.email unless user.pseudonyms.first.nil?%></td>
+                <% form_for user,  :url => url_for(:controller => 'users', :action => 'activate_user')  ,
+                   :html => {:id => "user"} do |f| %>
+
+     <% if user.workflow_state != "inactive" %>
+              <td><%= f.check_box :is_active, :class => "activate", :checked => "checked", :id =>user.id %></td>
+          <% else %>
+              <td><%= f.check_box :is_active, :class => "activate", :id =>user.id %></td>
+          <% end %>
+      <% end %>
+        </tr>
+  <% end %>
+
+</table>
+
+<%= will_paginate(@users, :style=>"margin-top: 1em;") %>
+
+<% js_block do %>
+<script type="text/javascript">
+    require([
+        'jquery' /* $ */
+    ], function($) {
+       var check_box_state;
+        $(".activate").click(function() {
+            var $self = $(this);
+           if ($(this).is(':checked')) {
+              check_box_state = 'checked';
+           } else {
+               check_box_state = 'unchecked';
+           }
+            $.ajax({
+                type: 'POST',
+                url: 'update_user',
+                data: {
+                    'id': $self.attr('id'),
+                    'state': check_box_state
+                },
+                complete: function(msg){
+                    $.flashMessage('User status updated!')
+                }
+
+
+            });
+        });
+    });
+</script>
+<% end %>
+

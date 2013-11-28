@@ -26,9 +26,14 @@ class DiscussionTopic < ActiveRecord::Base
   include ContextModuleItem
   include SearchTermHelper
 
+  acts_as_taggable_on :tags
+  named_scope :by_join_date, :order => "created_at DESC"
+
   attr_accessible :title, :message, :user, :delayed_post_at, :lock_at, :assignment,
     :plaintext_message, :podcast_enabled, :podcast_has_student_posts,
     :require_initial_post, :threaded, :discussion_type, :context, :pinned, :locked
+
+  attr_reader :tag_tokens
 
   module DiscussionTypes
     SIDE_COMMENT = 'side_comment'
@@ -246,7 +251,7 @@ class DiscussionTopic < ActiveRecord::Base
     current_user ||= self.current_user
     return nil unless current_user
     self.context_module_action(current_user, :read) if new_state == 'read'
-    
+
     return true if new_state == self.read_state(current_user)
 
     StreamItem.update_read_state_for_asset(self, new_state, current_user.id)
@@ -739,7 +744,7 @@ class DiscussionTopic < ActiveRecord::Base
   end
 
   def subscribers
-    # this duplicates some logic from #subscribed? so we don't have to call 
+    # this duplicates some logic from #subscribed? so we don't have to call
     # #posters for each legacy subscriber.
     sub_ids = discussion_topic_participants.where(:subscribed => true).pluck(:user_id)
     legacy_sub_ids = discussion_topic_participants.where(:subscribed => nil).pluck(:user_id)
@@ -783,7 +788,7 @@ class DiscussionTopic < ActiveRecord::Base
     end
   end
 
-  # Public: Determine if the discussion topic is locked for a specific user. The topic is locked when the 
+  # Public: Determine if the discussion topic is locked for a specific user. The topic is locked when the
   #         delayed_post_at is in the future or the group assignment is locked. This does not determine
   #         the visibility of the topic to the user, only that they are unable to reply.
   def locked_for?(user, opts={})

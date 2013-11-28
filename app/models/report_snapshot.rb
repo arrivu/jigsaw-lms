@@ -17,7 +17,7 @@
 #
 
 class ReportSnapshot < ActiveRecord::Base
-  STATS_COLLECTION_URL = "https://stats.instructure.com/stats_collection"
+  STATS_COLLECTION_URL = "https://stats.jigsawacademy.com/stats_collection"
   REPORT_TO_SEND = "counts_progressive_overview"
 
   belongs_to :account

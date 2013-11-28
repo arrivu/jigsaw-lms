@@ -1,0 +1,59 @@
+
+<% content_for :page_title, t(:page_title, "Offers") %>
+<% @show_left_side = true %>
+
+
+<% content_for :right_side do %>
+    <div class="rs-margin-all">
+      <a href="offers/new" class="add_user_link btn button-sidebar-wide"><i class="icon-add"></i> <%= t(:new_offer_link, "Add New Offer") %></a>
+    </div>
+<% end %>
+
+
+
+<table id="dataTable"  class = "table table-bordered table-striped">
+  <tr>
+    <th>Course Name</th>
+    <th>Coupon Name</th>
+    <th>Alpha Mask</th>
+    <th>Referrer Amount </th>
+    <th>Referrer Percentage </th>
+    <th>Referree Amount </th>
+    <th>Referree Percentage </th>
+    <th>Referrer Expiry Date</th>
+    <th>Referree Expiry Date</th>
+    <th>How Many</th>
+    <th>Actions</th> <th></th>
+
+  </tr>
+
+
+  <% @offers.each do |offer| %>
+      <tr>
+
+
+        <td><%= Course.find(offer.metadata).name %></td>
+        <td><%= offer.name %></td>
+        <td><%= offer.alpha_mask %></td>
+        <td><%= offer.referrer_amount  %></td>
+        <td><%= offer.referrer_percentage %></td>
+        <td><%= offer.referree_amount %></td>
+        <td><%= offer.referree_percentage %></td>
+        <td><%= offer.referrer_expiry_date %></td>
+        <td><%= offer.referree_expiry_date %></td>
+        <td><%= offer.how_many %></td>
+
+        <td><%= link_to 'edit', {:action => 'edit', :id => offer} %></td>
+
+
+        <td> <%= link_to 'delete', {:action=>'destroy', :id=> offer}, :confirm=>"You sure?", :method=> :delete %></td>
+
+
+
+      </tr>
+
+  <% end %>
+
+</table>
+
+

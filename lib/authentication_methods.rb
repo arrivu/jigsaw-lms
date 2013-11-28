@@ -238,7 +238,7 @@ module AuthenticationMethods
         store_location
         flash[:warning] = I18n.t('lib.auth.errors.not_authenticated', "You must be logged in to access this page") unless request.path == '/'
         opts = {}
-        opts[:canvas_login] = 1 if params[:canvas_login]
+        opts[:lms_login] = 1 if params[:lms_login]
         redirect_to login_url(opts) # should this have :no_auto => 'true' ?
       }
       format.json { render_json_unauthorized }
@@ -281,7 +281,7 @@ module AuthenticationMethods
   end
 
   def initiate_delegated_login(current_host=nil)
-    is_delegated = @domain_root_account.delegated_authentication? && !params[:canvas_login]
+    is_delegated = @domain_root_account.delegated_authentication? && !params[:lms_login]
     is_cas = is_delegated && @domain_root_account.cas_authentication?
     is_saml = is_delegated && @domain_root_account.saml_authentication?
     if is_cas

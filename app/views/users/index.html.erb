@@ -12,6 +12,7 @@
   <div class="rs-margin-lr rs-margin-top" style="padding-bottom: 20px;">
     <a href="<%= context_url(@context, :context_groups_url) %>" class="btn button-sidebar-wide user_groups"><i class="icon-group"></i> <%= t('buttons.user_groups', 'View User Groups') %></a>
     <a href="<%= context_url(@context, :context_avatars_url) %>" class="btn button-sidebar-wide manage_profile_pictures"><i class="icon-student-view"></i> <%= t('buttons.manage_profile_pictures', 'Manage Profile Pictures') %></a>
+    <a href="<%= context_url(@context, :context_activate_user_url) %>" class="btn button-sidebar-wide manage_profile_pictures"><i class="icon-syllabus"></i> <%= t('buttons.activate_user', 'User Activation') %></a>
   </div>
 
   <% if @enrollment_terms.size > 1 %>

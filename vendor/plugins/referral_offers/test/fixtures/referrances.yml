@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  referral_id: 
+  provider_id: 
+  visit_count: 
+  unique_url_token: MyText
+  referree_email: 
+  status: MyText
+
+two:
+  referral_id: 
+  provider_id: 
+  visit_count: 
+  unique_url_token: MyText
+  referree_email: 
+  status: MyText

@@ -57,7 +57,7 @@ class FacebookController < ApplicationController
       redirect_to facebook_url
       return
     end
-    flash[:notice] = t :authorization_success, "Authorization successful!  Canvas and Facebook are now friends." if params[:just_authorized]
+    flash[:notice] = t :authorization_success, "Authorization successful!  Jigsaw LMS and Facebook are now friends." if params[:just_authorized]
     @messages = []
     if @user
       @messages = @user.messages.to_facebook.to_a

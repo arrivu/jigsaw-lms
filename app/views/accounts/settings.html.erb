@@ -55,6 +55,9 @@
     <% if @context.root_account.settings[:enable_alerts] && can_do(@context, @current_user, :manage_interaction_alerts) %>
       <li><a href="#tab-alerts" id="tab-alerts-link"><%= t(:tab_alerts, "Alerts") %></a></li>
     <% end %>
+    <% if @account.root_account? %>
+        <li><a href="#tab-offers" id="tab-offers-link"><%= t(:tab_offers, "Offers") %></a></li>
+    <% end %>
   </ul>
   <% if can_do(@context, @current_user, :manage_account_settings) %>
     <div id="tab-settings">
@@ -247,7 +250,7 @@ Allowing Draft State here will allow teachers to enable it in their individual c
                 <% if @account.account_authorization_config %>
                   <div>
                     <%= settings.check_box :canvas_authentication, :checked => @account.canvas_authentication? %>
-                    <%= settings.label :canvas_authentication, :en => "Canvas Authentication" %>
+                    <%= settings.label :canvas_authentication, :en => "Jigsaw LMS Authentication" %>
                   </div>
                 <% end %>
               <% end %>
@@ -271,7 +274,7 @@ Allowing Draft State here will allow teachers to enable it in their individual c
                     <div id="open_registration_delegated_warning_dialog" style="display: none;">
                         <%= t(:open_registration_delegated_warning_message,
                         "An external identity provider is enabled, and users created via open registration may not be able to log in unless
-                        the external identity provider's login form has a link back to %{url}.", :url => login_url(:canvas_login => 1)) %>
+                        the external identity provider's login form has a link back to %{url}.", :url => login_url(:lms_login => 1)) %>
                     </div>
                   <% end %>
                 </div>
@@ -456,7 +459,7 @@ Allowing Draft State here will allow teachers to enable it in their individual c
                   "In order to make it easier for users, rather than forcing them to download " +
                   "things like Word docs, PDFs, Excel spreadsheets, and open office documents " +
                   "(In addition to requiring that those programs be installed on their on their " +
-                  "computer), in many areas throughout Canvas, it will allow you an inline " +
+                  "computer), in many areas throughout Jigsaw LMS, it will allow you an inline " +
                   "preview of the document.\n\n" +
 
                   "If Scribd has been enabled for this account, it will try to use it to show the preview. " +
@@ -508,13 +511,13 @@ Allowing Draft State here will allow teachers to enable it in their individual c
 
         <% if @account.root_account? && !@account.site_admin? %>
           <h2><%= t(:email_notification_from_settings, 'E-mail Notification "From" Settings') %></h2>
-          <p><%= t(:email_notification_from_description, "This setting allows the Admin to brand or label the 'From' text on all notifications sent from Canvas for this Account.") %></p>
+          <p><%= t(:email_notification_from_description, "This setting allows the Admin to brand or label the 'From' text on all notifications sent from Jigsaw LMS for this Account.") %></p>
           <% f.fields_for :settings do |settings| %>
             <div>
               <%= settings.radio_button :outgoing_email_default_name_option, 'default',
                                         :checked => @account.settings[:outgoing_email_default_name].blank?,
                                         :class => 'notification_from_name_option' %>
-              <%= settings.label :outgoing_email_default_name_option_default, :en => "Default Canvas Setting" %>
+              <%= settings.label :outgoing_email_default_name_option_default, :en => "Default Jigsaw LMS Setting" %>
             </div>
             <div style='padding-left: 2em;'>
               <strong><%= t 'notifications.example', 'Example:' %></strong>
@@ -551,7 +554,7 @@ Allowing Draft State here will allow teachers to enable it in their individual c
             </div>
             <div style='padding-left: 2em;'>
               <p>
-                <%= t('notifications.custom_name_description', 'If selected, this will replace all other branding sent in Canvas notifications.') %>
+                <%= t('notifications.custom_name_description', 'If selected, this will replace all other branding sent in Jigsaw LMS notifications.') %>
                 <br/>
                 <%= text_field_tag 'account[settings][outgoing_email_default_name]', @account.settings[:outgoing_email_default_name] %>
               </p>
@@ -599,7 +602,7 @@ Allowing Draft State here will allow teachers to enable it in their individual c
               <tr>
                 <td>
                   <b><%= t('notifications.external_services_warning_label', 'Pop-up Message Content:') %></b>
-                  <blockquote><%= t('notifications.external_services_warning', 'Notice: Some notifications may contain confidential information. Selecting to receive notifications at an email other than your institution provided address may result in sending sensitive Canvas course and group information outside of the institutional system.')%></blockquote>
+                  <blockquote><%= t('notifications.external_services_warning', 'Notice: Some notifications may contain confidential information. Selecting to receive notifications at an email other than your institution provided address may result in sending sensitive Jigsaw LMS course and group information outside of the institutional system.')%></blockquote>
                 </td>
               </tr>
             </table>
@@ -717,7 +720,7 @@ Allowing Draft State here will allow teachers to enable it in their individual c
             </tr>
             <% if @account.site_admin? %>
               <tr id="confirm_global_announcement_field">
-                <td colspan=2><input type="checkbox" id="confirm_global_announcement" name="confirm_global_announcement"> <%= label_tag :confirm_global_announcement, t(:confirm_global_announcement, "This announcement will be shown to *all* Canvas users. Confirm that you want to create it.", :wrapper => '<b>\1</b>') %></td>
+                <td colspan=2><input type="checkbox" id="confirm_global_announcement" name="confirm_global_announcement"> <%= label_tag :confirm_global_announcement, t(:confirm_global_announcement, "This announcement will be shown to *all* Jigsaw LMS users. Confirm that you want to create it.", :wrapper => '<b>\1</b>') %></td>
               </tr>
               <tr>
                 <td colspan=2>
@@ -817,6 +820,10 @@ Allowing Draft State here will allow teachers to enable it in their individual c
       </table>
     </div>
   <% end %>
+
+
+
+
   <% if can_do(@context, @current_user, :manage_account_settings) %>
       <div id="tab-tools">
         <%= render :partial => 'external_tools/external_tools', :object => @context.context_external_tools.active %>

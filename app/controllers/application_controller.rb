@@ -51,6 +51,7 @@ class ApplicationController < ActionController::Base
   before_filter :init_body_classes
   after_filter :set_response_headers
   after_filter :update_enrollment_last_activity_at
+  before_filter :get_wiki_type
   include Tour
 
   add_crumb(proc {
@@ -330,7 +331,7 @@ class ApplicationController < ActionController::Base
   def delegated_authentication_url?
     @domain_root_account.delegated_authentication? &&
     !@domain_root_account.ldap_authentication? &&
-    !params[:canvas_login]
+    !params[:lms_login]
   end
 
   # To be used as a before_filter, requires controller or controller actions
@@ -700,7 +701,7 @@ class ApplicationController < ActionController::Base
   end
   
   def cache_buster
-    # Annoying problem.  If I set the cache-control to anything other than "no-cache, no-store" 
+    # Annoying problem.  If I set the cache-control to anything other than "no-cache, no-store"
     # then the local cache is used when the user clicks the 'back' button.  I don't know how
     # to tell the browser to ALWAYS check back other than to disable caching...
     return true if @cancel_cache_buster || request.xhr? || api_request?
@@ -1003,8 +1004,10 @@ class ApplicationController < ActionController::Base
   def get_wiki_page
     @wiki = @context.wiki
     @wiki.check_has_front_page
-
+    @wiki.make_sure_wiki_has_front_page
     page_name = params[:wiki_page_id] || params[:id] || (params[:wiki_page] && params[:wiki_page][:title])
+    page_name ||= WikiPage::DEFAULT_FAQ_FRONT_PAGE_URL if (@wiki_type ==  WikiPage::WIKI_TYPE_FAQS)
+    page_name ||= WikiPage::DEFAULT_CAREER_FRONT_PAGE_URL if (@wiki_type ==  WikiPage::WIKI_TYPE_CAREERS)
     page_name ||= (@wiki.get_front_page_url || Wiki::DEFAULT_FRONT_PAGE_URL) unless @context.draft_state_enabled?
     if(params[:format] && !['json', 'html'].include?(params[:format]))
       page_name += ".#{params[:format]}"
@@ -1017,9 +1020,10 @@ class ApplicationController < ActionController::Base
               @wiki.wiki_pages.deleted_last.find_by_url(page_name.to_s.to_url) ||
               @wiki.wiki_pages.find_by_id(page_name.to_i)
     end
+
     @page ||= @wiki.wiki_pages.new(
       :title => page_name.titleize,
-      :url => page_name.to_url
+      :url => page_name.to_url, :wiki_type => @wiki_type
     )
     if @page.new_record?
       @page.wiki = @wiki
@@ -1044,15 +1048,15 @@ class ApplicationController < ActionController::Base
 
     @page.editing_roles = (@context.default_wiki_editing_roles rescue nil) || @page.default_roles
 
-    if @page.is_front_page?
-      @page.body = t "#application.wiki_front_page_default_content_course", "Welcome to your new course wiki!" if @context.is_a?(Course)
-      @page.body = t "#application.wiki_front_page_default_content_group", "Welcome to your new group wiki!" if @context.is_a?(Group)
+    if @page.is_front_page? or @wiki.wiki_pages.faqs.empty? or @wiki.wiki_pages.careers.empty?
+      @page.body = t "#application.wiki_front_page_default_content_course", "Welcome to your new course #{@page.wiki_type}!" if @context.is_a?(Course)
+      @page.body = t "#application.wiki_front_page_default_content_group", "Welcome to your new group #{@page.wiki_type}!" if @context.is_a?(Group)
     end
   end
 
   def context_wiki_page_url
     page_name = @page.url
-    named_context_url(@context, :context_wiki_page_url, page_name)
+    named_context_url(@context, :context_wiki_page_url, @page.wiki_type, page_name)
   end
 
   def content_tag_redirect(context, tag, error_redirect_symbol)
@@ -1060,7 +1064,7 @@ class ApplicationController < ActionController::Base
     if tag.content_type == 'Assignment'
       redirect_to named_context_url(context, :context_assignment_url, tag.content_id, url_params)
     elsif tag.content_type == 'WikiPage'
-      redirect_to named_context_url(context, :context_wiki_page_url, tag.content.url, url_params)
+      redirect_to named_context_url(context, :context_wiki_page_url, tag.content.wiki_type, tag.content.url, url_params)
     elsif tag.content_type == 'Attachment'
       redirect_to named_context_url(context, :context_file_url, tag.content_id, url_params)
     elsif tag.content_type == 'Quiz'
@@ -1513,7 +1517,7 @@ class ApplicationController < ActionController::Base
   helper_method :flash_notices
 
   def unsupported_browser
-    t("#application.warnings.unsupported_browser", "Your browser does not meet the minimum requirements for Canvas. Please visit the *Canvas Guides* for a complete list of supported browsers.", :wrapper => @template.link_to('\1', 'http://guides.instructure.com/s/2204/m/4214/l/41056-which-browsers-does-canvas-support'))
+    t("#application.warnings.unsupported_browser", "Your browser does not meet the minimum requirements for Jigsaw LMS. Please visit the *Jigsaw LMS Guides* for a complete list of supported browsers.", :wrapper => @template.link_to('\1', 'http://guides.jigsawacademy.in/s/2204/m/4214/l/41056-which-browsers-does-canvas-support'))
   end
 
   def browser_supported?
@@ -1602,6 +1606,21 @@ class ApplicationController < ActionController::Base
       end
 
       js_env hash
+    end
+  end
+
+  def get_wiki_type
+    @wiki_type =  WikiPage::WIKI_TYPE_PAGES
+    @wiki_type = params[:type] if params[:type]
+  end
+
+  def has_any_wiki_page_for_wiki_type?
+    if @wiki_type ==  WikiPage::WIKI_TYPE_FAQS
+      @context.wiki.wiki_pages.faqs.count == 0
+    elsif @wiki_type ==  WikiPage::WIKI_TYPE_CAREERS
+        @context.wiki.wiki_pages.careers.count == 0
+    else
+       @context.wiki.wiki_pages.pages.count == 0
     end
   end
 end

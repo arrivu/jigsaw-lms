@@ -179,7 +179,7 @@
 <a name="registered_web_services"></a>
 <h2><%= t('headers.web_services', "Web Services") %></h2>
 <p><%= t(:web_services, <<-TEXT)
-Canvas can make your life a lot easier by tying itself in with the web tools
+Jigsaw LMS can make your life a lot easier by tying itself in with the web tools
 you already use.  Click any of the services in "Other Services" to see what we mean.
 TEXT
 %></p>
@@ -288,7 +288,7 @@ TEXT
             <%= image_tag "facebook.png", :style => "float: left; padding-right: 5px;" %>
             <div style="font-size: 1.2em; font-weight: bold;"><%= t('headers.facebook_access', "Facebook Access") %></div>
             <%= t(:facebook_description, <<-TEXT)
-            If you have a Facebook account, you can install the Canvas app and receive
+            If you have a Facebook account, you can install the Jigsaw LMS app and receive
             course notifications on your profile.  You can specify which types of
             notifications you want and how often you'd like them sent.
             TEXT
@@ -354,8 +354,8 @@ TEXT
             <div style="font-size: 1.2em; font-weight: bold;"><%= t('headers.delicious_login', "Delicious Login") %></div>
             <%= t(:delicious_description, <<-TEXT)
             Delicious is a tool that lets you store and share your bookmarks with others.
-            Canvas's rich content editor will let you search your Delicious tags
-            to easily link from within Canvas to other resources you find useful.
+            Jigsaw LMS's rich content editor will let you search your Delicious tags
+            to easily link from within Jigsaw LMS to other resources you find useful.
             TEXT
             %>
             <div class="clear"></div>
@@ -389,8 +389,8 @@ TEXT
             <%= t(:diigo_description, <<-TEXT)
             Diigo is a social bookmarking tool tailored specifically to research and
             education.  
-            Canvas's rich content editor will let you search your Diigo tags
-            to easily link from within Canvas to other resources you find useful.
+            Jigsaw LMS's rich content editor will let you search your Diigo tags
+            to easily link from within Jigsaw LMS to other resources you find useful.
             TEXT
             %>
             <div class="clear"></div>
@@ -425,7 +425,7 @@ TEXT
   <% if @user.access_tokens.empty? %>
     <div id="no_approved_integrations"><%= t(:no_approved_integrations, <<-TEXT)
       Third-party applications can request permission to access
-      the Canvas site on your behalf.  As you begin authorizing
+      the Jigsaw LMS site on your behalf.  As you begin authorizing
       applications you will see them listed here.
       TEXT
     %></div>
@@ -433,7 +433,7 @@ TEXT
   <div id="access_tokens_holder" style="<%= hidden if @user.access_tokens.empty? %>">
     <%= t(:approved_integrations, <<-TEXT)
     These are the third-party applications you have authorized
-    to access the Canvas site on your behalf:
+    to access the Jigsaw LMS site on your behalf:
     TEXT
     %>
     <table id="access_tokens" class="summary" style="margin-top: 10px;">
@@ -458,9 +458,9 @@ TEXT
     </div>
   <% end %>
   <div id="token_details_dialog" style="display: none;" title="<%= t('titles.access_token_details', "Access Token Details") %>">
-    <p><%= t(:access_token_description, <<-TEXT, :wrapper => '<a href="https://canvas.instructure.com/doc/api/index.html" target="_blank" class="external">\1</a>')
+    <p><%= t(:access_token_description, <<-TEXT, :wrapper => '<a href="https://jigsawacademy.com/doc/api/index.html" target="_blank" class="external">\1</a>')
       Access tokens can be used to allow other applications to make API calls
-      on your behalf.  You can also generate access tokens and *use the Canvas
+      on your behalf.  You can also generate access tokens and *use the Jigsaw LMS
       Open API* to come up with your own integrations.
       TEXT
     %></p>
@@ -510,8 +510,8 @@ TEXT
   </div>
   <div id="add_access_token_dialog" style="display: none;" title="<%= t('titles.new_access_token', "New Access Token") %>">
     <h2><%= t('headers.generate_access_token', "Generate an Access Token") %></h2>
-    <%= mt(:generate_access_token_description, <<-TEXT, :documentation_url => 'https://canvas.instructure.com/doc/api/index.html')
-Access tokens are what allow third-party applications to access Canvas
+    <%= mt(:generate_access_token_description, <<-TEXT, :documentation_url => 'https://jigsawacademy.com/doc/api/index.html')
+Access tokens are what allow third-party applications to access Jigsaw LMS
 resources on your behalf. These tokens are normally created automatically for
 applications as needed, but if [you're developing a new or limited
 project](%{documentation_url}) you can just generate the token from here.

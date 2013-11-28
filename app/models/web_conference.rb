@@ -323,7 +323,7 @@ class WebConference < ActiveRecord::Base
   end
 
 
-  def craft_url(user=nil,session=nil,return_to="http://www.instructure.com")
+  def craft_url(user=nil,session=nil,return_to="http://jigsawacademy.com/")
     user ||= self.user
     initiate_conference and touch or return nil
     if (user == self.user || self.grants_right?(user,session,:initiate)) && !active?(true)

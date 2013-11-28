@@ -173,18 +173,18 @@ class WimbaConference < WebConference
     token.split(/=/, 2).last.chomp
   end
 
-  def admin_join_url(user, return_to="http://www.instructure.com")
+  def admin_join_url(user, return_to="http://jigsawacademy.com/")
     add_user_to_conference(user, :presenter) &&
     join_url(user)
   end
 
-  def admin_settings_url(user, return_to="http://www.instructure.com")
+  def admin_settings_url(user, return_to="http://jigsawacademy.com/")
     initiate_conference and touch or return nil
     add_user_to_conference(user, :admin) &&
     settings_url(user)
   end
 
-  def participant_join_url(user, return_to="http://www.instructure.com")
+  def participant_join_url(user, return_to="http://jigsawacademy.com/")
     add_user_to_conference(user) &&
     join_url(user)
   end

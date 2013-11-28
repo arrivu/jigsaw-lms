@@ -23,16 +23,17 @@ describe "/wiki_pages/_wiki_right_side" do
   it "should render" do
     group_with_user
     view_context
-    page = @group.wiki.wiki_pages.create(:title => "a page")
+    page = @group.wiki.wiki_pages.create(:title => "a page",:wiki_type =>"#{WikiPage::WIKI_TYPE_PAGES}")
     assigns[:wiki] = @group.wiki
     assigns[:page] = page
+    assigns[:wiki_type] = WikiPage::WIKI_TYPE_PAGES
     assigns[:page].save!
     assigns[:context] = @group
     render :partial => "wiki_pages/wiki_right_side"
     response.should_not be_nil
-    response.body.should match(/Edit this Page/)
-    response.body.should match(/Delete this Page/)
-    response.body.should match(/Create a New Page/)
+    response.body.should match("Edit this #{WikiPage::WIKI_TYPE_PAGES}")
+    response.body.should match("Delete this #{WikiPage::WIKI_TYPE_PAGES}")
+    response.body.should match("Create a #{WikiPage::WIKI_TYPE_PAGES}")
   end
 end
 

@@ -33,3 +33,16 @@ Delayed::Worker.on_max_failures = proc do |job, err|
   # All other failures are kept for inspection.
   err.is_a?(Delayed::Backend::RecordNotFound)
 end
+
+if Rails.env == "development"
+  Rails.logger.info "Delayed::Job is executed synchronously in #{Rails.env} mode."
+  Delayed::Job.class_eval do
+    def self.enqueue(obj,xyz)
+      Rails.logger.info "Delayed::Job:SYNC START"
+      #obj[:payload_object].perform
+      obj.perform
+      Rails.logger.info "Delayed::Job:SYNC END"
+    end
+  end
+end
+

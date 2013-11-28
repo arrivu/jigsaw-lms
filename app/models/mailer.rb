@@ -36,4 +36,12 @@ class Mailer < ActionMailer::Base
       body m.body
     end
   end
+
+  def user_activation_mail(user)
+    @user= user
+    recipients  user.pseudonyms.first.email
+    from "#{HostUrl.outgoing_email_default_name} "+ "<" + HostUrl.outgoing_email_address + ">"
+    sent_on       Time.now
+  end
+
 end

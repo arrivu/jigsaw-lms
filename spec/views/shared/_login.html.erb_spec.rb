@@ -50,7 +50,7 @@ describe "/shared/_login" do
     page.css("#login_forgot_password")[0]['href'].should == config.change_password_url
   end
   
-  it "should use default forgot password mechanism if external mechanism specified but it's a canvas_login request" do
+  it "should use default forgot password mechanism if external mechanism specified but it's a lms_login request" do
     @account = Account.default
     config = @account.account_authorization_configs.build
     config.auth_type = 'ldap'
@@ -58,7 +58,7 @@ describe "/shared/_login" do
     config.save!
     @account.forgot_password_external_url.should == config.change_password_url
     assigns[:domain_root_account] = @account
-    render :partial => "shared/login", :locals => {:params => {:canvas_login => '1'}}
+    render :partial => "shared/login", :locals => {:params => {:lms_login => '1'}}
     page = Nokogiri(response.body)
     page.css("#login_forgot_password")[0]['href'].should == '#'
   end

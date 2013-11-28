@@ -50,7 +50,7 @@
     <pre><%=@account_config.debug_get("fingerprint_from_idp")%></pre>
   <% end %>
   <% if @account_config.debug_get("is_valid_login_response") %>
-    <div class="debug_label"><%= before_label(:is_valid_login_response, "Canvas thinks response is valid") %></div>
+    <div class="debug_label"><%= before_label(:is_valid_login_response, "Jigsaw LMS thinks response is valid") %></div>
     <pre><%=@account_config.debug_get("is_valid_login_response")%></pre>
   <% end %>
   <% if @account_config.debug_get("login_response_validation_error") %>
@@ -58,11 +58,11 @@
     <pre class = debug_xml><%=@account_config.debug_get("login_response_validation_error")%></pre>
   <% end %>
   <% if @account_config.debug_get("login_to_canvas_success") %>
-    <div class="debug_label"><%= before_label(:login_to_canvas_success, "User successfully logged into Canvas") %></div>
+    <div class="debug_label"><%= before_label(:login_to_canvas_success, "User successfully logged into Jigsaw LMS") %></div>
     <pre><%=@account_config.debug_get("login_to_canvas_success")%></pre>
   <% end %>
   <% if @account_config.debug_get("canvas_login_fail_message") %>
-    <div class="debug_label"><%= before_label(:canvas_login_fail_message, "Canvas Login failure message") %></div>
+    <div class="debug_label"><%= before_label(:canvas_login_fail_message, "Jigsaw LMS Login failure message") %></div>
     <pre><%=@account_config.debug_get("canvas_login_fail_message")%></pre>
   <% end %>
   <% if @account_config.debug_get("logged_in_user_id") %>

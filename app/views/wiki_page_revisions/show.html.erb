@@ -1,6 +1,6 @@
 <% 
-  add_crumb(t('#crumbs.wiki_page_revisions', "Revisions"), context_url(@context, :context_wiki_page_wiki_page_revisions_url, @page))
-  add_crumb(datetime_string(@revision.model.updated_at), context_url(@context, :context_wiki_page_wiki_page_revision_url, @page, @revision))
+  add_crumb(t('#crumbs.wiki_page_revisions', "Revisions"), context_url(@context, :context_wiki_page_wiki_page_revisions_url, @page.wiki_type, @page))
+  add_crumb(datetime_string(@revision.model.updated_at), context_url(@context, :context_wiki_page_wiki_page_revision_url, @page.wiki_type, @page, @revision))
 %>
 
 <% content_for :page_title do %><%= @page.title.titleize %><% end %>
@@ -9,7 +9,7 @@
     <ul class="unstyled_list wide_spacing">
       <% if can_do(@page, @current_user, :update) %>
         <li>
-          <% form_for(@revision, :url => context_url(@context, :context_wiki_page_wiki_page_revision_url, @page, @revision)) do |f| %>
+          <% form_for(@revision, :url => context_url(@context, :context_wiki_page_wiki_page_revision_url, @page.wiki_type, @page, @revision)) do |f| %>
           <div class="button-container">
             <button type="submit" class="btn"><%= image_tag "reply.png", :alt => "Rollback" %> <%= t 'buttons.roll_back_version', 'Roll-back to this Version' %></button><br /><br />
           </div>
@@ -18,7 +18,7 @@
       <% end %>
       <li>
         <div>
-          <a href="<%= context_url(@context, :context_wiki_page_url, @page) %>" class="forward"><%= t 'links.go_to_latest', 'Go to Latest Version' %></a>
+          <a href="<%= context_url(@context, :context_wiki_page_url,  @page.wiki_type, @page) %>" class="forward"><%= t 'links.go_to_latest', 'Go to Latest Version' %></a>
           <ul class="item_list" style='line-height: 14px; font-size: 11px; padding-left:21px; '>
             <% if @revision.model.user %>
               <li><%= t 'labels.by_user', 'by %{user}', :user => context_user_name(@context, @page.user) %></li>
@@ -30,7 +30,7 @@
           </ul>
         </div>
       </li>
-      <li><a href="<%= context_url(@context, :context_wiki_page_wiki_page_revisions_url, @page) %>" class="history"><%= t 'links.back_to_history', 'Back to Revision history' %></a></li>
+      <li><a href="<%= context_url(@context, :context_wiki_page_wiki_page_revisions_url, @page.wiki_type, @page) %>" class="history"><%= t 'links.back_to_history', 'Back to Revision history' %></a></li>
     </ul>
   </div>
 <% end %>

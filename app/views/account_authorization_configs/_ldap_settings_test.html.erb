@@ -3,19 +3,19 @@ ldap_tests = []
 ldap_tests << OpenStruct.new(
   :test_type => :connection,
   :label => t(:test_ldap_connection_label, "Testing connection..."),
-  :help_header => t(:test_ldap_connection_help_header, "Canvas can't connect to your LDAP server"),
+  :help_header => t(:test_ldap_connection_help_header, "Jigsaw LMS can't connect to your LDAP server"),
   :help_body => t(:test_ldap_connection_help_body, "The connection either timed out or was refused. Things to consider:"),
   :help => [
-    t(:test_ldap_connection_help_fixes_1, "Canvas is connecting to %{ips}", :ips => @account.account_authorization_configs.map {|a| a.ldap_ip}.to_sentence),
+    t(:test_ldap_connection_help_fixes_1, "Jigsaw LMS is connecting to %{ips}", :ips => @account.account_authorization_configs.map {|a| a.ldap_ip}.to_sentence),
     t(:test_ldap_connection_help_fixes_2, "This was only a connection test. SSL certificates were not validated."),
-    t(:test_ldap_connection_help_fixes_3, "Check your firewall settings. Are all Canvas IP address allowed to access your server?")
+    t(:test_ldap_connection_help_fixes_3, "Check your firewall settings. Are all Jigsaw LMS IP address allowed to access your server?")
   ],
   :url => account_test_ldap_connections_url(@account)
 )
 ldap_tests << OpenStruct.new(
   :test_type => :bind,
   :label => t(:test_ldap_bind_label, "Testing LDAP bind..."),
-  :help_header => t(:test_ldap_bind_help_header, "Canvas can't bind (login) to your LDAP server"),
+  :help_header => t(:test_ldap_bind_help_header, "Jigsaw LMS can't bind (login) to your LDAP server"),
   :help_body => t(:test_ldap_bind_help_body, "Your LDAP server server rejected the bind attempt. Things to consider:"),
   :help => [
     t(:test_ldap_bind_help_fixes_1, "Verify the provided filter string (i.e. '(sAMAccountName={{login}})')."),
@@ -26,7 +26,7 @@ ldap_tests << OpenStruct.new(
 ldap_tests << OpenStruct.new(
   :test_type => :search,
   :label => t(:test_ldap_search_label, "Testing LDAP search..."),
-  :help_header => t(:test_ldap_search_help_header, "Canvas can't search your LDAP instance"),
+  :help_header => t(:test_ldap_search_help_header, "Jigsaw LMS can't search your LDAP instance"),
   :help_body => t(:test_ldap_search_help_body, "The search either failed or returned 0 results. Things to consider:"),
   :help => [
     t(:test_ldap_search_help_fixes_1, "Verify the provided filter string (i.e. '(sAMAccountName={{login}})')."),
