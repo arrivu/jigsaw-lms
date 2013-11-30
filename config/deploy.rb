@@ -23,7 +23,7 @@ set :default_stage, "production"
 set :repository,    "http://github.com/m-narayan/jigsaw-lms.git"
 set :scm,     :git
 set :deploy_via,  :remote_cache
-set :branch,        "develop"
+set :branch,        "deploy"
 set :deploy_to,     "/var/deploy/capistrano/canvas"
 set :use_sudo,      true
 set :deploy_env,    "production"
