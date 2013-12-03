@@ -1,7 +1,7 @@
 ActionController::Dispatcher.middleware.use OmniAuth::Builder  do
 
-  provider :facebook, "542771412468139", "c890fc3fedd58085b067171d5652c1df"
-  provider :linkedin, "31azcdigi8tt", "OKd1hmuJoNOg9J2g"
-  provider :google_oauth2, "1043706304418.apps.googleusercontent.com", "9hf4pcRW5uvHP3DSz-nsQ0DL"
+  provider :facebook, "555321834555667", "1a13870e08753770471dc06ab362f462"
+  provider :linkedin, "755v9o4po1nv69", "3tcFcLEf18g5YyyK"
+  provider :google_oauth2, "836287453511.apps.googleusercontent.com", "CHE7ouYKPAw7Txm9MZw6ZEKA"
 
 end
