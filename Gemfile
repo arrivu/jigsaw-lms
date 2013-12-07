@@ -20,8 +20,8 @@ else
   if lts_file
     eval(File.read(lts_file))
   else
-    #gem 'rails', :git => 'https://github.com/makandra/rails.git', :branch => '2-3-lts', :ref => 'e86daf8ff727d5efc0040c876ba00c9444a5d915'
-    gem 'rails', '2.3.18'
+    gem 'rails', :git => 'https://github.com/makandra/rails.git', :branch => '2-3-lts', :ref => 'e86daf8ff727d5efc0040c876ba00c9444a5d915'
+    # gem 'rails', '2.3.18'
   end
   gem 'authlogic',    '2.1.3'
 end
