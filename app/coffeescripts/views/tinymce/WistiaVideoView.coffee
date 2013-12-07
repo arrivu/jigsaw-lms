@@ -29,7 +29,7 @@ define [
       @$selectedNode = $(selectedNode)
       super
       @render()
-      wistiaVideoURL = "http://localhost:3000/list_collections"
+      wistiaVideoURL = "#{location.origin}/list_collections"
       @show().disableWhileLoading @request = $.getJSON wistiaVideoURL, (data) =>
         @projects = data.collections
         _.map @projects, (project) ->
@@ -41,7 +41,7 @@ define [
 
 
     onComboSelect: (event, ui) ->
-      wistiaMediaURL = "http://localhost:3000/get_collection/#{event.target.value}"
+      wistiaMediaURL = "#{location.origin}/get_collection/#{event.target.value}"
       @$('.findWistiaMediaView').show().disableWhileLoading @request = $.getJSON wistiaMediaURL, (data) =>
         @renderResults(data.collections.medias)
 

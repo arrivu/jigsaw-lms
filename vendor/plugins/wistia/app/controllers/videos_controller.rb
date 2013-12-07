@@ -1,15 +1,15 @@
 require "#{Rails.root}/vendor/plugins/wistia/lib/wistia/wistia_video_api"
 class VideosController < ApplicationController
   before_filter :require_user
-
-  def  list_collections
-    if WistiaVideoAPI.enabled?
+  Rails.cache.fetch( list_collections.cache_key, {:expires_in=>15.minutes}) do
+   def  list_collections
+     if WistiaVideoAPI.enabled?
        WistiaVideoAPI.list_collections
-
        respond_to do |format|
          format.json  { render :json => {:collections => WistiaVideoAPI.instance_variable_get(:@collections) }}
        end
-    end
+     end
+ end
   end
 
   def get_collection
