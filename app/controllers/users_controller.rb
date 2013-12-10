@@ -282,7 +282,7 @@ class UsersController < ApplicationController
       @query = (params[:user] && params[:user][:name]) || params[:term]
       js_env :ACCOUNT => account_json(@domain_root_account, nil, session, ['registration_settings'])
       Shackles.activate(:slave) do
-      @users= User.all
+      @users= User.active
         if api_request?
           search_term = params[:search_term].presence
 
@@ -297,7 +297,7 @@ class UsersController < ApplicationController
           return render :json => users.map { |u| user_json(u, @current_user, session) }
         else
           @users ||= []
-          @users= User.order('created_at DESC').paginate(:page => params[:page], :per_page => @per_page, :total_entries => @users.size)
+          @users= User.active.order('created_at DESC').paginate(:page => params[:page], :per_page => @per_page, :total_entries => @users.size)
         end
 
         respond_to do |format|

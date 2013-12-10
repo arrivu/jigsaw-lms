@@ -46,8 +46,8 @@
     <h2><%= t 'headers.common_pages', 'Common Pages' %></h2>
     <div class="rs-margin-lr rs-margin-bottom">
     <ul class="item_list limit_height" style="max-height: 100px;">
-      <%= render :partial => 'wiki_pages/page_link' %>
       <% common_pages = pages.sort_by{|p| p.view_count} %>
+      <%= render :partial => 'wiki_pages/page_link',:collection => pages.sort_by{|p| p.title}  %>
       <%= render :partial => 'wiki_pages/page_link', :collection => common_pages[0..3], :locals => {:skip_front_page => true} %>
       <li><a href="#" class="more_pages_link" style="padding-left: 20px; font-size: 0.9em; <%= hidden unless common_pages.length > 4 %>"><%= t 'links.more', 'more...' %></a></li>
       <%= render :partial => 'wiki_pages/page_link', :collection => common_pages[4..9], :locals => {:skip_front_page => true, :hidden => true} %>
@@ -74,7 +74,7 @@
     <% else %>
       <ul class="item_list limit_height">
         <li><a href="#" class="more_pages_link" style="padding-left: 20px; font-size: 0.9em;"><%= t 'links.show_all', 'show all...' %></a></li>
-        <%= render :partial => 'wiki_pages/page_link', :locals => {:hidden => true} %>
+        <%= render :partial => 'wiki_pages/page_link', :locals => {:hidden => true},:collection => pages.sort_by{|p| p.title } %>
         <%= render :partial => 'wiki_pages/page_link', :collection => pages.sort_by{|p| p.title }, :locals => {:skip_front_page => true, :hidden => true} %>
       </ul>
     <% end %>

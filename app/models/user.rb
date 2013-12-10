@@ -133,7 +133,7 @@ class User < ActiveRecord::Base
         enrollment_conditions(:invited, strict_course_state, course_workflow_state)
     end
   end
-  has_many :omniauth_authentications , :dependent => :delete_all
+  has_many :omniauth_authentications , :dependent => :destroy
   has_many :communication_channels, :order => 'communication_channels.position ASC', :dependent => :destroy
   has_one :communication_channel, :order => 'position'
   has_many :enrollments, :dependent => :destroy
@@ -875,6 +875,7 @@ class User < ActiveRecord::Base
       self.pseudonyms.each{|p| p.destroy(even_if_managed_passwords) }
       self.communication_channels.each{|cc| cc.destroy }
       self.enrollments.each{|e| e.destroy }
+      self.omniauth_authentications.each{|ee| ee.destroy }
     end
   end
 
