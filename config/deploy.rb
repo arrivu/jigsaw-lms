@@ -24,14 +24,14 @@ set :repository,    "http://github.com/m-narayan/jigsaw-lms.git"
 set :scm,     :git
 set :deploy_via,  :remote_cache
 set :branch,        "deploy"
-set :deploy_to,     "/var/deploy/capistrano/canvas"
+set :deploy_to,     "/var/deploy/capistrano/jigsaw"
 set :use_sudo,      true
 set :deploy_env,    "production"
 #set :bundle_dir,    "/var/data/gems"
 set :bundle_without, [:sqlite]
 set :bundle_flags, "--deployment --binstubs"
 
-set :server_base_url, "jigsawlms.arrivuapps.com"
+set :server_base_url, "www.jigsawacademy.net"
 #set me for future
 def is_hotfix?
   ENV.has_key?('hotfix') && ENV['hotfix'].downcase == "true"
@@ -109,7 +109,7 @@ desc "Make sure local git is in sync with remote."
 
 
   desc "Compile static assets"
-  task :compile_assets, :on_error => :continue do
+  task :compile_assets do
     # On remote: bundle exec rake canvas:compile_assets
     run "cd #{latest_release} && bundle exec #{rake} RAILS_ENV=#{rails_env} canvas:compile_assets[false]"
     # run "cd #{latest_release} && chown -R #{passenger_user}:#{passenger_user} ."
