@@ -14,25 +14,25 @@ require "capistrano/ext/multistage"
 # disable the warning on how to configure your server
 #set :maintenance_config_warning, false
 
-#set :application,   "arrivu-lms"
+#set :application,   "jigsaw-lms"
 set :user,    "sysadmin"
 set :passenger_user,"canvasuser"
-ssh_options[:port] = 22
+ssh_options[:port] = 2002
 set :stages, ["staging", "production"]
 set :default_stage, "production"
-set :repository,   "https://github.com/m-narayan/canvas-lms.git"
+set :repository,   "https://github.com/m-narayan/jigsaw-lms.git"
 #git@github.com:m-narayan/jigsaw-lms.git
 set :scm,     :git
 set :deploy_via,  :remote_cache
 set :branch,        "develop"
-set :deploy_to,     "/var/deploy/capistrano/arrivu-lms"
+set :deploy_to,     "/var/deploy/capistrano/jigsaw"
 set :use_sudo,      true
 set :deploy_env,    "production"
 #set :bundle_dir,    "/var/data/gems"
 set :bundle_without, [:sqlite]
 set :bundle_flags, "--deployment --binstubs"
 
-set :server_base_url, "media.arrivuapps.com"
+set :server_base_url, "www.jigsawacademy.net"
 #set me for future
 def is_hotfix?
   ENV.has_key?('hotfix') && ENV['hotfix'].downcase == "true"
@@ -156,7 +156,6 @@ desc "Make sure local git is in sync with remote."
  desc "Clone QTIMigrationTool"
   task :clone_qtimigrationtool do
     run "cd #{latest_release}/vendor && git clone https://github.com/instructure/QTIMigrationTool.git QTIMigrationTool && chmod +x QTIMigrationTool/migrate.py"
-
   end
 
   desc "Tasks that run after create_symlink"
