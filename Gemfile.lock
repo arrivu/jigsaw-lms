@@ -279,7 +279,6 @@ GEM
     soap4r-middleware (0.8.3)
       soap4r-ruby1.9 (= 2.0.0)
     soap4r-ruby1.9 (2.0.0)
-    sqlite3-ruby (1.3.2)
     statsd-ruby (1.0.0)
     subexec (0.0.4)
     test-unit (1.2.3)
