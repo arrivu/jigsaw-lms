@@ -14,25 +14,24 @@ require "capistrano/ext/multistage"
 # disable the warning on how to configure your server
 #set :maintenance_config_warning, false
 
-#set :application,   "arrivu-lms"
+#set :application,   "jigsaw-lms"
 set :user,    "sysadmin"
 set :passenger_user,"canvasuser"
-ssh_options[:port] = 22
+ssh_options[:port] = 2002
 set :stages, ["staging", "production"]
 set :default_stage, "production"
-set :repository,   "https://github.com/m-narayan/canvas-lms.git"
-#git@github.com:m-narayan/jigsaw-lms.git
+set :repository,    "http://github.com/m-narayan/jigsaw-lms.git"
 set :scm,     :git
 set :deploy_via,  :remote_cache
-set :branch,        "develop"
-set :deploy_to,     "/var/deploy/capistrano/arrivu-lms"
+set :branch,        "deploy"
+set :deploy_to,     "/var/deploy/capistrano/jigsaw"
 set :use_sudo,      true
 set :deploy_env,    "production"
 #set :bundle_dir,    "/var/data/gems"
 set :bundle_without, [:sqlite]
 set :bundle_flags, "--deployment --binstubs"
 
-set :server_base_url, "media.arrivuapps.com"
+set :server_base_url, "www.jigsawacademy.net"
 #set me for future
 def is_hotfix?
   ENV.has_key?('hotfix') && ENV['hotfix'].downcase == "true"
@@ -66,7 +65,7 @@ namespace :deploy do
 end
 # Canavs-specific task after a deploy
 namespace :canvas do
-desc "Make sure local git is in sync with remote."
+  desc "Make sure local git is in sync with remote."
   task :check_revision, roles: :web do
     unless `git rev-parse HEAD` == `git rev-parse origin/#{branch}`
       puts "WARNING: HEAD is not the same as origin/#{branch}"
@@ -90,7 +89,7 @@ desc "Make sure local git is in sync with remote."
 
   # REMOTE COMMANDS
 
- # On every deploy
+  # On every deploy
   desc "Create symlink for files folder to mount point"
   task :copy_config do
     folder = 'tmp/files'
@@ -100,11 +99,11 @@ desc "Make sure local git is in sync with remote."
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/delayed_jobs.yml #{release_path}/config/delayed_jobs.yml"
     run "ln -nfs #{shared_path}/config/domain.yml #{release_path}/config/domain.yml"
- run "ln -nfs #{shared_path}/config/file_store.yml #{release_path}/config/file_store.yml"
+    run "ln -nfs #{shared_path}/config/file_store.yml #{release_path}/config/file_store.yml"
     run "ln -nfs #{shared_path}/config/outgoing_mail.yml #{release_path}/config/outgoing_mail.yml"
     run "ln -nfs #{shared_path}/config/redis.yml #{release_path}/config/redis.yml"
     run "ln -nfs #{shared_path}/config/security.yml #{release_path}/config/security.yml"
-   run "ln -nfs #{shared_path}/config/logging.yml #{release_path}/config/logging.yml"
+    run "ln -nfs #{shared_path}/config/logging.yml #{release_path}/config/logging.yml"
 
   end
 
@@ -127,16 +126,16 @@ desc "Make sure local git is in sync with remote."
     sudo "touch #{current_path}/tmp/restart.txt"
     # On remote: /etc/init.d/canvas_init restart
     sudo "/etc/init.d/canvas_init restart"
- end
+  end
 
   desc "Tasks that run before create_symlink"
   task :before_create_symlink do
     copy_config
     compile_assets
-         clone_qtimigrationtool
+    clone_qtimigrationtool
   end
 
- desc "change permission to passenger_user "
+  desc "change permission to passenger_user "
   task :canvasuser_permission do
     sudo "mkdir -p #{current_path}/log"
     sudo "mkdir -p #{current_path}/tmp/pids"
@@ -145,24 +144,23 @@ desc "Make sure local git is in sync with remote."
     sudo "touch Gemfile.lock"
     sudo "chown -R #{passenger_user} #{current_path}/config/environment.rb"
     sudo "chown -R #{passenger_user} #{current_path}/log"
-        sudo "chown -R #{passenger_user} #{current_path}/tmp"
-        sudo "chown -R #{passenger_user} #{current_path}/public/assets"
-        sudo "chown -R  #{passenger_user} #{current_path}/public/stylesheets/compiled"
-        sudo "chown -R  #{passenger_user} #{current_path}/Gemfile.lock"
-        sudo "chown -R  #{passenger_user} #{current_path}/config.ru"
-        sudo "chown -R  #{passenger_user} #{current_path}"
+    sudo "chown -R #{passenger_user} #{current_path}/tmp"
+    sudo "chown -R #{passenger_user} #{current_path}/public/assets"
+    sudo "chown -R  #{passenger_user} #{current_path}/public/stylesheets/compiled"
+    sudo "chown -R  #{passenger_user} #{current_path}/Gemfile.lock"
+    sudo "chown -R  #{passenger_user} #{current_path}/config.ru"
+    sudo "chown -R  #{passenger_user} #{current_path}"
   end
 
- desc "Clone QTIMigrationTool"
+  desc "Clone QTIMigrationTool"
   task :clone_qtimigrationtool do
     run "cd #{latest_release}/vendor && git clone https://github.com/instructure/QTIMigrationTool.git QTIMigrationTool && chmod +x QTIMigrationTool/migrate.py"
-
   end
 
   desc "Tasks that run after create_symlink"
   task :after_create_symlink do
-        canvasuser_permission
- deploy.migrate unless is_hotfix?
+    canvasuser_permission
+    deploy.migrate unless is_hotfix?
     load_notifications unless is_hotfix?
   end
 
