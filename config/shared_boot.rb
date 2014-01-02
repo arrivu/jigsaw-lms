@@ -40,13 +40,13 @@ else
 end
 
 # RailsLTS configuration (doesn't apply to rails 3)
-#if Rails.version < "3.0"
-#  config.rails_lts_options = {
-#    disable_xml_parsing: true,
-#    # this is also taken care of below, since it defaults to false in rails3 as well
-#    escape_html_entities_in_json: true,
-#  }
-#end
+if Rails.version < "3.0"
+  config.rails_lts_options = {
+    disable_xml_parsing: true,
+    # this is also taken care of below, since it defaults to false in rails3 as well
+    escape_html_entities_in_json: true,
+  }
+end
 
 # Activate observers that should always be running
 config.active_record.observers = [:cacher, :stream_item_cache]
