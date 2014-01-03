@@ -939,12 +939,35 @@ define([
             errors[i] += "<br/>" + msg;
           }
         });
-      } else {
+      }
+      else {
         $.each(val, function(idx, msg) {
-          if(!errors.general) {
-            errors.general = msg;
-          } else {
-            errors.general += "<br/>" + msg;
+            var pseudo="";
+            var pseudo_user="";
+            $.each(data_errors, function(key, value) {
+                if(key == "pseudonym")
+                    pseudo = key;
+                else if(key == "user")
+                    pseudo_user = key;
+
+            });
+          if($('#pseudonym_unique_id').val() == '')
+          {
+              errors[i] ="The email field is required";
+          }
+          else if(!errors.general) {
+              if(pseudo_user!="user")
+                errors.general = msg;
+              else
+                  errors.general ="\t";
+
+          }
+          else {
+              if(pseudo=="pseudonym")
+                errors.general += "This email is already taken";
+              else
+                errors.general += "<br/>" + msg;
+
           }
         });
       }
@@ -988,6 +1011,7 @@ define([
   // Pops up a small box containing the given message.  The box is connected to the given form element, and will
   // go away when the element is selected.
   $.fn.errorBox = function(message, scroll) {
+      //alert(JSON.stringify(message));
     if(this.length) {
       var $obj = this,
           $oldBox = $obj.data('associated_error_box');

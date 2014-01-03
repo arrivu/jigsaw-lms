@@ -3,7 +3,7 @@ class CreateReferrerCoupon < ActiveRecord::Migration
 
   def self.up
     create_table :referrer_coupons do |t|
-      t.references :referral, :limit => 8
+      t.references :reference, :limit => 8
       t.references :coupon, :limit => 8
       t.references :referree, :limit => 8
       t.string :status

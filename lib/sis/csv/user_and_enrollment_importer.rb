@@ -39,7 +39,7 @@ module SIS
 
             begin
 
-              importer.add_user(row['user_id'], row['email'], row['first_name'], row['last_name'], row['email'], row['status'],  row['provider'], row['module_id'], row['password'], row['ssha_password'])
+              importer.add_user(row['user_id'], row['email'], row['first_name'], row['last_name'], row['email'], row['status'],  row['provider'],row['course_id'], row['module_ids'], row['password'], row['ssha_password'])
 
             rescue ImportError => e
               messages << "#{e}"

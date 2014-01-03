@@ -16,10 +16,6 @@ define [
       "click #referral_submit": "sendInvites"
 
 
-    afterRender: ->
-      editor = @$el.find("#referral_email_text")
-      editor.editorBox()
-
     sendInvites: ->
       @.$el.find('#invite_friends_error_box').empty() # Clear error box every time
       errored_users = []
@@ -35,7 +31,7 @@ define [
       if errored_users.length > 0
         @renderErrorView(errored_users)
       else
-        @$el.disableWhileLoading @model.save valid_emails: valid_emails,
+        @$el.disableWhileLoading @model.save(valid_emails: valid_emails,mail_subject:  $('#referral_email_subject').val() ,mail_text: tinyMCE.activeEditor.getContent() ),
           wait: true
           success: (model, response) ->
             response.map (reference) =>
@@ -84,6 +80,7 @@ define [
       json['li_reference'] = @li_reference
       json['go_reference'] = @go_reference
       json['gl_reference'] = @gl_reference
+      json['reward_description'] = $.parseJSON(ENV.COURSE_REWARD).reward.description
 
       json
 

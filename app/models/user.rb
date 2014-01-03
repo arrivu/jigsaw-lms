@@ -877,6 +877,7 @@ class User < ActiveRecord::Base
       self.communication_channels.each{|cc| cc.destroy }
       self.enrollments.each{|e| e.destroy }
       self.omniauth_authentications.each{|ee| ee.destroy }
+      self.user_module_enrollments.each{|u| u.destroy }
     end
   end
 

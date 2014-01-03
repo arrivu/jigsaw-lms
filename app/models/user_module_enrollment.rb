@@ -9,6 +9,8 @@ class UserModuleEnrollment < ActiveRecord::Base
   scope :active, where(:workflow_state => ACTIVE)
   scope :deleted, where(:workflow_state => DELETED)
 
-
-
+  def destroy
+    self.workflow_state = 'deleted'
+    self.save
+  end
 end

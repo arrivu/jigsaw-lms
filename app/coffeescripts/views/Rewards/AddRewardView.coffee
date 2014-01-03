@@ -15,6 +15,9 @@ define [
 
     className: 'validated-form-view form-horizontal bootstrap-form'
 
+    initialize: ->
+      tinymce.execCommand('mceRemoveControl',true,'email_text');
+
     afterRender: ->
       super
       @$el.dialog
@@ -33,6 +36,10 @@ define [
       timeField.date_field()
       editor = @$el.find(".rich_editor")
       editor.editorBox()
+      setTimeout (->
+        tinymce.execCommand "mceAddControl", true, "email_text"
+        editor.editorBox()
+      ), 0
       @$el.submit (e) =>
         @submit()
         return false
