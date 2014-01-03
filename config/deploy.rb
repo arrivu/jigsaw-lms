@@ -104,6 +104,7 @@ namespace :canvas do
     run "ln -nfs #{shared_path}/config/redis.yml #{release_path}/config/redis.yml"
     run "ln -nfs #{shared_path}/config/security.yml #{release_path}/config/security.yml"
     run "ln -nfs #{shared_path}/config/logging.yml #{release_path}/config/logging.yml"
+    run "ln -nfs #{shared_path}/config/omniauth.yml #{release_path}/config/omniauth.yml"
 
   end
 
