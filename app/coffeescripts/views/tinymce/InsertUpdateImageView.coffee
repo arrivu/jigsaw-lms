@@ -22,7 +22,7 @@ define [
 
     dialogOptions:
       width: 625
-      title: I18n.t 'titles.insert_edit_image', 'Insert FAQ'
+      title: I18n.t 'titles.insert_edit_image', 'Insert / Edit Image'
 
     initialize: (@editor, selectedNode) ->
       @$editor = $("##{@editor.id}")

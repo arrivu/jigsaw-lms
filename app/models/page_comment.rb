@@ -23,7 +23,7 @@ class PageComment < ActiveRecord::Base
   attr_accessible :message,:page_id,:page_type,:user_id
   belongs_to :wiki_pages
   scope :for_user, lambda { |user| where(:user_id => user) }
-
+  validates_presence_of :message
   def user_name
     self.user.name rescue t(:default_user_name, "Anonymous")
   end

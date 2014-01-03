@@ -1,0 +1,17 @@
+
+development:
+  facebook_key: "smtp.gmail.com"
+  facebook_secret: "587"
+  linkedin_key: "jigsawlms@gmail.com"
+  linkedin_secret: "Admin123$"
+  google_oauth2_key: "plain" # plain, login, or cram_md5
+  google_oauth2_secret: "localhost:3000"
+
+
+production:
+  facebook_key: "smtp.gmail.com"
+    facebook_secret: "587"
+    linkedin_key: "jigsawlms@gmail.com"
+    linkedin_secret: "Admin123$"
+    google_oauth2_key: "plain" # plain, login, or cram_md5
+    google_oauth2_secret: "localhost:3000"

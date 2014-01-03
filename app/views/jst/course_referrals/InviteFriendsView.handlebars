@@ -2,22 +2,19 @@
 <div id="invite_friends_error_box"></div>
 <div class="loader"></div>
 <div class="container">
-        <div class="span10">
+        <div class="span11">
+            <div class="alert alert-info span10" style="text-align: center;" >
+                {{reward_description}}
+            </div>
             <div class="span5">
                 <h5 style="width: 100%;font-weight: bold;color: #333333">Invite by Email </h5>
                      <textarea class="span5" cols="40" id="referral_referral_emails" name="referral[referral_emails]" rows="4" placeholder='student@example.com,firstlast@example.com'></textarea>
                 <h5 style="width: 100%;font-weight: bold;color: #333333">Email Subject </h5>
-                    <input class="span5" type="text" name="referral[email_subject]" value="{{ email_subject }}">
-                <h5 style="width: 100%;font-weight: bold;color: #333333">Email Message </h5>
-                    <textarea class="span5" cols="40" id="referral_email_text" name="referral[email_text]" rows="9">
-                        {{ email_text }}
-                    </textarea>
-
-                    <input class="btn btn-primary" id="referral_submit" name="commit" type="submit" value="Send Invites">
+                    <input class="span5" type="text"  id="referral_email_subject" name="referral[email_subject]" value="{{ email_subject }}">
 
             </div>
-            <div class="span3" style="margin: 0px 50px;">
-             <h5 style="margin:12px 3px;font-weight: bold;color: #333333">Your invite url to share<br> Paste it in your blog!</h5>
+            <div class="span5" style="margin: 0px 50px;">
+             <h5 style="margin:12px 3px;font-weight: bold;color: #333333">Your invite url to share Paste it in your blog!</h5>
 
                 <input type="text" name="email address" style="height:35px" value={{domain_url}}{{gl_reference}}>
                 <br>
@@ -25,23 +22,31 @@
                 <h5 style="font-weight: bold;color: #333333">Or</h5>
                 <h5 style="font-weight: bold;color: #333333">invite via social media </h5>
 
-                <div id="right-side" style="margin: 0 0 0; width: 227px;">
 
+<table><tr><td>
 
 <a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]= {{domain_url}}{{fb_reference}} &p[title]={{email_subject}}&p[summary]={{email_text}}" onclick="javascript:window.open(this.href,
-                    '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=500');return false;"class="btn button-sidebar-wide"><i class="icon-facebook-boxed"></i> Share on Facebook</a>
-
+                    '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=500');return false;"class="btn button-sidebar-wide" style="width: 165px;"><i class="icon-facebook-boxed"></i> Share on Facebook</a>
+</td><td>
  <a href="http://www.linkedin.com/shareArticle?mini=true&url={{domain_url}}{{li_reference}} &title= {{email_subject}} &summary= {{email_text}} "onclick="javascript:window.open(this.href,
-                     '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=500');return false;"class="btn button-sidebar-wide"><i class="icon-linkedin "></i> Share on LinkedIn</a>
-
+                     '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=500');return false;"class="btn button-sidebar-wide" style="width: 165px;"><i class="icon-linkedin "></i> Share on LinkedIn</a>
+</td>
+    <tr><td>
  <a href="http://plus.google.com/share?url= {{domain_url}}{{go_reference}}" onclick="javascript:window.open(this.href,
-              '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=500');return false;"class="btn button-sidebar-wide"><i class="icon-add"></i> Share on Google</a>
-
+              '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=500');return false;"class="btn button-sidebar-wide" style="width: 165px;"><i class="icon-add"></i> Share on Google</a>
+</td><td>
  <a href="http://twitter.com/intent/tweet?&url={{domain_url}}{{tw_reference}} &text= {{email_subject}} {{email_text}} {{domain_url}}{{tw_reference}}" onclick="javascript:window.open(this.href,
-                    '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=500');return false;" class="btn button-sidebar-wide"><i class="icon-twitter-boxed"></i> Share on Twitter</a>
-
+                    '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=500');return false;" class="btn button-sidebar-wide" style="width: 165px;"><i class="icon-twitter-boxed"></i> Share on Twitter</a>
+</td></tr></table>
                  </div>
-          </div>
+               <div class="span10">
+            <h5 style="width: 100%;font-weight: bold;color: #333333">Email Message </h5>
+            <textarea class="" cols="540" id="referral_email_text" name="referral[email_text]" rows="9" style="width:900px;height: 200px;">
+                {{ email_text }}
+            </textarea>
+
+            <input class="btn btn-primary" id="referral_submit" name="commit" type="submit" value="Send Invites">
+            </div>
         </div>
      </div>
 {{else}}

@@ -98,7 +98,8 @@ class ApplicationController < ActionController::Base
         :current_user_roles => @current_user.try(:roles),
         :AUTHENTICITY_TOKEN => form_authenticity_token,
         :files_domain => HostUrl.file_host(@domain_root_account || Account.default, request.host_with_port),
-        :FAQ_button_disable => @wiki_type == 'faq' ? true :false
+        :FAQ_button_disable => @wiki_type == 'faq' ? true :false,
+        :wistia_button_disable => wistia_plugin_disable
       }
       @js_env[:lolcalize] = true if ENV['LOLCALIZE']
     end
@@ -115,6 +116,14 @@ class ApplicationController < ActionController::Base
     @js_env
   end
   helper_method :js_env
+
+  def wistia_plugin_disable
+    if PluginSetting.count > 0
+     PluginSetting.find_by_name('wistia').disabled ? true : false
+    else
+     true
+    end
+  end
 
   protected
 

@@ -6,11 +6,13 @@ define [
   'compiled/views/course_referrals/InviteFriendsView'
   'compiled/models/Referral'
   'compiled/views/course_referrals/MyReferencesView'
-], ($, _, Backbone, template, InviteFriendsView,Referral,MyReferencesView) ->
+  'compiled/views/course_referrals/MyRewardsView'
+], ($, _, Backbone, template, InviteFriendsView,Referral,MyReferencesView,MyRewardsView) ->
   class CourseReferralsIndexView extends Backbone.View
     referrals = $.parseJSON(ENV.COURSE_REFERRAL)
     course_referral = new Referral referrals.referral unless referrals == null
     my_references =  $.parseJSON(ENV.MY_REFERENCES)
+    my_rewards = $.parseJSON(ENV.MY_REWARDS)
     course_reference_fb = $.parseJSON(ENV.COURSE_REFERENCE_FB)
     course_reference_tw = $.parseJSON(ENV.COURSE_REFERENCE_TW)
     course_reference_li = $.parseJSON(ENV.COURSE_REFERENCE_LI)
@@ -30,6 +32,7 @@ define [
       @$referralTabs.tabs()
       @renderInviteFriendsView()
       @renderMyReferencesView()
+      @renderMyRewardsView()
 
 
     renderInviteFriendsView: ->
@@ -52,6 +55,16 @@ define [
           invitation_sent_at : formatDate(new Date(reference_array.reference.created_at))
           status : reference_array.reference.status
         $("#references_table").prepend myReferencesView.render().el
+
+    renderMyRewardsView:->
+      my_rewards.map (reward) =>
+        myRewardsView = new MyRewardsView
+          name: reward.referrer_coupon.referree.name
+          email: reward.referrer_coupon.referree.email
+          enrolled_at: formatDate(new Date(reward.referrer_coupon.referree.updated_at))
+          reward_expiry_date: formatDate(new Date(reward.referrer_coupon.expiry_date))
+          reward_code: reward.referrer_coupon.coupon_code
+        $("#rewards_table").prepend myRewardsView.render().el
 
 
     forceTwoDigits = (val) ->

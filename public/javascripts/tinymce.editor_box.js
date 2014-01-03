@@ -124,9 +124,12 @@ define([
         instructure_buttons = instructure_buttons + ",instructure_external_button_clump";
       }
     }
+    if (!ENV.wistia_button_disable)
+    {
     INST.allowWistia = true
     if(INST && INST.allowWistia) {
         instructure_buttons = instructure_buttons + ",wistia";
+    }
     }
     if (ENV.FAQ_button_disable)
     {

@@ -32,8 +32,8 @@ class ReferralsController < ApplicationController
     @email_references = []
     @reward = Reward.find_by_metadata_and_metadata_type_and_status(@context.id.to_s, @context.class.name, Reward::STATUS_ACTIVE)
     @referral = Referral.find(params[:id])
-    @referral.email_subject = params[:email_subject]
-    @referral.email_text = params[:email_text]
+    @referral.email_subject = params[:mail_subject]
+    @referral.email_text = params[:mail_text]
     referral_emails = params[:valid_emails]
     referral_emails.each do |email|
       @email_references << @referral.references.build(provider: email)
@@ -117,7 +117,7 @@ class ReferralsController < ApplicationController
 
           @coupon2 = generate_coupon(@reward,@reference.id.to_s) #referrer coupon
 
-          ReferrerCoupon.find_or_create_by_referral_id_and_referree_id_and_coupon_id(@referral.id,@referree.id, @coupon2.id,
+          ReferrerCoupon.find_or_create_by_reference_id_and_referree_id_and_coupon_id(@reference.id,@referree.id, @coupon2.id,
                                                                                    status: ReferrerCoupon::STATUS_WAIT_FOR_ENROLL,expiry_date: @coupon2.expiration,
                                                                                    coupon_code: @coupon2.alpha_code,
                                                                                    expiry_date: @reward.referrer_expiry_date)
@@ -139,13 +139,16 @@ class ReferralsController < ApplicationController
     @my_rewards=[]
     @referrals = @current_pseudonym.referrals
     @referrals.each do |referral|
-       referral.referrer_coupons.each do |referrer_coupon|
-        @my_rewards << referrer_coupon
-       end
       referral.references.not_in_social.each do |reference|
       @references << reference
-        end
+      end
+      referral.references.each do |reference|
+      reference.referrer_coupons.active.each do |referrer_coupon|
+        @my_rewards << referrer_coupon
+      end
+      end
     end
+    js_env(MY_REWARDS: @my_rewards.to_json(:include => :referree))
     js_env(MY_REFERENCES: @references.to_json)
   end
 

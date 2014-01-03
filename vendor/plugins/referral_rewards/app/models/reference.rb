@@ -2,6 +2,7 @@ class Reference < ActiveRecord::Base
 
   belongs_to :referral
   has_many :referrees
+  has_many :referrer_coupons
 
   attr_accessible  :short_url_code, :provider, :status, :visit_count,:referral_id
 

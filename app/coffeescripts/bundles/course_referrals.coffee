@@ -12,6 +12,11 @@ require [
 
   courseReferralsIndexView.render()
 
+  $(document).ready ->
+    editor = $("#referral_email_text")
+    editor.editorBox()
+
+
 
 
 

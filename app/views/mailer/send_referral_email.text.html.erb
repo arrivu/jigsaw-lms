@@ -1,4 +1,10 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+</head>
 <body style="background-color: #EAEAEA;">
 
 <center>
@@ -20,13 +26,16 @@
                             font-family: 'Open Sans', 'Lucida Grande', 'Segoe UI', Arial, Verdana, 'Lucida Sans Unicode', Tahoma, 'Sans Serif';
                             border-collapse: collapse;">
 
-                      <%= @inner_html %>
+                      <%= @inner_html.html_safe %>
 
-                    </table>
 
-                    <a href="<%= @url %>"><%= t(:click_to_get_reward, "Click here to get your Reward") %></a>
 
-                  </td>
+                      <a href="<%= @url %>"><%= t(:click_to_get_reward, "Click here to get your Reward") %></a></p>
+
+                      </td>
+
+                      <p></table>
+
                   <td width="36"></td>
                 </tr>
                 <tr>

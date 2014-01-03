@@ -145,27 +145,28 @@
           <%= @context.restrict_enrollments_to_course_dates ? t('date_restricted', "Users can only participate in the course between these dates") : t('not_date_restricted', "These dates will not affect course availability") %>
         </div>
       </td>
-      <% if available_locales.size > 1 %>
-          </tr><tr>
-      <td class="form-label"><%= f.blabel :locale, :language, :en => "Language" %></td>
-      <td>
-        <div class="course_form">
-          <% no_language = t(:no_language_preference, "Not set (user-configurable, defaults to %{language})", :language => available_locales[infer_locale(:context => @context.account)]) %>
-          <%= f.select :locale, [[no_language, nil]] + available_locales.invert.sort, {:selected => @context.locale}, {:class => 'locale'} %>
-          <%= render :partial => 'shared/locale_warning' %>
-          <p> <%= mt :transifex_message, <<-TEXT, :transifex_url => "https://www.transifex.com/projects/p/canvas-lms/"
-                  Join the [Jigsaw LMS Translation Community](%{transifex_url})
-                  TEXT
-          %>
-          </p>
-        </div>
-        <span class="course_info locale"><%= @context.locale ? available_locales[@context.locale] : no_language %></span>
-        <div class="aside palign">
-          <%= t('language_overrides_preferences', "This will override any user/system language preferences. This is only recommended for foreign language courses") %>
-        </div>
-      </td>
-      <% end %>
-      </tr><tr>
+      <%# if available_locales.size > 1 %>
+    </tr>
+      <!--<tr>-->
+      <!--<td class="form-label"><%#= f.blabel :locale, :language, :en => "Language" %></td>-->
+      <!--<td>-->
+      <!--<div class="course_form">-->
+      <!--<%# no_language = t(:no_language_preference, "Not set (user-configurable, defaults to %{language})", :language => available_locales[infer_locale(:context => @context.account)]) %>-->
+      <!--<%#= f.select :locale, [[no_language, nil]] + available_locales.invert.sort, {:selected => @context.locale}, {:class => 'locale'} %>-->
+      <!--<%#= render :partial => 'shared/locale_warning' %>-->
+      <p> <%#= mt :transifex_message, <<-TEXT, :transifex_url => "https://www.transifex.com/projects/p/canvas-lms/"
+<!--Join the [Jigsaw LMS Translation Community](%{transifex_url})-->
+<!--TEXT-->
+            <!--%>
+        <!--</p>-->
+        <!--</div>-->
+        <!--<span class="course_info locale"><%#= @context.locale ? available_locales[@context.locale] : no_language %></span>-->
+        <!--<div class="aside palign">-->
+        <!--<%#= t('language_overrides_preferences', "This will override any user/system language preferences. This is only recommended for foreign language courses") %>-->
+        <!--</div>-->
+        <!--</td>-->
+        <%# end %>
+        <!--</tr>--><tr>
       <td class="form-label"><%= f.blabel :storage_quota_mb, :storage_quota, :en => "File Storage" %></td>
       <td>
           <span class="course_form">
