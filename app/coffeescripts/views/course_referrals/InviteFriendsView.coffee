@@ -31,7 +31,7 @@ define [
       if errored_users.length > 0
         @renderErrorView(errored_users)
       else
-        @$el.disableWhileLoading @model.save(valid_emails: valid_emails,mail_subject:  $('#referral_email_subject').val() ,mail_text: tinyMCE.activeEditor.getContent() ),
+        @$el.disableWhileLoading @model.save valid_emails: valid_emails,mail_subject:  $('#referral_email_subject').val() ,mail_text: tinyMCE.activeEditor.getContent() ,
           wait: true
           success: (model, response) ->
             response.map (reference) =>
@@ -40,12 +40,10 @@ define [
                 invitation_sent_at : formatDate(new Date(reference.reference.created_at))
                 status : reference.reference.status
               $("#references_table").prepend myReferencesView.render().el
-
-
             $.flashMessage 'Invitations sent'
             $('#referral_referral_emails').val('')
           error: (model, response) ->
-            $.flashMessage 'Error while sending invitations please contact admin'
+            $.flashMessage 'Error while sending invitations please contact admin.'
 
 
     renderErrorView:(errored_users) =>
@@ -80,7 +78,7 @@ define [
       json['li_reference'] = @li_reference
       json['go_reference'] = @go_reference
       json['gl_reference'] = @gl_reference
-      json['reward_description'] = $.parseJSON(ENV.COURSE_REWARD).reward.description
+      json['reward_description'] = $.parseJSON(ENV.COURSE_REWARD).reward.description unless $.parseJSON(ENV.COURSE_REWARD) == null
 
       json
 
