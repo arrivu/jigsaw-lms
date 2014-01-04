@@ -20,8 +20,10 @@ set :passenger_user,"canvasuser"
 ssh_options[:port] = 2002
 set :stages, ["staging", "production"]
 set :default_stage, "production"
-set :repository,    "git@github.com:m-narayan/jigsaw-lms.git"
+set :repository, "https://github.com/m-narayan/jigsaw-lms.git"   
+# "git@github.com:m-narayan/jigsaw-lms.git"
 set :scm,     :git
+#https://github.com/m-narayan/jigsaw-lms.git
 set :deploy_via,  :remote_cache
 set :branch,        "deploy"
 set :deploy_to,     "/var/deploy/capistrano/jigsaw"
