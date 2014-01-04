@@ -56,6 +56,7 @@ class ReferralsController < ApplicationController
       m.subject = referral.email_subject
       m.html_body = referral.email_text
       m.body = @domain_url+"#{email_reference.short_url_code}"
+      m.save!
       Mailer.send_later(:deliver_send_referral_email,m)
     end
   end
