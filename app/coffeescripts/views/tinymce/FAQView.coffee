@@ -26,25 +26,34 @@ define [
       @show()
 
     update: (event) =>
-       @editor.selection.moveToBookmark(@prevSelection)
-       if $(tinymce.activeEditor.getBody()).find('.accordion').length == 0
-         @$editor.editorBox 'insert_code', @generateAccordionHtml()
-       else
-         @AccordionHtmlWithoutMainDiv()
-       @editor.focus()
-       @close()
+      @editor.selection.moveToBookmark(@prevSelection)
+      if $(tinymce.activeEditor.getBody()).find('.accordion').length == 0
+        @$editor.editorBox 'insert_code', @generateAccordionHtml()
+        @close()
+      else
+        @AccordionHtmlWithoutMainDiv()
+        @close()
+
 
     generateAccordionHtml:  =>
+      if this.$("#txtQuestion").val() is "" and this.$("#txtAnswer").val() is ""
+        alert('textboxes are empty')
+        @editor.focus()
+      else
         htmlview  = '<div class="accordion">'
         htmlview += '<h3>' + @editor.dom.createHTML("a",{href: '#'},this.$('input[name=question]').val()) + '</h3>'
         htmlview += '<div>' + '<p>' + this.$('textarea[name=answer]').val() + '</p>' + '</div>'
         htmlview += '</div>'
 
-    AccordionHtmlWithoutMainDiv:  =>
-        $(tinymce.activeEditor.getBody()).find('.accordion').append("<h3>" + @editor.dom.createHTML("a",{href: '#'},
-          this.$('input[name=question]').val()) + "</h3>" + '<div>' + '<p>' + this.$('textarea[name=answer]').val()
-          + '</p>' + '</div>')
 
+    AccordionHtmlWithoutMainDiv:  =>
+      if this.$("#txtQuestion").val() is "" and this.$("#txtAnswer").val() is ""
+        alert('textboxes are empty')
+        @editor.focus()
+      else
+        $(tinymce.activeEditor.getBody()).find('.accordion').append("<h3>" + @editor.dom.createHTML("a",{href: '#'},
+        this.$('input[name=question]').val()) + "</h3>" + '<div>' + '<p>' + this.$('textarea[name=answer]').val()+'</p>'+'</div>')
+        @close()
 
 
 
