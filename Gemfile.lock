@@ -14,30 +14,6 @@ GIT
       rails
 
 GIT
-  remote: https://github.com/makandra/rails.git
-  revision: e86daf8ff727d5efc0040c876ba00c9444a5d915
-  ref: e86daf8ff727d5efc0040c876ba00c9444a5d915
-  branch: 2-3-lts
-  specs:
-    actionmailer (2.3.18)
-      actionpack (= 2.3.18)
-    actionpack (2.3.18)
-      activesupport (= 2.3.18)
-      rack (~> 1.1.0)
-    activerecord (2.3.18)
-      activesupport (= 2.3.18)
-    activeresource (2.3.18)
-      activesupport (= 2.3.18)
-    activesupport (2.3.18)
-    rails (2.3.18)
-      actionmailer (= 2.3.18)
-      actionpack (= 2.3.18)
-      activerecord (= 2.3.18)
-      activeresource (= 2.3.18)
-      activesupport (= 2.3.18)
-      rake (>= 0.8.3)
-
-GIT
   remote: https://github.com/regru/premailer.git
   revision: 08a73c70701f5d81bc4a5cf6c959a45ad94db88e
   ref: 08a73c70701f5d81bc4a5cf6c959a45ad94db88e
@@ -49,6 +25,16 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
+    actionmailer (2.3.18)
+      actionpack (= 2.3.18)
+    actionpack (2.3.18)
+      activesupport (= 2.3.18)
+      rack (~> 1.1.0)
+    activerecord (2.3.18)
+      activesupport (= 2.3.18)
+    activeresource (2.3.18)
+      activesupport (= 2.3.18)
+    activesupport (2.3.18)
     addressable (2.3.5)
     adobe_connect (1.0.0)
       activesupport (>= 2.3.17)
@@ -225,6 +211,13 @@ GEM
     rack (1.1.3)
     rack-test (0.6.2)
       rack (>= 1.0)
+    rails (2.3.18)
+      actionmailer (= 2.3.18)
+      actionpack (= 2.3.18)
+      activerecord (= 2.3.18)
+      activeresource (= 2.3.18)
+      activesupport (= 2.3.18)
+      rake (>= 0.8.3)
     rake (10.1.0)
     ratom-instructure (0.6.9)
       libxml-ruby (>= 1.1.2)
@@ -279,6 +272,7 @@ GEM
     soap4r-middleware (0.8.3)
       soap4r-ruby1.9 (= 2.0.0)
     soap4r-ruby1.9 (2.0.0)
+    sqlite3-ruby (1.3.2)
     statsd-ruby (1.0.0)
     subexec (0.0.4)
     test-unit (1.2.3)
@@ -379,7 +373,7 @@ DEPENDENCIES
   parallelized_specs (= 0.4.64)
   pg (= 0.15.0)
   rack (= 1.1.3)
-  rails!
+  rails (= 2.3.18)
   rake (= 10.1.0)
   ratom-instructure (= 0.6.9)
   rb-fchange
