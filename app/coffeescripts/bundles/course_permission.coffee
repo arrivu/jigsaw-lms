@@ -8,13 +8,11 @@ require [
   'compiled/views/course_module_permissions/ManageCourseModuleView'
 ], ($, _, ModulePermission, CourseModuleCollection, CourseModulePermissionIndexView, ManageCourseModuleView) ->
 
-  course_modules = new CourseModuleCollection ENV.COURSE_MODULES_FOR_ENROLLMENT
-
-#  user_modules = new CourseModuleCollection ENV.ENROLLED_COURSE_USERS
+  course_modules = new CourseModuleCollection ENV.COURSE_MODULE_GROUPS_FOR_ENROLLMENT
 
   enrolled_users = ENV.ENROLLED_COURSE_USERS
 
-  selected_module_users=ENV.MODULE_PERMISSION_USER_IDS
+  selected_module_users=ENV.MODULE_GROUP_PERMISSION_USER_IDS
 
   courseModulePermissionIndexView = new CourseModulePermissionIndexView
     el: '#content'

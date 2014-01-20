@@ -59,22 +59,29 @@ define([
         return indent;
       },
 
-      updateModulePositions: function() {
-        var ids = []
-        $("#context_modules .context_module").each(function() {
-          ids.push($(this).attr('id').substring('context_module_'.length));
-        });
-        var url = $(".reorder_modules_url").attr('href');
-        $("#context_modules").loadingImage();
-        $.ajaxJSON(url, 'POST', {order: ids.join(",")}, function(data) {
-          $("#context_modules").loadingImage('remove');
-          for(var idx in data) {
-            var module = data[idx];
-            $("#context_module_" + module.context_module.id).triggerHandler('update', module);
-          }
-        }, function(data) {
-          $("#context_modules").loadingImage('remove');
-        });
+      updateModulePositions: function(event, ui) {
+          var $module_group = ui.item.parents(".context_module_group");
+          var url = $module_group.find(".reorder_module_group_items_url").attr('href');
+          var module_items = [];
+          $module_group.find(".context_module").each(function() {
+              module_items.push($(this).getTemplateData({textValues: ['id']}).id);
+          });
+          $module_group.find(".context_module.ui-sortable").sortable('disable');
+          $module_group.disableWhileLoading(
+              $.ajaxJSON(url, 'POST', {order: module_items.join(",")}, function(data) {
+                  for(var idx in data) {
+                      var module = data[idx];
+                      $("#context_module_" + module.context_module.id).triggerHandler('update', module);
+                  }
+                  $module_group.find(".context_module.ui-sortable").sortable('enable');
+              }, function(data) {
+                  $module_group.find(".context_module").loadingImage('remove');
+                  $module_group.find(".context_module").errorBox(I18n.t('errors.reorder', 'Reorder failed, please try again.'));
+              })
+          );
+
+
+
       },
 
       updateModuleItemPositions: function(event, ui) {
@@ -102,6 +109,26 @@ define([
           })
         );
       },
+
+    updateModuleGroupPositions: function(event, ui) {
+        var ids = []
+        $("#context_module_groups .context_module_group").each(function() {
+            ids.push($(this).attr('id').substring('context_module_group_'.length));
+        });
+        var url = $(".reorder_module_groups_url").attr('href');
+        $("#context_module_groups").loadingImage();
+        $.ajaxJSON(url, 'POST', {order: ids.join(",")}, function(data) {
+            $("#context_module_groups").loadingImage('remove');
+            for(var idx in data) {
+                var module_group = data[idx];
+                $("#context_module_group_" + module.module_group.id).triggerHandler('update', module_group);
+            }
+        }, function(data) {
+            $("#context_module_groups").loadingImage('remove');
+        });
+
+    },
+
 
       refreshProgressions: function(show_links) {
         if (ENV.NO_MODULE_PROGRESSIONS) return;
@@ -244,7 +271,48 @@ define([
           $(this).text(content_tag.title);
         });
       },
-      editModule: function($module) {
+
+//   module group
+        editModuleGroup: function($module,event) {
+          var $form = $("#add_context_module_group_form");
+          $form.data('current_module', $module);
+          var data = $module.getTemplateData({textValues: ['name']});
+          $form.fillFormData(data, {object_name: 'context_module_group'});
+          var isNew = false;
+          if($module.attr('id') == 'context_module_new') {
+              isNew = true;
+              $form.attr('action', $form.find(".add_context_module_group_url").attr('href'));
+              $form.attr('method', 'POST');
+               $form.find(".submit_button").text("Add Module Group");
+          } else {
+              $form.attr('action', event.target.href);
+              $form.attr('method', 'PUT');
+              $form.find(".submit_button").text("Update Module Group");
+          }
+
+          $module.fadeIn('fast', function() {
+          });
+          $module.addClass('dont_remove');
+          $form.find(".module_group_name").toggleClass('lonely_entry', isNew);
+          $form.dialog({
+              autoOpen: false,
+              modal: true,
+              width: 400,
+              close: function() {
+                  modules.hideEditModuleGroup(true);
+              }
+          }).fixDialogButtons().dialog('option', {title: (isNew ? "Add Module Group" :  "Edit Module Group"), width: (324)}).dialog('open'); //show();
+          $module.removeClass('dont_remove');
+          $form.find(":text:visible:first").focus().select();
+      },
+    hideEditModuleGroup: function(remove) {
+        $("#add_context_module_group_form").dialog('close');
+    },
+
+//   module group end
+
+
+      editModule: function($module,$module_group_id) {
         var $form = $("#add_context_module_form");
         $form.data('current_module', $module);
         var data = $module.getTemplateData({textValues: ['name', 'unlock_at', 'require_sequential_progress']});
@@ -252,11 +320,13 @@ define([
         var isNew = false;
         if($module.attr('id') == 'context_module_new') {
           isNew = true;
+          $form.find('#context_module_context_module_group_id').val($module_group_id);
           $form.attr('action', $form.find(".add_context_module_url").attr('href'));
           $form.find(".completion_entry").hide();
           $form.attr('method', 'POST');
           $form.find(".submit_button").text(I18n.t('buttons.add', "Add Module"));
         } else {
+          $form.find('#context_module_context_module_group_id').val($module_group_id);
           $form.attr('action', $module.find(".edit_module_link").attr('href'));
           $form.find(".completion_entry").show();
           $form.attr('method', 'PUT');
@@ -459,11 +529,20 @@ define([
         placeholder: 'context_module_placeholder',
         forcePlaceholderSize: true,
         axis: 'y',
-        containment: "#context_modules"
-      }
+        containment: "#context_module_groups"
+      } ,
+    sortable_module_group_options: {
+        connectWith: '.context_module_group_items',
+        handle: '.reorder_module_link',
+        helper: 'clone',
+        placeholder: 'context_module_group_placeholder',
+        forcePlaceholderSize: true,
+        axis: 'y',
+        containment: "#context_module_groups"
+    }
     };
   })();
-  
+
 
   modules.initModuleManagement = function() {
     // Create the context modules backbone view to manage the publish button. 
@@ -702,6 +781,19 @@ define([
         }
       });
     });
+      $(".delete_module_group_link").live('click', function(event) {
+          event.preventDefault();
+          $(this).parents(".context_module_group").confirmDelete({
+              url: $(this).attr('href'),
+              message:  "Are you sure you want to delete this module group?",
+              success: function(data) {
+                  $(this).remove();
+                  $(this).slideUp(function() {
+                      $(this).remove();
+                  });
+              }
+          });
+      });
     $(".outdent_item_link,.indent_item_link").live('click', function(event) {
       event.preventDefault();
       var do_indent = $(this).hasClass('indent_item_link');
@@ -775,20 +867,45 @@ define([
 
     $(".add_module_link").live('click', function(event) {
       event.preventDefault();
+      var $module_group_id = $(this).closest(".context_module_group").data("id");
       var $module = $("#context_module_blank").clone(true).attr('id', 'context_module_new');
-      $("#context_modules").append($module);
+        $(this).closest("#context_modules").find('.context_module_group_items').append($module);
         var opts = modules.sortable_module_options;
         opts['update'] = modules.updateModuleItemPositions;
         $module.find(".context_module_items").sortable(opts);
         $("#context_modules.ui-sortable").sortable('refresh');
+        $("#context_module_groups.ui-sortable").sortable('refresh');
         $("#context_modules .context_module .context_module_items.ui-sortable").each(function() {
           $(this).sortable('refresh');
           $(this).sortable('option', 'connectWith', '.context_module_items');
         });
-      modules.editModule($module);
+      modules.editModule($module,$module_group_id);
     });
 
-    $(".add_module_item_link").live('click', function(event) {
+    $(".edit_module_group_link").live('click', function(event) {
+        current_event = event
+      event.preventDefault();
+      modules.editModuleGroup($(this).parents(".context_module_group"),current_event);
+    });
+
+
+    $(".add_module_group_link").live('click', function(event) {
+      event.preventDefault();
+      var $module = $(".context_module_group_blank").clone(true).attr('id', 'context_module_new');
+        var opts = modules.sortable_module_group_options;
+        opts['update'] = modules.updateModuleGroupPositions;
+        $module.find(".context_modules").sortable(opts);
+        $("#context_module_groups.ui-sortable").sortable('refresh');
+        $("#context_module_groups .context_module_group .context_module.ui-sortable").each(function() {
+            $(this).sortable('refresh');
+            $(this).sortable('option', 'connectWith', '.context_module');
+        });
+      modules.editModuleGroup($module);
+      $("#context_module_group").append($module);
+    });
+
+
+      $(".add_module_item_link").live('click', function(event) {
       event.preventDefault();
       var $module = $(this).closest(".context_module");
       if($module.hasClass('collapsed_module')) {
@@ -899,6 +1016,7 @@ define([
       $("#context_modules .context_module_items").each(function() {
         $items.push($(this));
       });
+
       var next = function() {
         if($items.length > 0) {
           var $item = $items.shift();
@@ -907,18 +1025,44 @@ define([
           $item.sortable(opts);
           setTimeout(next, 10);
         }
+
       };
+
       next();
-      $("#context_modules").sortable({
-        handle: '.reorder_module_link',
+
+        var $module_items = [];
+        $("#context_modules .context_module_group_items").each(function() {
+            $module_items.push($(this));
+        });
+
+
+        var add_sortable_module_next = function() {
+        if($module_items.length > 0) {
+            var $module_item = $module_items.shift();
+            var module_opts = modules.sortable_module_group_options;
+            module_opts['update'] = modules.updateModulePositions;
+            $module_item.sortable(module_opts);
+            setTimeout(add_sortable_module_next, 10);
+        }
+        };
+
+      add_sortable_module_next();
+      $("#context_module_groups").sortable({
+        handle: '.reorder_module_group_link',
         helper: 'clone',
-        containment: '#context_modules_sortable_container',
+        containment: '#context_modules_groups_sortable_container',
         axis: 'y',
-        update: modules.updateModulePositions
+        update: modules.updateModuleGroupPositions
       });
+
+
       modules.refreshModuleList();
       modules.refreshed = true;
     }, 1000);
+  $("#add_context_module_group_form .cancel_button").click(function(event) {
+      modules.hideEditModuleGroup(true);
+  });
+
   }
 
   $(document).ready(function() {
@@ -1011,11 +1155,11 @@ define([
     if($("#context_modules").hasClass('editable')) {
       setTimeout(modules.initModuleManagement, 1000);
     }
-    
+
     modules.updateProgressions();
     modules.refreshProgressions();
     modules.updateAssignmentData();
-    
+
     $(".context_module").find(".expand_module_link,.collapse_module_link").bind('click', function(event, goSlow) {
       event.preventDefault();
       var expandCallback = null;
@@ -1113,7 +1257,7 @@ define([
         var $module = $(this);
         var moduleData = $module.find(".header").getTemplateData({textValues: ['id', 'name']});
         var $row = $("#student_progression_dialog .module_" + moduleData.id);
-        
+
         moduleData.progress = $studentWithProgressions.find(".progression_" + moduleData.id + ":first").getTemplateData({textValues: ['workflow_state']}).workflow_state;
         moduleData.progress = moduleData.progress || "no information";
         var type = "nothing";
@@ -1196,12 +1340,12 @@ define([
         var $module = $(this);
         var moduleData = $module.find(".header").getTemplateData({textValues: ['id', 'name']});
         var $template = $dialog.find(".module.blank:first").clone(true).removeClass('blank');
-        
+
         $template.addClass('module_' + moduleData.id);
         $template.fillTemplateData({data: moduleData});
         $dialog.find(".side_tabs_content tbody").append($template.show());
       });
-  
+
       $("#student_progression_dialog").dialog({
         width: 800,
         open: function() {
@@ -1248,8 +1392,8 @@ define([
       $("#context_module_" + collapsedModules[idx]).addClass('collapsed_module');
     }
     var foundModules = [];
-    var $contextModules = $("#context_modules .context_module");
-    if (!$contextModules.length) {
+    var $contextModules = $("#context_modules");
+    if (!$("#context_modules_sortable_container").is(":visible")) {
       $('#no_context_modules_message').show();
     }
     $contextModules.each(function() {

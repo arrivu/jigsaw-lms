@@ -326,6 +326,22 @@ class PseudonymsController < ApplicationController
     end
   end
 
+ def  update_favourite_course
+   return unless get_user
+   return unless @user == @current_user || authorized_action(@user, @current_user, :manage_logins)
+   @pseudonym = Pseudonym.active.find(params[:pseudonym_id])
+   if params[:status] == 'selected'
+      @pseudonym.settings[:favourite_course_id] = params[:favourite_course_id]
+   elsif params[:status] == 'deselected'
+     @pseudonym.settings[:favourite_course_id] = nil
+     end
+   if @pseudonym.save!
+     respond_to do |format|
+       format.json { render :json => @pseudonym }
+     end
+   end
+ end
+
   protected
   def context_is_root_account?
     if @context.root_account?

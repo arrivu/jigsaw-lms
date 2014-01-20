@@ -19,7 +19,7 @@
 class Pseudonym < ActiveRecord::Base
   include Workflow
 
-  attr_accessible :user, :account, :password, :password_confirmation, :path, :path_type, :password_auto_generated, :unique_id
+  attr_accessible :user, :account, :password, :password_confirmation, :path, :path_type, :password_auto_generated, :unique_id,:settings
 
   has_many :session_persistence_tokens
   belongs_to :account
@@ -51,6 +51,58 @@ class Pseudonym < ActiveRecord::Base
   are_sis_sticky :unique_id
 
   validates_each :password, {:if => :require_password?}, &Canvas::PasswordPolicy.method("validate")
+  serialize :settings, Hash
+
+  cattr_accessor :pseudonym_settings_options
+  self.pseudonym_settings_options = {}
+
+  def self.add_setting(setting, opts=nil)
+    self.pseudonym_settings_options[setting.to_sym] = opts || {}
+    if (opts && opts[:boolean] && opts.has_key?(:default))
+      if opts[:default]
+        self.class_eval "def #{setting}?; settings[:#{setting}] != false; end"
+      else
+        self.class_eval "def #{setting}?; !!settings[:#{setting}]; end"
+      end
+    end
+  end
+
+  add_setting :favourite_course_id
+
+
+  def settings=(hash)
+    if hash.is_a?(Hash)
+      hash.each do |key, val|
+        if pseudonym_settings_options && pseudonym_settings_options[key.to_sym]
+          opts = pseudonym_settings_options[key.to_sym]
+         if opts[:boolean]
+            settings[key.to_sym] = (val == true || val == 'true' || val == '1' || val == 'on')
+          elsif opts[:hash]
+            new_hash = {}
+            if val.is_a?(Hash)
+              val.each do |inner_key, inner_val|
+                if opts[:values].include?(inner_key.to_sym)
+                  new_hash[inner_key.to_sym] = inner_val.to_s
+                end
+              end
+            end
+            settings[key.to_sym] = new_hash.empty? ? nil : new_hash
+          else
+            settings[key.to_sym] = val.to_s
+          end
+        end
+      end
+    end
+    settings
+  end
+
+  def settings
+    result = self.read_attribute(:settings)
+    return result if result
+    return write_attribute(:settings, {}) unless frozen?
+    {}.freeze
+  end
+
   acts_as_authentic do |config|
     config.validates_format_of_login_field_options = {:with => /\A\w[\w\.\+\-_'@ =]*\z/}
     config.login_field :unique_id

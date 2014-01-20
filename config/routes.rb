@@ -416,7 +416,13 @@ FakeRails3Routes.draw do
     match 'student_view' => 'courses#leave_student_view', :as => :student_view, :via => :delete
     match 'test_student' => 'courses#reset_test_student', :as => :test_student, :via => :delete
     match 'content_migrations' => 'content_migrations#index', :as => :content_migrations, :via => :get
-    resources :user_module_enrollments,:path => :permissions
+    resources :user_module_group_enrollments,:path => :permissions
+    resources :context_module_groups,:path => :module_groups do
+      match 'reorder' => 'context_module_groups#reorder_items', :as => :reorder, :via => :post
+      collection do
+        post :reorder
+      end
+    end
   end
 
   match 'quiz_statistics/:quiz_statistics_id/files/:file_id/download' => 'files#show', :as => :quiz_statistics_download, :download => '1'
@@ -667,7 +673,11 @@ FakeRails3Routes.draw do
       resources :rubric_assessments, :path => :assessments
     end
 
-    resources :pseudonyms, :except => ["index"]
+    resources :pseudonyms, :except => ["index"] do
+      member do
+        put :update_favourite_course
+      end
+    end
     resources :question_banks, :only => [:index]
     match 'assignments_needing_grading' => 'users#assignments_needing_grading', :as => :assignments_needing_grading
     match 'assignments_needing_submitting' => 'users#assignments_needing_submitting', :as => :assignments_needing_submitting
@@ -1015,6 +1025,15 @@ FakeRails3Routes.draw do
         post "#{context}s/:#{context}_id/rewards", :action => :create, :path_name => "#{context}_rewards_create"
         put "#{context}s/:#{context}_id/rewards/:reward_id", :action => :update, :path_name => "#{context}_rewards_update"
         delete "#{context}s/:#{context}_id/rewards/:reward_id", :action => :destroy, :path_name => "#{context}_rewards_delete"
+      end
+      et_routes("course")
+      et_routes("account")
+    end
+
+    scope(:controller => :referrals) do
+      def et_routes(context)
+        get "#{context}s/:#{context}_id/referrees", :action => :get_referrees, :path_name => "#{context}_referrees"
+        post "#{context}s/:#{context}_id/referrees", :action => :update_referrees, :path_name => "#{context}_update_referrees"
       end
       et_routes("course")
       et_routes("account")

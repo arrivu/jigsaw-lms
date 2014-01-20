@@ -17,6 +17,7 @@
 #
 
 class ContextModule < ActiveRecord::Base
+  cattr_accessor :context_module_group_id
   include Workflow
   include SearchTermHelper
   attr_accessible :context, :name, :unlock_at, :require_sequential_progress, :completion_requirements, :prerequisites
@@ -24,7 +25,8 @@ class ContextModule < ActiveRecord::Base
   belongs_to :cloned_item
   has_many :context_module_progressions, :dependent => :destroy
   has_many :content_tags, :dependent => :destroy, :order => 'content_tags.position, content_tags.title'
-  has_many :user_module_enrollments , :dependent => :destroy
+  has_many :user_module_group_enrollments , :dependent => :destroy
+  has_one :context_module_group_association
   acts_as_list :scope => :context
   
   serialize :prerequisites
@@ -149,7 +151,7 @@ class ContextModule < ActiveRecord::Base
   
   def available_for?(user, opts={})
     return true if self.active? && !self.to_be_unlocked && self.prerequisites.blank? && !self.require_sequential_progress &&
-        UserModuleEnrollment.find_by_context_module_id_and_user_id_and_workflow_state(self.id,user.id,UserModuleEnrollment::ACTIVE)
+        UserModuleGroupEnrollment.find_by_context_module_group_id_and_user_id_and_workflow_state(self.context_module_group_association.try(:context_module_group_id),user.id,UserModuleGroupEnrollment::ACTIVE)
     if self.grants_right?(user, nil, :update)
      return true
     elsif !self.active?
@@ -602,7 +604,7 @@ class ContextModule < ActiveRecord::Base
   end
 
   def check_for_user_enrollment(user,progression)
-   enrollment = UserModuleEnrollment.find_by_context_module_id_and_user_id_and_workflow_state(self.id,user.id,UserModuleEnrollment::ACTIVE)
+   enrollment = UserModuleGroupEnrollment.find_by_context_module_group_id_and_user_id_and_workflow_state(self.context_module_group_association.try(:context_module_group_id),user.id,UserModuleGroupEnrollment::ACTIVE)
    if enrollment
      progression
    else

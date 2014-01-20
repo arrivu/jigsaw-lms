@@ -1134,6 +1134,8 @@ class CoursesController < ApplicationController
         @events.concat @context.assignments.active.to_a
         @undated_events = @events.select {|e| e.start_at == nil}
         @dates = (@events.select {|e| e.start_at != nil}).map {|e| e.start_at.to_date}.uniq.sort.sort
+        when 'announcements_discussion'
+          redirect_to course_discussion_topics_url(@context,:course_home_view => true)
       else
         @active_tab = "home"
         if @context.grants_right?(@current_user, session, :manage_groups)

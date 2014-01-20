@@ -320,7 +320,7 @@ define([
             datagrid.moveRight();
           }
         } else if (event.keyString == 'esc') { //keyCode == 27) {
-          // This makes it so when you press escape, the gricell gets focus back, 
+          // This makes it so when you press escape, the gricell gets focus back,
           // so JAWS doesn't think we're "not in a table" 
           // First get a reference to the parent gridcell, we need to do it first because datagrid.blur(); will remove $(this) from the DOM
           var $gridcell = $(this).parents("[role='gridcell']");

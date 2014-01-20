@@ -13,7 +13,11 @@ define [
 
     template: template
 
-    el: '#content'
+    unless ENV.home_page_announcement?
+      IndexView::el = "#content"
+    else
+      IndexView::el = "#announcements_dialog"
+
 
     events:
       'change #onlyUnread, #onlyGraded, #searchTerm' : 'handleFilterChange'

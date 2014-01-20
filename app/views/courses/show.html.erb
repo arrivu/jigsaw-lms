@@ -77,6 +77,9 @@
   when 'syllabus'
     js_bundle :syllabus
     jammit_css :tinymce
+  when 'announcements_discussion'
+    js_bundle :discussion_topics_index
+    jammit_css :discussions_list,:token_input
   else
     js_bundle :dashboard
   end
@@ -204,6 +207,7 @@ $(document).ready(function() {
         <option value="modules" <%= 'selected' if @context.default_view == 'modules' %>><%= t('options.modules', %{the Course Modules/Sections}) %></option>
         <option value="assignments" <%= 'selected' if @context.default_view == 'assignments' %>><%= t('options.assignments', %{the Assignment List}) %></option>
         <option value="syllabus" <%= 'selected' if @context.default_view == 'syllabus' %>><%= t('options.syllabus', %{the Assignments with Syllabus}) %></option>
+        <option value="announcements_discussion" <%= 'selected' if @context.default_view == 'announcements_discussion' %>><%= t('options.announcement_with_discussiond', %{the Announcement with Discussion}) %></option>
       </select>
     </p>
     <div class="select_details ui-state-highlight ui-corner-all" style="display: none; padding: 1em; font-size: 12px;">
@@ -225,6 +229,9 @@ This layout is probably best for courses that aren't based on a specific schedul
       <div class="syllabus_details options_details">
         <%= mt 'details.syllabus', "The **syllabus view** lets you write up a description of course expectations or introduce the course with links, images, etc. and then also shows a calendar view of all assignments and course events." %>
       </div>
+      <div class="announcements_discussion_details options_details">
+        <%= mt 'details.announcements_discussion', "The **announcements_discussion** lets participants see the most recent announcements and discussion of this particular course" %>
+      </div>
     </div>
     <div class="button-container">
       <button type="submit" class="btn"><%= t('buttons.update_layout', %{Update Layout}) %></button>
@@ -241,7 +248,7 @@ This layout is probably best for courses that aren't based on a specific schedul
           <a href="<%= context_url(@context, :context_details_url) %>" class="edit_course_home_content_link"><%= t('links.change_layout', %{Change Home Page Layout}) %></a>
         <% end %>
         <% if can_do(@context, @current_user, :manage_content) && @course_home_view != 'feed' %>
-          | 
+          |
         <% end %>
         <% if @course_home_view != 'feed' %>
           <a href="<%= context_url(@context, :context_url, :view => 'feed') %>"><%= t('links.course_stream', %{See Course Stream}) %></a>
@@ -257,6 +264,8 @@ This layout is probably best for courses that aren't based on a specific schedul
     <%= render :partial => 'assignments/assignments_list_content', :locals => {:course_home => true} %>
   <% elsif @course_home_view == 'syllabus' %>
     <%= render :partial => 'assignments/syllabus_content', :locals => {:course_home => true} %>
+  <% elsif @course_home_view == 'announcements_discussion' %>
+
   <% else %>
     <%= render :partial => 'shared/dashboard_messages' %>
     <%= render :partial => 'shared/recent_activity' %>

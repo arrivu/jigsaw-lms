@@ -1,4 +1,6 @@
+<%= javascript_include_tag('favourite_course') %>
 <li class="customListItem" data-id="<%= menu_course[:id] %>">
+  <img alt="Star-off" style ="margin-left: 184px" class="star" id="star-image<%= menu_course[:id] %>" onclick="changeImage(event,<%=menu_course[:id]%>, <%=@current_user.id%>,<%= @current_pseudonym.id %>)" src= <%=  @current_pseudonym.settings[:favourite_course_id].to_i == menu_course[:id] ? "/images/messages/star-lit.png" : "/images/messages/star.png" %>  />
   <a href="<%= menu_course[:href] %>">
     <span class="name ellipsis" title="<%= menu_course[:longName] %>"><%= menu_course[:shortName] %></span>
     <% if defined? menu_course[:term] %>

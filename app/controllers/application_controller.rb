@@ -99,7 +99,7 @@ class ApplicationController < ActionController::Base
         :AUTHENTICITY_TOKEN => form_authenticity_token,
         :files_domain => HostUrl.file_host(@domain_root_account || Account.default, request.host_with_port),
         :FAQ_button_disable => @wiki_type == 'faq' ? true :false,
-        :wistia_button_disable => wistia_plugin_disable
+        :Wistia_Plugin_disable => check_wistia_status
       }
       @js_env[:lolcalize] = true if ENV['LOLCALIZE']
     end
@@ -117,11 +117,12 @@ class ApplicationController < ActionController::Base
   end
   helper_method :js_env
 
-  def wistia_plugin_disable
-    if PluginSetting.count > 0
-     PluginSetting.find_by_name('wistia').disabled ? true : false
+  def check_wistia_status
+    wistia_plugin = PluginSetting.find_by_name('wistia')
+    if wistia_plugin.nil?
+      true
     else
-     true
+      wistia_plugin.disabled ? true : false
     end
   end
 

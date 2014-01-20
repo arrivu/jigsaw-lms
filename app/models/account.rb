@@ -25,6 +25,7 @@ class Account < ActiveRecord::Base
     :default_user_storage_quota_mb, :default_group_storage_quota_mb
 
   include Workflow
+  has_many :rewards
   belongs_to :parent_account, :class_name => 'Account'
   belongs_to :root_account, :class_name => 'Account'
   authenticates_many :pseudonym_sessions

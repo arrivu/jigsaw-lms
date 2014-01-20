@@ -226,9 +226,9 @@ class DiscussionTopicsController < ApplicationController
                     change_settings: user_can_edit_course_settings?
                 },
                 discussionTagLists: @context.owned_tags.map(&:attributes).to_json,
-                TagWithDiscussionIds: @tag_topic_ids}
-
-
+                TagWithDiscussionIds: @tag_topic_ids,
+                home_page_announcement: params[:course_home_view] ,
+                change_home_link_url: context_url(@context, :context_url)}
         append_sis_data(hash)
 
         js_env(hash)

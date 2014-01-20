@@ -1,3 +1,6 @@
+<%
+   editable ||= can_do(@context, @current_user, :manage_grades) || can_do(@context, @current_user, :manage_content)
+%>
 <% course_home ||= false %>
 <% js_env :COLLAPSED_MODULES => @collapsed_modules %>
 <% js_env :CAN_MANAGE_MODULES  => can_do(@context, @current_user, :manage_grades) || can_do(@context, @current_user, :manage_content) %>
@@ -19,8 +22,8 @@
   <% if can_do(@context, @current_user, :manage_content) %>
     <div class="context-modules-main-toolbar">
       <button class="btn btn-small module_progressions_link"><%= t('links.student_progress', 'View Progress') %></button>
-      <button class="btn btn-small btn-primary add_module_link"><%= t('#context_modules.buttons.add_module', 'Create a Module') %></button>
-      <%= link_to "Module Permissions" ,course_user_module_enrollments_path(@context) ,:class => "btn btn-small btn-primary" %>
+      <button class="btn btn-small btn-primary add_module_group_link"><%= t('#context_modules.buttons.add_module', 'Create a Module Group') %></button>
+      <%= link_to "Module Permissions" ,course_user_module_group_enrollments_path(@context) ,:class => "btn btn-small btn-primary" %>
     </div>
   <% end %>
 </div>
@@ -55,21 +58,46 @@ TEXT
    {:key => t('keycodes.previous_module_item', 'Down'), :description => t('keycode_descriptions.previous_module_item', 'Select previous module or module item')},
    {:key => t('keycodes.toggle_module_dragging', 'Space'), :description => t('keycode_descriptions.toggle_module_dragging', 'Select item to begin dragging, or drop previously selected item')}
 ]) %>
-<div id="context_modules_sortable_container">
-  <div id="context_modules" tabindex="0" aria-label="<%= t('headings.course_modules', %{Course Modules}) %>" class="<%= 'editable' if can_do(@context, @current_user, :manage_content) %>">
-    <% editable = can_do(@context, @current_user, :manage_grades) || can_do(@context, @current_user, :manage_content) %>
-    <% cache([@context.cache_key, editable, 'all_context_modules', collection_cache_key(@modules)].join('/')) do %>
-      <% ContextModule.send(:preload_associations, @modules, [:context_module_progressions, {:content_tags => :content}]) %>
-      <% @modules.each do |m| %>
-        <%= render :partial => 'context_modules/context_module', :object => m, :locals => {:editable => editable } %>
-      <% end %>
-    <% end %>
-  </div>
-</div>
+        <div id="context_modules_groups_sortable_container">
+         <div id="context_module_groups">
+            <% @module_groups ||= @context.context_module_groups  %>
+            <% @module_groups.each do |context_module_group| %>
+
+                <%= render :partial => 'context_modules/context_module_groups', :object => nil, :locals => {:context_module_group => context_module_group } %>
+
+            <% end %>
+
+         </div>
+        </div>
+<%= render :partial => 'context_modules/context_module_groups', :object => nil, :locals => {:context_module_group => nil } %>
 <%= render :partial => 'context_modules/context_module', :object => nil %>
 <%= render :partial => 'context_modules/module_item', :object => nil %>
 <% if can_do(@context, @current_user, :manage_content) %>
-  <% form_for :context_module, :url => context_url(@context, :context_context_modules_url), :html => {:id => "add_context_module_form", :style => "display: none;"} do |f| %>
+
+    <% form_for :context_module_group, :url => context_url(@context, :context_context_module_groups_url), :html => {:id => "add_context_module_group_form", :style => "display: none;"} do |f| %>
+        <table class="formtable">
+          <tr>
+            <td colspan="2">
+              <div class="module_group_name">
+                <%= f.text_field :name, :placeholder => t('module_name', %{Module Group Name}), :class => 'input-block-level' %>
+              </div>
+            </td>
+          </tr>
+
+         <tr>
+          <td colspan="2">
+            <div class="button-container">
+              <button type="button" class="btn cancel_button"><%= t('#buttons.cancel', %{Cancel}) %></button>
+              <button type="submit" class="btn btn-primary submit_button"><%= t('buttons.add_module', %{Add Module}) %></button>
+            </div>
+            <a href="<%= context_url(@context, :context_context_modules_url) %>" style="display: none;" class="add_context_module_url">&nbsp;</a>
+          </td>
+        </tr>
+        </table>
+    <% end %>
+
+  <% form_for :context_module, :url => context_url(@context, :context_context_modules_url) , :html => {:id => "add_context_module_form", :style => "display: none;"} do |f| %>
+   <%= f.hidden_field :context_module_group_id %>
     <table class="formtable">
       <tr>
         <td colspan="2">
@@ -335,7 +363,7 @@ TEXT
   <%= image_tag "text_entry_dim.png", :id => "criterion_image_must_submit", :class => "image not_blank", :alt => t('images.alt.must_submit', "must submit"), :title => t('images.title.must_submit', "Students must submit this assignment before the module is considered complete") %>
   <%= image_tag "text_entry_dim.png", :id => "criterion_image_must_contribute", :class => "image not_blank", :alt => t('images.alt.must_contribute', "must contribute"), :title => t('images.title.must_contribute', "Students must contribute to this item before the module is considered complete") %>
   <%= image_tag "blank.png", :id => "criterion_image_blank", :class => "image", :alt => "" %>
-  <a href="<%= context_url(@context, :reorder_context_context_modules_url) %>" class="reorder_modules_url">&nbsp;</a>
+  <a href="<%= context_url(@context, :reorder_context_context_module_groups_url) %>" class="reorder_module_groups_url">&nbsp;</a>
 </div>
 <div id="current_user_progression_list" class="user_<%= @current_user && @current_user.id %>" style="display: none;">
   <div class="progression progression_blank">

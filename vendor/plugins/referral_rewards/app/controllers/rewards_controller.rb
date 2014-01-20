@@ -1,5 +1,5 @@
 class RewardsController < ApplicationController
-
+  before_filter :require_user
   before_filter :require_context
   add_crumb(proc { t('#crumbs.rewards', "Rewards")}) { |c| c.send :named_context_url, c.instance_variable_get("@context"), :context_rewards_url }
   before_filter { |c| c.active_tab = "Rewards" }

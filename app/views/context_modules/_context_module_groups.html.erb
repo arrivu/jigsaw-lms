@@ -1,0 +1,70 @@
+<%
+   editable ||= can_do(@context, @current_user, :manage_grades) || can_do(@context, @current_user, :manage_content)
+%>
+<div class="context_module_group" data-id=<%= context_module_group.try_rescue(:id) %> data-module-group-url="<%= context_url(@context, :context_url) %>/module_groups/<%= context_module_group ? context_module_group.id : "{{ id }}" %>" data-module-group-id="<%= context_module_group ? context_module_group.id : "{{ id }}" %>" id="context_module_group_<%= context_module_group ? context_module_group.id : "blank" %>"  >
+<div id="context_modules_sortable_container" style="margin-bottom: 10px;<%= hidden unless context_module_group %> " class="context_module_group_<%= context_module_group ? context_module_group.id : "blank" %>" style="<%= hidden unless context_module_group %> " >
+  <div id="context_modules" tabindex="0" aria-label="<%= t('headings.course_modules', %{Course Modules}) %>" class="<%= 'editable' if can_do(@context, @current_user, :manage_content) %>" style="border: 1px dotted darkred;"  >
+    <div class="bordered  editable_context_module" style="background-color: #e4e6e8;
+            border-bottom: 1px dotted #aaaaaa;
+            padding: 6px 0; margin-bottom: 15px"
+    >
+      <div class="header context-module-header clearfix">
+        <div class="context-module-left-toolbar">
+          <span class="reorder_module_group_link" title="<%= t('reorder_modules', %{Drag to reorder modules}) %>" style="cursor: move; <%= hidden unless @module_groups.length > 1 && editable %>"><%= image_tag "move.png", :alt => t('reorder_modules', 'Drag to reorder modules') %></span>
+          <a href="<%= context_url(@context, :context_url) %>/module_groups/<%= context_module_group ? context_module_group.id : "{{ id }}" %>/reorder" rel="nofollow" class="reorder_module_group_items_url" style="display: none;">&nbsp;</a>
+          <span class="name">&nbsp; <%= context_module_group.try_rescue(:name) || nbsp %></span>
+
+        </div>
+
+        <ul class="context-module-toolbar">
+          <% if editable %>
+              <li class="context-module-toolbar-item">
+                <div class="admin-links">
+                  <a class="al-trigger" aria-haspopup="true" aria-owns="ui-id-1" href="#">
+                    <i class="icon-settings"></i><i class="icon-mini-arrow-down"></i>
+                    <span class="screenreader-only"><%= t('manage', 'Manage') %></span>
+                  </a>
+                  <ul class="al-options">
+                    <li>
+                      <a href="#" rel="<%= context_url(@context, :context_url) %>/modules/<%= context_module_group ? context_module_group.id : "{{ id }}" %>/items" class="add_module_link icon-plus"><%= t('links.add_item', %{Add Module}) %></a>
+                    </li>
+                    <li>
+                      <a href="<%= context_url(@context, :context_url) %>/module_groups/<%= context_module_group ? context_module_group.id : "{{ id }}" %>" class="icon-edit edit_module_group_link" title="<%= t('links.title.edit_module', %{Edit}) %>"><%= t('links.text.edit_module', %{Edit}) %></a>
+                    </li>
+                    <li>
+                      <a href="<%= context_url(@context, :context_url) %>/module_groups/<%= context_module_group ? context_module_group.id : "{{ id }}" %>" class="delete_module_group_link icon-trash" title="<%= t('links.title.delete_module', %{Delete this module}) %>"><%= t('links.text.delete_module', %{Delete}) %></a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+          <%end%>
+
+        </ul>
+      </div>
+    </div>
+     <div class="items context_module_group_items" style="min-height: 50px;">
+    <% editable = can_do(@context, @current_user, :manage_grades) || can_do(@context, @current_user, :manage_content) %>
+    <% unless context_module_group.nil? %>
+        <% context_module_group.context_module_group_associations.each do |context_module_group_association| %>
+            <%@module_count =context_module_group.context_module_group_associations.size %>
+            <% if context_module_group_association.context_module.workflow_state == 'active'%>
+                <%= render :partial => 'context_modules/context_module', :object => context_module_group_association.context_module, :locals => {:editable => editable } %>
+
+            <% elsif  @context.grants_right?(@curren_user, :manage_content) %>
+                <%= render :partial => 'context_modules/context_module', :object => context_module_group_association.context_module, :locals => {:editable => editable } %>
+            <%end  %>
+
+        <% end %>
+    <% end %>
+     </div>
+  </div>
+</div>
+</div>
+
+
+
+
+
+
+
+

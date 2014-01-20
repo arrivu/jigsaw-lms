@@ -6,6 +6,7 @@ require [
   'compiled/views/DiscussionTopics/DiscussionListView'
   'compiled/views/DiscussionTopics/IndexView'
   'compiled/views/DiscussionTopics/DiscussionTagListView'
+  'jquery'
 ], (I18n, _, {Router}, DiscussionTopicsCollection, DiscussionListView, IndexView,DiscussionTagListView) ->
 
   class DiscussionIndexRouter extends Router
@@ -47,11 +48,14 @@ require [
     index: ->
       @view = new IndexView
         discussionTagView: @discussions.discussion_tag
-        openDiscussionView:   @discussions.open
-        lockedDiscussionView: @discussions.locked
-        pinnedDiscussionView: @discussions.pinned
-        permissions:          ENV.permissions
-        atom_feed_url:        ENV.atom_feed_url
+        openDiscussionView:     @discussions.open
+        lockedDiscussionView:   @discussions.locked
+        pinnedDiscussionView:   @discussions.pinned
+        permissions:            ENV.permissions
+        atom_feed_url:          ENV.atom_feed_url
+        home_page_announcement: ENV.home_page_announcement
+        course_url:             ENV.change_home_link_url
+        token:                  ENV.AUTHENTICITY_TOKEN
       @_attachCollections()
       @fetchDiscussions()
       @view.render()
@@ -186,3 +190,14 @@ require [
   # Start up the page
   router = new DiscussionIndexRouter
   Backbone.history.start()
+
+  $(document).ready ->
+    $(".edit_course_home_content_link").click (event) ->
+      event.preventDefault()
+      $("#edit_course_home_content").show()
+      $("#course_home_content").hide()
+
+    $("#edit_course_home_content .cancel_button").click ->
+      $("#edit_course_home_content").hide()
+      $("#course_home_content").show()
+

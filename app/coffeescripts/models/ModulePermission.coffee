@@ -8,4 +8,4 @@ define [
 
     urlRoot: -> "/courses/#{course_id}/permissions"
 
-    resourceName: 'user_module_enrollments'
+    resourceName: 'user_module_group_enrollments'

@@ -1,3 +1,29 @@
+
+<% if params[:course_home_view] %>
+    <% js_block do %>
+        <script>
+            require([
+                'jquery' /* $ */,
+                'jquery.ajaxJSON' /* ajaxJSON */,
+                'jqueryui/dialog',
+                'compiled/jquery/fixDialogButtons' /* fix dialog formatting */,
+                'jquery.loadingImg' /* loadingImg, loadingImage */,
+                'vendor/jquery.scrollTo' /* /\.scrollTo/ */,
+                'compiled/behaviors/openAsDialog'
+            ], function($) {
+
+
+                $("#announcements_dialog").dialog({modal: true,width:1000,height:485});
+
+            });
+        </script>
+    <% end %>
+
+    <form id="announcements_dialog" data-turn-into-dialog='{"width":1000,"modal":true}' style="display:none" title="Announcements">
+      <%= render :partial => 'announcements/content' %>
+    </form>
+ <%end  %>
+
 <%
   @body_classes << 'hide-content-while-scripts-not-loaded'
 
@@ -9,3 +35,6 @@
   js_bundle :discussion_topics_index
   jammit_css :discussions_list,:token_input
 %>
+
+
+

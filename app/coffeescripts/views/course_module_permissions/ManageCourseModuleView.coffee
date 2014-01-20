@@ -93,7 +93,7 @@ define [
           return uid
 
     renderHeader: -> 
-      @$el.find('thead tr').html "<th>Modules</th><th class='permissionButtonView'></th>"
+      @$el.find('thead tr').html "<th>Module Groups</th><th class='permissionButtonView'></th>"
 
       @collection.each (module) =>
         moduleHeaderView = new ModuleHeaderView
@@ -137,7 +137,7 @@ define [
 
 
     check_permission:(module_id,user_id) ->
-      for key, value of ENV.MODULE_PERMISSION_USER_IDS
+      for key, value of ENV.MODULE_GROUP_PERMISSION_USER_IDS
         module_id = parseInt(module_id, 10)
         key_module_id = parseInt(key, 10)
         if key_module_id == module_id

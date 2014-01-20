@@ -1,4 +1,4 @@
-class UserModuleEnrollment < ActiveRecord::Base
+class UserModuleGroupEnrollment < ActiveRecord::Base
 
   ACTIVE = "active"
   DELETED = "deleted"

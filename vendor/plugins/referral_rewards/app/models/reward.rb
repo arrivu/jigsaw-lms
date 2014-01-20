@@ -18,6 +18,8 @@ class Reward < ActiveRecord::Base
   STATUS_INACTIVE ='inactive'
   METADATA_COURSE = 'Course'
   METADATA_ACCOUNT = 'Account'
+  REFERER = 'Referrer'
+  REFEREE = 'Referee'
 
 end
 

@@ -1,9 +1,36 @@
+{{#if options.permissions.change_settings}}
+ {{#if options.home_page_announcement}}
+  <div id="course_home_content">
+     <a href="#" style="margin-left: 900px;" class="edit_course_home_content_link">{{#t "links.change_layout"}}Change Home Page Layout{{/t}}</a>
+  </div>
+  {{/if}}
+{{/if}}
+
 <h1 class="screenreader-only">
   {{#t "discussion_topics"}}Discussion Topics{{/t}}
 </h1>
 
 {{#ifAll atLeastOnePageFetched length}}
-  <div class="headerBar clearfix">
+  <div id="edit_course_home_content" style="display: none;">
+  <form action={{options.course_url}} id="edit_course_home_content_form" method="post">
+  <input name="_method" type="hidden" value="put">
+  <input name="authenticity_token" type="hidden" value={{options.token}}>
+     <strong>{{#t "labels.set_layout"}}When people visit the course page, show them{{/t}}</strong></label>
+     <select name="course[default_view]" id="edit_course_home_content_select">
+          <option value="feed" >the Recent Activity Dashboard</option>
+          <option value="wiki" >a Page I'll Design Myself</option>
+          <option value="modules">the Course Modules/Sections</option>
+          <option value="assignments" >the Assignment List </option>
+          <option value="syllabus" >the Assignments with Syllabus</option>
+          <option value="announcements_discussion" selected="selected">the Announcement with Discussion</option>
+      </select>
+     <div class="button-container">
+          <button type="submit" class="btn">{{#t "buttons.update_layout"}}Update Layout{{/t}}</button>
+          <button type="button" class="btn button-secondary cancel_button">{{#t "buttons.cancel"}}Cancel{{/t}} </button>
+     </div>
+     </form>
+  </div>
+    <div class="headerBar clearfix">
     <div class="headerBar-right form-inline">
       {{#if options.atom_feed_url}}
         <a class="btn"

@@ -8,7 +8,6 @@ require [
 
   rewardCollection = new RewardCollection
 
-
   rewardsCollectionView = new RewardsCollectionView
     collection: rewardCollection
 

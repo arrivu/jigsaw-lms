@@ -134,7 +134,7 @@ class User < ActiveRecord::Base
     end
   end
   has_many :omniauth_authentications , :dependent => :delete_all
-  has_many :user_module_enrollments , :dependent => :destroy
+  has_many :user_module_group_enrollments , :dependent => :destroy
   has_many :communication_channels, :order => 'communication_channels.position ASC', :dependent => :destroy
   has_one :communication_channel, :order => 'position'
   has_many :enrollments, :dependent => :destroy

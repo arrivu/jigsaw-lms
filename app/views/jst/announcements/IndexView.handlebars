@@ -13,13 +13,15 @@
         <button id="delete" data-tooltip>{{#t "delete"}}Delete{{/t}}</button>
       </span>
 
-      {{#if options.permissions.create}}
+      {{#if options.currentUserIsTeacher}}
         <a href="{{new_topic_url}}" class="btn btn-primary" id="new-discussion-btn">
           <i class="icon-announcement"></i> 
           {{#t "make_an_announcement"}}Make an announcement{{/t}}
         </a>
       {{/if}}
     </div>
+
+  {{#if options.is_not_course_home}}
     <div class="headerBar-left form-inline index_view_filter_form">
       <label class="hidden-inline-text" for="searchTerm">{{#t "search_title_body_or_author"}}Search title, body, or author{{/t}}</label>
       <input id="searchTerm"
@@ -32,6 +34,8 @@
                {{#if onlyUnread}}checked{{/if}} /><label for="onlyUnread">{{#t "unread"}}Unread{{/t}}</label>
       </span>
     </div>
+{{/if}}
+
   </div>
   <div class="nothingMatchedFilter" style="display:none;">
     <p>
@@ -52,7 +56,7 @@
       <h1>
         {{#t "there_are_no_announcements_show"}}There are no announcements to show{{/t}}
       </h1>
-      {{#if options.permissions.create}}
+      {{#if options.currentUserIsTeacher}}
         <a href="{{new_topic_url}}" class="btn btn-large btn-primary">
           {{#t "make_an_announcement_caps"}}Make an Announcement{{/t}}
         </a>

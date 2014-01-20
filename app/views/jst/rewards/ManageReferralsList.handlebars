@@ -1,0 +1,26 @@
+<td nowrap="nowrap"
+      class="reward" data-id="{{coupon_code}}">{{type}}</td>
+<td>{{name}}</td>
+<td>{{email}}</td>
+<td>{{provider}}</td>
+<td>{{context_name}}</td>
+<td>{{reward_name}}</td>
+<td>{{reward_description}}</td>
+<td>{{expiry_date}}</td>
+<td>{{coupon_code}}</td>
+<td class="links text-right" nowrap="nowrap">
+    <a href="#"
+       class="coupon_reward_link btn {{#if status_check}}btn-danger{{else}}btn-primary{{/if}}"
+       title="Redeem a Coupon"
+       data-coupon-reward={{coupon_code}}>
+        {{#if status_check}}
+            Recover
+        {{else}}
+            Redeem
+        {{/if}}
+        </a>
+</td>
+
+
+
+

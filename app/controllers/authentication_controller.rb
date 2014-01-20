@@ -50,7 +50,8 @@ class AuthenticationController < ApplicationController
   def successful_login(pseudonym)
     @current_pseudonym = pseudonym
     flash[:notice] = "You are now logged in"
-    redirect_to root_url
+    favourite_course_url_path
+    #redirect_to root_url
   end
 
   def un_successful_login
@@ -83,6 +84,25 @@ class AuthenticationController < ApplicationController
    authentication.user.phone ||= auth[:info][:phone]
    authentication.user.name ||= auth[:info][:name]
    authentication.user.save!
-end
+ end
 
+ #redirect to the users favourite course home path if the user has one
+
+ def favourite_course_url_path
+   @pseudonym = Pseudonym.find(@user)
+   if @user.enrollments.empty?
+     redirect_to root_url
+   else
+   @favourite_course_id = @pseudonym.settings
+   if @favourite_course_id.empty?
+    @context_id = @user.enrollments.first.course_id
+    @context = Course.active.find(@context_id)
+    redirect_to course_url(@context)
+   else
+    @context_id = @favourite_course_id[:favourite_course_id]
+    @context = Course.active.find(@context_id)
+    redirect_to course_url(@context)
+   end
+  end
+ end
 end

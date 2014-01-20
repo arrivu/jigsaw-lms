@@ -7,7 +7,7 @@ require [
 
   collection = new AnnouncementsCollection
 
-  if ENV.permissions.create
+  if ENV.permissions.create and !ENV.home_page_announcement?
     externalFeeds = new ExternalFeedCollection
     externalFeeds.fetch()
     new ExternalFeedsIndexView
@@ -18,5 +18,7 @@ require [
     collection: collection
     permissions: ENV.permissions
     atom_feed_url: ENV.atom_feed_url
+    is_not_course_home: !ENV.home_page_announcement?
+    currentUserIsTeacher:  ENV.current_user_roles and 'teacher' in ENV.current_user_roles
 
   collection.fetch()

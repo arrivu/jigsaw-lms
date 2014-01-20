@@ -20,19 +20,20 @@
   </div>
 
 </fieldset>
-<fieldset>
-  <div class="control-group">
-   <label for="discussion_tag" class="control-label"> Add Tags:</label>
-   <div class="controls">
-     <input type="text"
-            class="token_input"
-            id="discussion_tag_tokens"
-            name="tag_tokens"
-            data-pre= {{topicTags}}>
-</div>
-</div>
-</fieldset>
-
+{{#if isTopic}}
+    <fieldset>
+      <div class="control-group">
+       <label for="discussion_tag" class="control-label"> Add Tags:</label>
+       <div class="controls">
+         <input type="text"
+                class="token_input"
+                id="discussion_tag_tokens"
+                name="tag_tokens"
+                data-pre= {{topicTags}}>
+    </div>
+    </div>
+    </fieldset>
+{{/if}}
 
 {{#if canAttach}}
 <fieldset>
