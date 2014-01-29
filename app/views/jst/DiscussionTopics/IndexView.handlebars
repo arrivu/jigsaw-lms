@@ -14,6 +14,7 @@
   <div id="edit_course_home_content" style="display: none;">
   <form action={{options.course_url}} id="edit_course_home_content_form" method="post">
   <input name="_method" type="hidden" value="put">
+  <h2>{{#t "headings.set_layout"}}Set Home Page Layout{{/t}}</h2>
   <input name="authenticity_token" type="hidden" value={{options.token}}>
      <strong>{{#t "labels.set_layout"}}When people visit the course page, show them{{/t}}</strong></label>
      <select name="course[default_view]" id="edit_course_home_content_select">

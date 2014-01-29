@@ -1,0 +1,44 @@
+<% if @resource_url.nil?  %>
+
+        <% unless @tool.nil? %>
+        <% js_block do %>
+            <script>
+                require(['jquery','tool_inline'], function($) {
+                $(document).ready(function() {
+                    $("#content").removeClass('padless');
+                });
+               });
+            </script>
+        <% end %>
+
+        <form action="<%= @resource_url_for_main_nav %>"
+              method="POST" <%= raw("target='#{@target || 'main_nav_tool_content'}'") unless @self_target %>
+              id="tool_form"
+              data-tool-id="<%= @tool_id %>"
+              data-tool-path="<%= @tool_path %>">
+          <% @tool_settings.each do |key, value| %>
+              <%= hidden_field_tag key, value %>
+          <% end %>
+
+          <button class="btn" type="submit"><%= t :load_tool_button, "Load %{tool}", :tool => @tool.name %></button>
+          <style>
+            .main_navigation_iframe{
+                height: 53px;
+                margin: 0;
+                max-width: 500px;
+                list-style: none;
+                float: right;
+                font-size: 12px;
+                margin-right: 10px;
+                margin-bottom: 3px;
+                padding: 0 11px;
+                border: none;
+            }
+
+          </style>
+
+        </form>
+          <%= iframe("about:blank", :name => 'main_nav_tool_content', :id => 'main_nav_tool_content',:class => "main_navigation_iframe") %>
+        <% end %>
+
+<% end %>

@@ -1,4 +1,5 @@
 class ReferralsController < ApplicationController
+  include ReferralsHelper
   before_filter :require_user, :except => [:referree_register,:update_referree]
   before_filter :require_context, :except => [:referree_register,:update_referree]
 
@@ -165,37 +166,9 @@ class ReferralsController < ApplicationController
   end
 
   def get_referrees
-    @referral_rewards = []
-      @rewards = Reward.where(metadata_type: @context.class.name,metadata: @context.id.to_s,status: Reward::STATUS_ACTIVE)
-      @rewards.each do |reward|
-        @referrals = reward.referrals
-          @referrals.each do |referral|
-           @references = referral.references
-            @references.each do |reference|
-              @referrees = reference.referrees
-                @referrees.each do |referree|
-                  @referral_reward = {type: Reward::REFEREE ,name: referree.name,email: referree.email,
-                                      provider: referree.referral_email,context_name: reward.metadata_type,
-                                      reward_name: reward.name,reward_description: reward.description,
-                                      expiry_date: referree.expiry_date ,coupon_code: referree.coupon_code,status: referree.status}
-                  @referral_rewards << (@referral_reward)
-                  end
-                @referrer_coupons =  reference.referrer_coupons
-                  @referrer_coupons.each do |referrer_coupon|
-                    @referral_reward = {type: Reward::REFERER ,name: referral.pseudonym.user.name,email: referral.pseudonym.unique_id,
-                                        provider: reference.provider,context_name: reward.metadata_type,
-                                        reward_name: reward.name,reward_description: reward.description,
-                                        expiry_date: referrer_coupon.expiry_date ,coupon_code: referrer_coupon.coupon_code,status: referrer_coupon.status}
-                    @referral_rewards << (@referral_reward)
-                  end
-            end
-          end
-      end
-    #js_env(REFERRAL_REWARDS: @referral_rewards.to_json)
-    respond_to do |format|
-        format.json { render :json => @referral_rewards }
-    end
-end
+    list_rewards
+  end
+
 
 
   def update_referrees

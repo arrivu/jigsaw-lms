@@ -52,6 +52,7 @@ class ApplicationController < ActionController::Base
   after_filter :set_response_headers
   after_filter :update_enrollment_last_activity_at
   before_filter :get_wiki_type
+  before_filter :get_badges
   include Tour
 
   add_crumb(proc {
@@ -1019,6 +1020,8 @@ class ApplicationController < ActionController::Base
     page_name = params[:wiki_page_id] || params[:id] || (params[:wiki_page] && params[:wiki_page][:title])
     page_name ||= WikiPage::DEFAULT_FAQ_FRONT_PAGE_URL if (@wiki_type ==  WikiPage::WIKI_TYPE_FAQS)
     page_name ||= WikiPage::DEFAULT_CAREER_FRONT_PAGE_URL if (@wiki_type ==  WikiPage::WIKI_TYPE_CAREERS)
+    page_name ||= WikiPage::DEFAULT_VIDEO_FRONT_PAGE_URL if (@wiki_type == WikiPage::WIKI_TYPE_VIDEOS)
+    page_name ||= WikiPage::DEFAULT_OFFER_FRONT_PAGE_URL if (@wiki_type == WikiPage::WIKI_TYPE_OFFERS)
     page_name ||= (@wiki.get_front_page_url || Wiki::DEFAULT_FRONT_PAGE_URL) unless @context.draft_state_enabled?
     if(params[:format] && !['json', 'html'].include?(params[:format]))
       page_name += ".#{params[:format]}"
@@ -1059,7 +1062,7 @@ class ApplicationController < ActionController::Base
 
     @page.editing_roles = (@context.default_wiki_editing_roles rescue nil) || @page.default_roles
 
-    if @page.is_front_page? or @wiki.wiki_pages.faqs.empty? or @wiki.wiki_pages.careers.empty?
+    if @page.is_front_page? or @wiki.wiki_pages.faqs.empty? or @wiki.wiki_pages.careers.empty? or @wiki.wiki_pages.videos.empty? or @wiki.wiki_pages.offers.empty?
       @page.body = t "#application.wiki_front_page_default_content_course", "Welcome to your new course #{@page.wiki_type}!" if @context.is_a?(Course)
       @page.body = t "#application.wiki_front_page_default_content_group", "Welcome to your new group #{@page.wiki_type}!" if @context.is_a?(Group)
     end
@@ -1630,8 +1633,30 @@ class ApplicationController < ActionController::Base
       @context.wiki.wiki_pages.faqs.count == 0
     elsif @wiki_type ==  WikiPage::WIKI_TYPE_CAREERS
         @context.wiki.wiki_pages.careers.count == 0
+    elsif @wiki_type == WikiPage::WIKI_TYPE_VIDEOS
+      @context.wiki.wiki_pages.videos.count == 0
+    elsif @wiki_type == WikiPage::WIKI_TYPE_OFFERS
+      @context.wiki.wiki_pages.offers.count == 0
     else
        @context.wiki.wiki_pages.pages.count == 0
+    end
+  end
+
+  def get_badges
+    unless @current_user.nil?
+        context_external_tool = ContextExternalTool.find_by_tool_id_and_workflow_state('canvabadges',['anonymous','name_only','email_only','public']).try(:id)
+        unless context_external_tool.nil?
+        @tool = ContextExternalTool.find_for(context_external_tool, @domain_root_account, :main_navigation)
+          unless @tool.nil?
+            @resource_title = @tool.label_for(:main_navigation)
+            @resource_url_for_main_nav = @tool.main_navigation(:url)
+            @opaque_id = @current_user.opaque_identifier(:asset_string)
+            @resource_type = 'main_navigation'
+            @return_url = user_profile_url(@current_user, :include_host => true)
+            @launch = BasicLTI::ToolLaunch.new(:url => @resource_url_for_main_nav, :tool => @tool, :user => @current_user, :context => @domain_root_account, :link_code => @opaque_id, :return_url => @return_url, :resource_type => @resource_type)
+            @tool_settings = @launch.generate
+          end
+        end
     end
   end
 

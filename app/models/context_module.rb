@@ -150,8 +150,7 @@ class ContextModule < ActiveRecord::Base
   end
   
   def available_for?(user, opts={})
-    return true if self.active? && !self.to_be_unlocked && self.prerequisites.blank? && !self.require_sequential_progress &&
-        UserModuleGroupEnrollment.find_by_context_module_group_id_and_user_id_and_workflow_state(self.context_module_group_association.try(:context_module_group_id),user.id,UserModuleGroupEnrollment::ACTIVE)
+    return true if self.active? && !self.to_be_unlocked && self.prerequisites.blank? && !self.require_sequential_progress && check_for_user_module_group_enrollment(user)
     if self.grants_right?(user, nil, :update)
      return true
     elsif !self.active?
@@ -256,8 +255,16 @@ class ContextModule < ActiveRecord::Base
   def add_item(params, added_item=nil, opts={})
     params[:type] = params[:type].underscore if params[:type]
     position = opts[:position] || (self.content_tags.active.map(&:position).compact.max || 0) + 1
-    if params[:type] == "wiki_page" || params[:type] == "page"
-      item = opts[:wiki_page] || self.context.wiki.wiki_pages.find_by_id(params[:id])
+    if params[:type] == "wiki"
+      item = opts[:wiki] || self.context.wiki.wiki_pages.pages.find_by_id(params[:id])
+    elsif params[:type] == "faq"
+      item = opts[:faq] || self.context.wiki.wiki_pages.faqs.find_by_id(params[:id])
+    elsif params[:type] == "career"
+      item = opts[:career] || self.context.wiki.wiki_pages.careers.find_by_id(params[:id])
+    elsif params[:type] == "video"
+      item = opts[:videos] || self.context.wiki.wiki_pages.videos.find_by_id(params[:id])
+    elsif params[:type] == "offer"
+      item = opts[:offers] || self.context.wiki.wiki_pages.offers.find_by_id(params[:id])
     elsif params[:type] == "attachment" || params[:type] == "file"
       item = opts[:attachment] || self.context.attachments.active.find_by_id(params[:id])
     elsif params[:type] == "assignment"
@@ -604,14 +611,35 @@ class ContextModule < ActiveRecord::Base
   end
 
   def check_for_user_enrollment(user,progression)
-   enrollment = UserModuleGroupEnrollment.find_by_context_module_group_id_and_user_id_and_workflow_state(self.context_module_group_association.try(:context_module_group_id),user.id,UserModuleGroupEnrollment::ACTIVE)
-   if enrollment
+   enrollment = UserModuleGroupEnrollment.find_by_context_module_group_id_and_user_id(self.context_module_group_association.try(:context_module_group_id),user.id)
+   if enrollment and (enrollment.workflow_state == UserModuleGroupEnrollment::ACTIVE)
      progression
-   else
-     progression.workflow_state = "locked"
-     progression.save!
-     progression
+    elsif !enrollment
+      default_context_module_group = self.context.context_module_groups.default.first
+      association = ContextModuleGroupAssociation.find_by_context_module_id_and_context_module_group_id(self.id,default_context_module_group.try(:id))
+       if association
+         progression
+       end
+    else
+      lock_progression(progression)
    end
+  end
+
+  def lock_progression(progression)
+    progression.workflow_state = "locked"
+    progression.save!
+    progression
+  end
+
+  def check_for_user_module_group_enrollment(user)
+    enrollment = UserModuleGroupEnrollment.find_by_context_module_group_id_and_user_id(self.context_module_group_association.try(:context_module_group_id),user.id)
+    if enrollment and (enrollment.workflow_state == UserModuleGroupEnrollment::ACTIVE)
+      true
+    elsif !enrollment
+      default_context_module_group = self.context.context_module_groups.default.active.first
+      ContextModuleGroupAssociation.find_by_context_module_id_and_context_module_group_id(self.id,default_context_module_group.try(:id))
+    end
+
   end
 
   def to_be_unlocked

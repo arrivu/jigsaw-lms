@@ -1,10 +1,13 @@
+<%
+   editable ||= can_do(@context, @current_user, :manage_grades) || can_do(@context, @current_user, :manage_content)
+%>
 <% course_home ||= false %>
 <% js_env :COLLAPSED_MODULES => @collapsed_modules %>
 <% js_env :CAN_MANAGE_MODULES  => can_do(@context, @current_user, :manage_grades) || can_do(@context, @current_user, :manage_content) %>
 <% js_env :COURSE_ID => @context.id %>
 <% js_env :NO_MODULE_PROGRESSIONS => @context.large_roster %>
 <% unless @context.draft_state_enabled? %>
-    <% js_bundle :context_modules %>
+    <% js_bundle :context_module_permission_groups %>
     <% jammit_css :context_modules %>
 
     <% if course_home %>
@@ -18,69 +21,89 @@
 
       <% if can_do(@context, @current_user, :manage_content) %>
           <div class="context-modules-main-toolbar">
-            <button class="btn btn-small module_progressions_link"><%= t('links.student_progress', 'View Progress') %></button>
-            <button class="btn btn-small btn-primary add_module_link"><%= t('#context_modules.buttons.add_module', 'Add a New Class') %></button>
-            <%= link_to "Permission groups" ,permission_groups_course_context_modules_url(@context),:class => "btn btn-small btn-primary" %>
+            <button class="btn btn-small btn-primary add_module_group_link"><%= t('#context_modules.buttons.add_module', 'Create a permission group') %></button>
+            <%= link_to "Student Permissions" ,course_user_module_group_enrollments_path(@context) ,:class => "btn btn-small btn-primary" %>
           </div>
       <% end %>
     </div>
 
     <div id="no_context_modules_message" style="display:none; clear: both;">
       <% if can_do(@context.context_modules.new, @current_user, :create) %>
-          <%= mt 'help.create', <<TEXT, :button => t('#context_modules.buttons.add_module_first', 'Add a New Class')
-Course Classes let you organize your assignments, pages, files, etc. into smaller sections or units. Classes could be centered around a theme, focused on a specific topic, or even just grouped chronologically.
-
-You can also sequence classes by defining criteria and prerequisites for each class. Students won't be able to access classes until they have unlocked all their prerequisites. That way you can prevent students from accessing certain content or files until they have, say, gotten at least 75% on a review quiz.
-
-To start organizing your course into classes, click the "%{button}" button to the right.
+          <%= mt 'help.create', <<TEXT, :button => t('#context_modules.buttons.add_module_first', 'create a permission group')
+Permission groups are the way to  logically grouping the classes and you can make permissions to permission groups, click the "%{button}" button to the right.
 TEXT
 %>
       <% else %>
-          <p><%= t('help.no_modules', %{No classes have been defined for this course.}) %></p>
+          <p><%= t('help.no_modules', %{No modules have been defined for this course.}) %></p>
       <% end %>
     </div>
     <div class="hidden-readable" tabindex="0" aria-label="keyboard instructions">
       <%= t('modules_keyboard_hint',
-            'To change the order of the course classs and class items,
+            'To change the order of the course modules and module items,
         first turn the cursor off on your screen reader. Insert-z in JAWS.
-        Press tab to select the first class.
-        Press up and down to choose a class or class item.
-        Press space to select the class or class item to start dragging.
+        Press tab to select the first module.
+        Press up and down to choose a module or module item.
+        Press space to select the module or module item to start dragging.
         Then press up and down to select a destination.
         Then press space a second time to drop selection after destination.') %>
     </div>
 
     <% keyboard_navigation([
-                                   {:key => t('keycodes.next_module_item', 'Up'), :description => t('keycode_descriptions.next_module_item', 'Select next class or class item')},
-                                   {:key => t('keycodes.previous_module_item', 'Down'), :description => t('keycode_descriptions.previous_module_item', 'Select previous class or class item')},
+                                   {:key => t('keycodes.next_module_item', 'Up'), :description => t('keycode_descriptions.next_module_item', 'Select next module or module item')},
+                                   {:key => t('keycodes.previous_module_item', 'Down'), :description => t('keycode_descriptions.previous_module_item', 'Select previous module or module item')},
                                    {:key => t('keycodes.toggle_module_dragging', 'Space'), :description => t('keycode_descriptions.toggle_module_dragging', 'Select item to begin dragging, or drop previously selected item')}
                            ]) %>
-    <div id="context_modules_sortable_container">
-      <div id="context_modules" tabindex="0" aria-label="<%= t('headings.course_modules', %{Course classess}) %>" class="<%= 'editable' if can_do(@context, @current_user, :manage_content) %>">
-        <% editable = can_do(@context, @current_user, :manage_grades) || can_do(@context, @current_user, :manage_content) %>
-        <% cache([@context.cache_key, editable, 'all_context_classs', collection_cache_key(@modules)].join('/')) do %>
-            <% ContextModule.send(:preload_associations, @modules, [:context_module_progressions, {:content_tags => :content}]) %>
-            <% @modules.each do |m| %>
-                <%= render :partial => 'context_modules/context_module', :object => m, :locals => {:editable => editable } %>
-            <% end %>
+    <div id="context_modules_groups_sortable_container">
+      <div id="context_module_groups">
+        <% @module_groups ||= @context.context_module_groups  %>
+        <% @module_groups.each do |context_module_group| %>
+
+            <%= render :partial => 'user_module_group_enrollments/context_module_groups', :object => nil, :locals => {:context_module_group => context_module_group } %>
+
         <% end %>
+
       </div>
     </div>
-    <%= render :partial => 'context_modules/context_module', :object => nil %>
-    <%= render :partial => 'context_modules/module_item', :object => nil %>
+    <%= render :partial => 'user_module_group_enrollments/context_module_groups', :object => nil, :locals => {:context_module_group => nil } %>
+    <%= render :partial => 'user_module_group_enrollments/context_module', :object => nil %>
+    <%= render :partial => 'user_module_group_enrollments/module_item', :object => nil %>
     <% if can_do(@context, @current_user, :manage_content) %>
-        <% form_for :context_module, :url => context_url(@context, :context_context_modules_url), :html => {:id => "add_context_module_form", :style => "display: none;"} do |f| %>
+
+        <% form_for :context_module_group, :url => context_url(@context, :context_context_module_groups_url), :html => {:id => "add_context_module_group_form", :style => "display: none;"} do |f| %>
+            <table class="formtable">
+              <tr>
+                <td colspan="2">
+                  <div class="module_group_name">
+                    <%= f.text_field :name, :placeholder => t('module_name', %{Class Group Name}), :class => 'input-block-level' %>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                  <div class="button-container">
+                    <button type="button" class="btn cancel_button"><%= t('#buttons.cancel', %{Cancel}) %></button>
+                    <button type="submit" class="btn btn-primary submit_button"><%= t('buttons.add_module', %{Add Module}) %></button>
+                  </div>
+                  <a href="<%= context_url(@context, :context_context_modules_url) %>" style="display: none;" class="add_context_module_url">&nbsp;</a>
+                </td>
+              </tr>
+            </table>
+        <% end %>
+
+        <% form_for :context_module, :url => context_url(@context, :context_context_modules_url) , :html => {:id => "add_context_module_form", :style => "display: none;"} do |f| %>
+            <%= f.hidden_field :context_module_group_id %>
             <table class="formtable">
               <tr>
                 <td colspan="2">
                   <div class="module_name">
-                    <%= f.text_field :name, :placeholder => t('module_name', %{Class Name}), :class => 'input-block-level' %>
+                    <%= f.text_field :name, :placeholder => t('module_name', %{Module Name}), :class => 'input-block-level' %>
                   </div>
                 </td>
               </tr><tr>
               <td colspan="2">
                 <input type="checkbox" id="unlock_module_at"/>
-                <label for="unlock_module_at"><%= t('#labels.lock_module_until', %{lock class until a given date}) %></label>
+                <label for="unlock_module_at"><%= t('#labels.lock_module_until', %{lock module until a given date}) %></label>
               </td>
             </tr><tr class="unlock_module_at_details">
               <td>
@@ -91,7 +114,7 @@ TEXT
             </tr><tr>
               <td colspan="2">
                 <div class="prerequisites_entry">
-                  <b><%= before_label('modules.before_students_view', %{Before students can view this class}) %></b>
+                  <b><%= before_label('modules.before_students_view', %{Before students can view this module}) %></b>
                   <div class="prerequisites_list">
                     <div class="no_prerequisites_message"><%= t('no_preprequisites', %{No prerequisites defined}) %></div>
                     <div class="criteria_list" style="display: none;">
@@ -113,9 +136,9 @@ TEXT
                   </div>
                 </div>
                 <div class="completion_entry">
-                  <b><%= before_label('module_complete_when', %{This class is complete when}) %></b>
+                  <b><%= before_label('module_complete_when', %{This module is complete when}) %></b>
                   <div class="completion_criteria_list">
-                    <div class="no_items_message"><%= t('prerequisites_need_item', %{You'll need to add items before you can specify how a user will complete this class}) %></div>
+                    <div class="no_items_message"><%= t('prerequisites_need_item', %{You'll need to add items before you can specify how a user will complete this module}) %></div>
                     <div class="no_criteria_message" style="display: none;"><%= t('no_requirements', %{No requirements defined}) %></div>
                     <div class="criteria_list" style="display: none;">
                     </div>
@@ -128,13 +151,13 @@ TEXT
             </tr><tr>
               <td colspan="2">
                 <%= f.check_box :require_sequential_progress, :id => "require_sequential_progress" %>
-                <%= f.label :require_sequential_progress, :en => "students must move through requirements in this class in sequential order", :for => "require_sequential_progress" %>
+                <%= f.label :require_sequential_progress, :en => "students must move through requirements in this module in sequential order", :for => "require_sequential_progress" %>
               </td>
             </tr><tr>
               <td colspan="2">
                 <div class="button-container">
                   <button type="button" class="btn cancel_button"><%= t('#buttons.cancel', %{Cancel}) %></button>
-                  <button type="submit" class="btn btn-primary submit_button"><%= t('buttons.add_module', %{Add class}) %></button>
+                  <button type="submit" class="btn btn-primary submit_button"><%= t('buttons.add_module', %{Add Module}) %></button>
                 </div>
                 <a href="<%= context_url(@context, :context_context_modules_url) %>" style="display: none;" class="add_context_module_url">&nbsp;</a>
               </td>
@@ -198,22 +221,22 @@ TEXT
         </div>
         <div id="add_prerequisite_dialog" style="display: none;">
           <h3><%= t 'headings.add_prerequisite', 'Add Prerequisite to %{name}', :name => '<span class="name">&nbsp;</span>'.html_safe %></h3>
-          <p style="display: none;"><%= t('select_prerequisite', %{Select the type of prerequisite.  Students cannot see a class until all prerequisites are satisfied.}) %>
+          <p style="display: none;"><%= t('select_prerequisite', %{Select the type of prerequisite.  Students cannot see a module until all prerequisites are satisfied.}) %>
           <div>
             <select class="type" style="display: none;">
-              <option value="module"><%= t('prerequisites.another_module', %{Another class}) %></option>
+              <option value="module"><%= t('prerequisites.another_module', %{Another Module}) %></option>
             </select>
           </div>
           </p>
-          <p class="module_details"><%= t 'module_details', %{classess are shown in sequential order, so only classs that are above %{name} can be set as prerequisites.}, :name => '<span class="name">&nbsp;</span>'.html_safe %>
+          <p class="module_details"><%= t 'module_details', %{Modules are shown in sequential order, so only modules that are above %{name} can be set as prerequisites.}, :name => '<span class="name">&nbsp;</span>'.html_safe %>
           <div>
             <select class="module_id">
             </select>
           </div>
           </p>
         </div>
-        <div id="student_progression_dialog" style="display: none;" title="<%= t 'titles.student_progression', 'class Progression by Student' %>">
-          <h2 style="margin-top: 0;"><%= t('headings.student_progress', %{class Progress by Student}) %></h2>
+        <div id="student_progression_dialog" style="display: none;" title="<%= t 'titles.student_progression', 'Module Progression by Student' %>">
+          <h2 style="margin-top: 0;"><%= t('headings.student_progress', %{Module Progress by Student}) %></h2>
           <table class="side_tabs_table" style="width: 100%;">
             <tr>
               <td class="left">
@@ -241,7 +264,7 @@ TEXT
                     <thead>
                     <tr>
                       <th>&nbsp;</th>
-                      <th><%= t('table_headings.module', %{class}) %></th>
+                      <th><%= t('table_headings.module', %{Module}) %></th>
                       <th><%= t('table_headings.state', %{State}) %></th>
                     </tr>
                     </thead>
@@ -271,22 +294,22 @@ TEXT
           <div style="max-height: 200px; overflow: auto;">
             <div>
               <div class="completed_list progression_list" style="margin-bottom: 10px;">
-                <h3 style="margin: 0;"><%= t('headings.students_completed', %{Students who have Completed the class}) %></h3>
+                <h3 style="margin: 0;"><%= t('headings.students_completed', %{Students who have Completed the Module}) %></h3>
                 <ul>
                 </ul>
               </div>
               <div class="started_list progression_list" style="margin-bottom: 10px;">
-                <h3 style="margin: 0;"><%= t('headings.students_in_progress', %{Students who are Working on the class}) %></h3>
+                <h3 style="margin: 0;"><%= t('headings.students_in_progress', %{Students who are Working on the Module}) %></h3>
                 <ul>
                 </ul>
               </div>
               <div class="unlocked_list progression_list" style="margin-bottom: 10px;">
-                <h3 style="margin: 0;"><%= t('headings.students_unlocked', %{Students who have Unlocked (but not started) the class}) %></h3>
+                <h3 style="margin: 0;"><%= t('headings.students_unlocked', %{Students who have Unlocked (but not started) the Module}) %></h3>
                 <ul>
                 </ul>
               </div>
               <div class="locked_list progression_list" style="margin-bottom: 10px;">
-                <h3 style="margin: 0;"><%= t('headings.students_locked', %{Students who haven't Unlocked the class}) %></h3>
+                <h3 style="margin: 0;"><%= t('headings.students_locked', %{Students who haven't Unlocked the Module}) %></h3>
                 <ul>
                 </ul>
               </div>
@@ -298,15 +321,15 @@ TEXT
       <a href="<%= context_url(@context, :progressions_context_context_modules_url) %>" class="progression_list_url">&nbsp;</a>
       <a href="<%= context_url(@context, :context_context_modules_assignment_info_url) %>" class="assignment_info_url">&nbsp;</a>
       <select id="module_list">
-        <option value="">[ <%= t('select_module.instructions', %{Select class}) %> ]</option>
+        <option value="">[ <%= t('select_module.instructions', %{Select Module}) %> ]</option>
         <% @modules.each do |m| %>
-            <option value="<%= m.id %>" class="context_module_option context_module_<%= m.id %>"><%= t 'select_module.name', 'the class, %{module}', :module => m.name %></option>
+            <option value="<%= m.id %>" class="context_module_option context_module_<%= m.id %>"><%= t 'select_module.name', 'the module, %{module}', :module => m.name %></option>
         <% end %>
       </select>
       <div id="display_criterion_blank" class="criterion" style="display: none; float: left;">
         <span class="id" style="display: none;">&nbsp;</span>
         <span class="type" style="display: none;">&nbsp;</span>
-        <span class="name"><%= t('module', %{class}) %></span>
+        <span class="name"><%= t('module', %{module}) %></span>
         <span><a href="#" class="delete_prerequisite_link" title="<%= t('links.title.remove_prerequisite', %{Remove this prerequisite}) %>">&#215;</a></span>
       </div>
       <div id="completion_criterion_option" class="completion_criterion_option">
@@ -330,12 +353,12 @@ TEXT
       <span class="points_possible_parent"><%= t 'assignment_points_possible', 'out of %{points_possible}', :points_possible => '<span class="points_possible">&nbsp;</span>'.html_safe %></span>
     </span>
       </div>
-      <%= image_tag "flagged_question_dim.png", :id => "criterion_image_min_score", :class => "image not_blank", :alt => t('images.alt.min_score', "minimum score"), :title => t('images.title.min_score', "Students must get at least a %{min_score} on this item before the class is considered complete", :min_score => "{{ min_score }}") %>
-      <%= image_tag "preview_dim.png", :id => "criterion_image_must_view", :class => "image not_blank", :alt => t('images.alt.must_view', "must view"), :title => t('images.title.must_view', "Students must view this item before the class is considered complete") %>
-      <%= image_tag "text_entry_dim.png", :id => "criterion_image_must_submit", :class => "image not_blank", :alt => t('images.alt.must_submit', "must submit"), :title => t('images.title.must_submit', "Students must submit this assignment before the class is considered complete") %>
-      <%= image_tag "text_entry_dim.png", :id => "criterion_image_must_contribute", :class => "image not_blank", :alt => t('images.alt.must_contribute', "must contribute"), :title => t('images.title.must_contribute', "Students must contribute to this item before the class is considered complete") %>
+      <%= image_tag "flagged_question_dim.png", :id => "criterion_image_min_score", :class => "image not_blank", :alt => t('images.alt.min_score', "minimum score"), :title => t('images.title.min_score', "Students must get at least a %{min_score} on this item before the module is considered complete", :min_score => "{{ min_score }}") %>
+      <%= image_tag "preview_dim.png", :id => "criterion_image_must_view", :class => "image not_blank", :alt => t('images.alt.must_view', "must view"), :title => t('images.title.must_view', "Students must view this item before the module is considered complete") %>
+      <%= image_tag "text_entry_dim.png", :id => "criterion_image_must_submit", :class => "image not_blank", :alt => t('images.alt.must_submit', "must submit"), :title => t('images.title.must_submit', "Students must submit this assignment before the module is considered complete") %>
+      <%= image_tag "text_entry_dim.png", :id => "criterion_image_must_contribute", :class => "image not_blank", :alt => t('images.alt.must_contribute', "must contribute"), :title => t('images.title.must_contribute', "Students must contribute to this item before the module is considered complete") %>
       <%= image_tag "blank.png", :id => "criterion_image_blank", :class => "image", :alt => "" %>
-      <a href="<%= context_url(@context, :reorder_context_context_modules_url) %>" class="reorder_modules_url">&nbsp;</a>
+      <a href="<%= context_url(@context, :reorder_context_context_module_groups_url) %>" class="reorder_module_groups_url">&nbsp;</a>
     </div>
     <div id="current_user_progression_list" class="user_<%= @current_user && @current_user.id %>" style="display: none;">
       <div class="progression progression_blank">
@@ -372,22 +395,22 @@ TEXT
           <li>
             <span class="keycode"><%= t('keycodes.next', %{j}) %></span>
             <span class="colon">:</span>
-            <span class="description"><%= t('key.description.next', %{Next class/Item}) %></span>
+            <span class="description"><%= t('key.description.next', %{Next Module/Item}) %></span>
           </li>
           <li>
             <span class="keycode"><%= t('keycodes.previous', %{k}) %></span>
             <span class="colon">:</span>
-            <span class="description"><%= t('key.description.previous', %{Previous class/Item}) %></span>
+            <span class="description"><%= t('key.description.previous', %{Previous Module/Item}) %></span>
           </li>
           <li>
             <span class="keycode"><%= t('keycodes.edit', %{e}) %></span>
             <span class="colon">:</span>
-            <span class="description"><%= t('key.description.edit', %{Edit class/Item}) %></span>
+            <span class="description"><%= t('key.description.edit', %{Edit Module/Item}) %></span>
           </li>
           <li>
             <span class="keycode"><%= t('keycodes.delete', %{d}) %></span>
             <span class="colon">:</span>
-            <span class="description"><%= t('key.description.delete', %{Delete Current class/Item}) %></span>
+            <span class="description"><%= t('key.description.delete', %{Delete Current Module/Item}) %></span>
           </li>
           <li>
             <span class="keycode"><%= t('keycodes.indent', %{i}) %></span>
@@ -402,7 +425,7 @@ TEXT
           <li>
             <span class="keycode"><%= t('keycodes.new', %{n}) %></span>
             <span class="colon">:</span>
-            <span class="description"><%= t('key.description.new', %{New class}) %></span>
+            <span class="description"><%= t('key.description.new', %{New Module}) %></span>
           </li>
         </ul>
     <% end %>

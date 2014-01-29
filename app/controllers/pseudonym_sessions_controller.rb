@@ -564,7 +564,8 @@ class PseudonymSessionsController < ApplicationController
         # assumed that if that URL is found rather than using the default,
         # they must have cookies enabled and we don't need to worry about
         # adding the :login_success param to it.
-        format.html { redirect_back_or_default(dashboard_url(:login_success => '1')) }
+        #format.html { redirect_back_or_default(dashboard_url(:login_success => '1')) }
+        format.html {favourite_course_url_path }
       end
       format.json { render :json => pseudonym.to_json(:methods => :user_code), :status => :ok }
     end
@@ -627,7 +628,10 @@ class PseudonymSessionsController < ApplicationController
 
   def oauth2_confirm
     @provider = Canvas::Oauth::Provider.new(session[:oauth2][:client_id], session[:oauth2][:redirect_uri], session[:oauth2][:scopes])
-
+    badge_host = URI.parse(session[:oauth2][:redirect_uri]).host
+    if (request.domain == badge_host.split('.')[1]) or (badge_host == "localhost")
+      redirect_to :controller =>  'pseudonym_sessions',:action => 'oauth2_accept'
+    end
     if mobile_device?
       js_env :GOOGLE_ANALYTICS_KEY => Setting.get_cached('google_analytics_key', nil)
       render :layout => 'mobile_auth', :action => 'oauth2_confirm_mobile'
@@ -683,5 +687,23 @@ class PseudonymSessionsController < ApplicationController
     end
 
     session.delete(:oauth2)
+  end
+
+  def favourite_course_url_path
+    @pseudonym = Pseudonym.find(@user)
+    if @user.enrollments.empty?
+      redirect_to root_url
+    else
+      @favourite_course_id = @pseudonym.settings
+      if @favourite_course_id.empty?
+        @context_id = @user.enrollments.first.course_id
+        @context = Course.active.find(@context_id)
+        redirect_to course_url(@context)
+      else
+        @context_id = @favourite_course_id[:favourite_course_id]
+        @context = Course.active.find(@context_id)
+        redirect_to course_url(@context)
+      end
+    end
   end
 end

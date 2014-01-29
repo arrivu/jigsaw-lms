@@ -3,12 +3,20 @@
   @body_classes ||= []
   @body_classes << "context-#{@context.asset_string}" if @context
   yield :pre_html
-
 -%><!DOCTYPE html>
-<!--[if IE 7 ]>    <html class="ie ie7 scripts-not-loaded" lang=<%= @locale %>> <![endif]-->
-<!--[if IE 8 ]>    <html class="ie ie8 scripts-not-loaded" lang=<%= @locale %>> <![endif]-->
-<!--[if gte IE 9 ]><html class="ie ie9 scripts-not-loaded" lang=<%= @locale %>> <![endif]-->
-<!--[if !(IE)]><!--> <html class="not-ie scripts-not-loaded" lang=<%= @locale %>> <!--<![endif]-->
+<html
+xmlns:og="http://ogp.me/ns#"
+xmlns:fb="http://www.facebook.com/2008/fbml">
+<!--[if IE 7 ]>    <html class="ie ie7 scripts-not-loaded" lang=<%= @locale %> xmlns:og="http://ogp.me/ns#"
+xmlns:fb="http://www.facebook.com/2008/fbml" > <![endif]-->
+<!--[if IE 8 ]>    <html class="ie ie8 scripts-not-loaded" lang=<%= @locale %> xmlns:og="http://ogp.me/ns#"
+xmlns:fb="http://www.facebook.com/2008/fbml"> <![endif]-->
+<!--[if gte IE 9 ]><html class="ie ie9 scripts-not-loaded" lang=<%= @locale %> xmlns:og="http://ogp.me/ns#"
+xmlns:fb="http://www.facebook.com/2008/fbml"> <![endif]-->
+<!--[if !(IE)]><!--> <html class="not-ie scripts-not-loaded" lang=<%= @locale %> ,
+xmlns:og="http://ogp.me/ns#"
+xmlns:fb="http://www.facebook.com/2008/fbml"
+> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title><%= yield :page_title || t('default_page_title', "Jigsaw LMS") %></title>
@@ -22,6 +30,7 @@
   <!--[if lte IE 8]> <%= javascript_include_tag "vendor/html5.js" %> <![endif]-->
   <%= yield :stylesheets %>
   <%= include_account_css %>
+
   <script>
     // listen for any clicks on links that have href="#" and queue them to be fired on dom ready.
       _earlyClick = function(e){

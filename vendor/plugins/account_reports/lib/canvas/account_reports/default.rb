@@ -63,5 +63,9 @@ module Canvas::AccountReports
       StudentReports.new(account_report).last_user_access
     end
 
+    def self.referral_export_csv(account_report)
+      ReferralReports.new(account_report).referral_export
+    end
+
   end
 end

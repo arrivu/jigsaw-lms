@@ -157,7 +157,7 @@ FakeRails3Routes.draw do
     get 'pages/:wiki_page_id' => 'wiki_pages#show_page', :wiki_page_id => /[^\/]+/, :as => :named_page
     get 'pages/:wiki_page_id/edit' => 'wiki_pages#edit_page', :wiki_page_id => /[^\/]+/, :as => :edit_named_page
 
-    type_regexp = Regexp.new([:wiki, :faq, :career].join("|"))
+    type_regexp = Regexp.new([:wiki, :faq, :career,:video,:offer].join("|"))
     resources :wiki_pages, path: ':type', constraints: { type: type_regexp } do
     match 'comments_create' => 'wiki_pages#comments_create' ,:as => :comments_create, :via => :post
     match 'comment_destroy/:id'=> 'wiki_pages#comment_destroy', :as => :comment_destroy,:only => [:destroy]
@@ -212,6 +212,8 @@ FakeRails3Routes.draw do
     # this needs to come before the users concern, or users/:id will preempt it
     match 'users/prior' => 'context#prior_users', :as => :prior_users
     resources :rewards
+    resources :comments ,:path => :testimonial
+
     concerns :users
     match 'statistics' => 'courses#statistics', :as => :statistics
     match 'unenroll/:id' => 'courses#unenroll_user', :as => :unenroll, :via => :delete
@@ -382,7 +384,7 @@ FakeRails3Routes.draw do
       match 'reorder' => 'outcome_groups#reorder', :as => :reorder
     end
 
-    resources :context_modules, :path => :modules do
+    resources :context_modules, :path => :classes do
       match 'items' => 'context_modules#add_item', :as => :add_item, :via => :post
       match 'reorder' => 'context_modules#reorder_items', :as => :reorder, :via => :post
       match 'collapse' => 'context_modules#toggle_collapse', :as => :toggle_collapse
@@ -390,6 +392,8 @@ FakeRails3Routes.draw do
       match 'items/last' => 'context_modules#module_redirect', :as => :last_redirect, :last => 1
       match 'items/first' => 'context_modules#module_redirect', :as => :first_redirect, :first => 1
       collection do
+        resources :user_module_group_enrollments,:path => :permissions
+        match 'permission_groups' => 'user_module_group_enrollments#permission_groups'
         post :reorder
         get :progressions
       end
@@ -416,7 +420,6 @@ FakeRails3Routes.draw do
     match 'student_view' => 'courses#leave_student_view', :as => :student_view, :via => :delete
     match 'test_student' => 'courses#reset_test_student', :as => :test_student, :via => :delete
     match 'content_migrations' => 'content_migrations#index', :as => :content_migrations, :via => :get
-    resources :user_module_group_enrollments,:path => :permissions
     resources :context_module_groups,:path => :module_groups do
       match 'reorder' => 'context_module_groups#reorder_items', :as => :reorder, :via => :post
       collection do
@@ -1403,7 +1406,7 @@ FakeRails3Routes.draw do
   match 'login/oauth2/auth' => 'pseudonym_sessions#oauth2_auth', :as => :oauth2_auth, :via => :get
   match 'login/oauth2/token' => 'pseudonym_sessions#oauth2_token', :as => :oauth2_token, :via => :post
   match 'login/oauth2/confirm' => 'pseudonym_sessions#oauth2_confirm', :as => :oauth2_auth_confirm, :via => :get
-  match 'login/oauth2/accept' => 'pseudonym_sessions#oauth2_accept', :as => :oauth2_auth_accept, :via => :post
+  match 'login/oauth2/accept' => 'pseudonym_sessions#oauth2_accept', :as => :oauth2_auth_accept, :via => [:post,:get]
   match 'login/oauth2/deny' => 'pseudonym_sessions#oauth2_deny', :as => :oauth2_auth_deny, :via => :get
   match 'login/oauth2/token' => 'pseudonym_sessions#oauth2_logout', :as => :oauth2_logout, :via => :delete
 
@@ -1422,5 +1425,4 @@ FakeRails3Routes.draw do
   get '/get_collection/:collection_id' =>'videos#get_collection'
   match '/rr/:short_url_code' => 'referrals#referree_register',:as => :rr
   match '/update_referree'  => 'referrals#update_referree',:path_name => "reward", :as => :referree_registration, :via => :post
-
 end

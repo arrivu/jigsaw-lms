@@ -18,6 +18,7 @@
 
         <ul class="context-module-toolbar">
           <% if editable %>
+               <% if context_module_group %>
               <li class="context-module-toolbar-item">
                 <div class="admin-links">
                   <a class="al-trigger" aria-haspopup="true" aria-owns="ui-id-1" href="#">
@@ -26,17 +27,17 @@
                   </a>
                   <ul class="al-options">
                     <li>
-                      <a href="#" rel="<%= context_url(@context, :context_url) %>/modules/<%= context_module_group ? context_module_group.id : "{{ id }}" %>/items" class="add_module_link icon-plus"><%= t('links.add_item', %{Add Module}) %></a>
-                    </li>
-                    <li>
                       <a href="<%= context_url(@context, :context_url) %>/module_groups/<%= context_module_group ? context_module_group.id : "{{ id }}" %>" class="icon-edit edit_module_group_link" title="<%= t('links.title.edit_module', %{Edit}) %>"><%= t('links.text.edit_module', %{Edit}) %></a>
                     </li>
+                    <% unless context_module_group.is_default %>
                     <li>
                       <a href="<%= context_url(@context, :context_url) %>/module_groups/<%= context_module_group ? context_module_group.id : "{{ id }}" %>" class="delete_module_group_link icon-trash" title="<%= t('links.title.delete_module', %{Delete this module}) %>"><%= t('links.text.delete_module', %{Delete}) %></a>
                     </li>
+                    <%end%>
                   </ul>
                 </div>
               </li>
+              <%end%>
           <%end%>
 
         </ul>
@@ -48,10 +49,10 @@
         <% context_module_group.context_module_group_associations.each do |context_module_group_association| %>
             <%@module_count =context_module_group.context_module_group_associations.size %>
             <% if context_module_group_association.context_module.workflow_state == 'active'%>
-                <%= render :partial => 'context_modules/context_module', :object => context_module_group_association.context_module, :locals => {:editable => editable } %>
+                <%= render :partial => 'user_module_group_enrollments/context_module', :object => context_module_group_association.context_module, :locals => {:editable => editable } %>
 
             <% elsif  @context.grants_right?(@curren_user, :manage_content) %>
-                <%= render :partial => 'context_modules/context_module', :object => context_module_group_association.context_module, :locals => {:editable => editable } %>
+                <%= render :partial => 'user_module_group_enrollments/context_module', :object => context_module_group_association.context_module, :locals => {:editable => editable } %>
             <%end  %>
 
         <% end %>

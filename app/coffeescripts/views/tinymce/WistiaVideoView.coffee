@@ -37,7 +37,7 @@ define [
       @$selectedNode = $(selectedNode)
       super
       @render()
-      wistiaVideoURL = "#{location.origin}/list_collections"
+      wistiaVideoURL = "#{location.protocol}//#{location.host}/list_collections"
       @show().disableWhileLoading @request = $.getJSON wistiaVideoURL, (data) =>
         @projects = data.collections
         _.map @projects, (project) ->
@@ -49,7 +49,7 @@ define [
 
 
     onComboSelect: (event, ui) ->
-      wistiaMediaURL = "#{location.origin}/get_collection/#{event.target.value}"
+      wistiaMediaURL = "#{location.protocol}//#{location.host}/get_collection/#{event.target.value}"
       @$('.findWistiaMediaView').show().disableWhileLoading @request = $.getJSON wistiaMediaURL, (data) =>
         @renderResults(data.collections.medias)
         if ($('#combo_field').prop("selectedIndex") > 0)

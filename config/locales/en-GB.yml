@@ -3249,7 +3249,7 @@ en-GB:
         must_view: "view the item"
       select_module: 
         instructions: "Select module"
-        name: "the module, %{module}"
+        name: "the class, %{module}"
       select_prerequisite: "Select the type of prerequisite. Students cannot see a module until all prerequisites are satisfied."
       student_name: "Student name"
       table_headings: 
@@ -11569,7 +11569,7 @@ en-GB:
     invalid_lti_resource_selection: "There was a problem retrieving a valid link from the external tool"
     link_from_external_tool: "Link resource from external tool"
     titles: 
-      add_item_to_module: "Add item to module"
+      add_item_to_class: "Add item to class"
       find_links_using_service: "Find links using %{service}"
   self_enrollments: 
     already_enrolled: 
@@ -12082,7 +12082,7 @@ en-GB:
       discussion_item: Discussion
       domain_match_notice: "to use this tool the domain must match %{domain}"
       external_tool_item: "External tool"
-      external_tool_notice: "Select a tool from the list below, or enter a URL for an external tool you already know is configured with Basic LTI to add a link to it to this *module*."
+      external_tool_notice: "Select a tool from the list below, or enter a URL for an external tool you already know is configured with Basic LTI to add a link to it to this *class*."
       external_url_item: "External URL"
       external_url_notice: "Enter a URL and page name to add a link to any website URL to this *module*."
       file_item: File

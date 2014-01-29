@@ -23,7 +23,7 @@ class Course < ActiveRecord::Base
   include TextHelper
 
   acts_as_tagger
-
+  acts_as_commentable
   attr_accessible :name,
                   :section,
                   :account,
@@ -174,7 +174,7 @@ class Course < ActiveRecord::Base
   attr_accessor :import_source
   has_many :zip_file_imports, :as => :context
   has_many :content_participation_counts, :as => :context, :dependent => :destroy
-
+  has_many :comment
   include Profile::Association
 
   before_save :assign_uuid
@@ -2700,6 +2700,9 @@ class Course < ActiveRecord::Base
   TAB_FAQS = 17
   TAB_CAREERS = 18
   TAB_REFERRALS=19
+  TAB_VIDEOS=20
+  TAB_OFFERS=21
+  TAB_COMMENTS=22
 
   def self.default_tabs
     [
@@ -2715,12 +2718,15 @@ class Course < ActiveRecord::Base
       { :id => TAB_SYLLABUS, :label => t('#tabs.syllabus', "Syllabus"), :css_class => 'syllabus', :href => :syllabus_course_assignments_path },
       { :id => TAB_OUTCOMES, :label => t('#tabs.outcomes', "Outcomes"), :css_class => 'outcomes', :href => :course_outcomes_path },
       { :id => TAB_QUIZZES, :label => t('#tabs.quizzes', "Quizzes"), :css_class => 'quizzes', :href => :course_quizzes_path },
-      { :id => TAB_MODULES, :label => t('#tabs.modules', "Modules"), :css_class => 'modules', :href => :course_context_modules_path },
+      { :id => TAB_MODULES, :label => t('#tabs.modules', "classes"), :css_class => 'classes', :href => :course_context_modules_path },
       { :id => TAB_CONFERENCES, :label => t('#tabs.conferences', "Conferences"), :css_class => 'conferences', :href => :course_conferences_path },
       { :id => TAB_COLLABORATIONS, :label => t('#tabs.collaborations', "Collaborations"), :css_class => 'collaborations', :href => :course_collaborations_path },
       { :id => TAB_FAQS, :label =>t('#tabs.faq', "FAQ"), :css_class => 'faq',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_FAQS  },
       { :id => TAB_CAREERS, :label =>t('#tabs.career', "Career"), :css_class => 'career', :href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_CAREERS },
       { :id => TAB_REFERRALS, :label => t('#tabs.referrals', "Referrals"), :css_class => 'referrals', :href => :course_referrals_path},
+      { :id => TAB_VIDEOS, :label => t('#tabs.videos', "Videos"), :css_class => 'videos',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_VIDEOS },
+      { :id => TAB_OFFERS, :label => t('#tabs.offers', "Offers"), :css_class => 'offer',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_OFFERS },
+      {:id => TAB_COMMENTS, :label => t('#tabs.testimonial', "Testimonial"), :css_class => 'comments', :href => :course_comments_path},
       { :id => TAB_SETTINGS, :label => t('#tabs.settings', "Settings"), :css_class => 'settings', :href => :course_settings_path }
 
     ]
@@ -2798,6 +2804,8 @@ class Course < ActiveRecord::Base
         tab[:hidden_unused] = true if tab[:id] == TAB_OUTCOMES && !active_record_types[:outcomes]
         tab[:hidden_unused] = true if tab[:id] == TAB_FAQS && !active_record_types[:faq]
         tab[:hidden_unused] = true if tab[:id] == TAB_CAREERS && !active_record_types[:career]
+        tab[:hidden_unused] = true if tab[:id] == TAB_VIDEOS && !active_record_types[:videos]
+        tab[:hidden_unused] = true if tab[:id] == TAB_OFFERS && !active_record_types[:offers]
       end
 
       # remove tabs that the user doesn't have access to

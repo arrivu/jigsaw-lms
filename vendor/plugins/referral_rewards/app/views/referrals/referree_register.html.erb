@@ -1,3 +1,11 @@
+<% content_for :meta_tags do %>
+    <meta content="Referral Registration" property="og:title" />
+    <meta content="Reward" property="og:type" />
+    <meta content= "<%=url_for(:only_path => false)%>" property="og:url" />
+    <meta content="http://www.jigsawacademy.net/images/jigsaw_logo.png" property="og:image" />
+    <meta content="<%= @reward.try(:description)%>"  property="og:description" />
+<% end %>
+
 <%
    jammit_css :login
    js_bundle :registration_confirmation

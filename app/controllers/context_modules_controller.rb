@@ -18,13 +18,12 @@
 
 class ContextModulesController < ApplicationController
   before_filter :require_context  
-  add_crumb(proc { t('#crumbs.modules', "Modules") }) { |c| c.send :named_context_url, c.instance_variable_get("@context"), :context_context_modules_url }
-  before_filter { |c| c.active_tab = "modules" }
+  add_crumb(proc { t('#crumbs.modules', "Classes") }) { |c| c.send :named_context_url, c.instance_variable_get("@context"), :context_context_modules_url }
+  before_filter { |c| c.active_tab = "classes" }
 
   def index
     if authorized_action(@context, @current_user, :read)
       @modules = @context.modules_visible_to(@current_user)
-      @module_groups = @context.context_module_groups
 
       @collapsed_modules = ContextModuleProgression.for_user(@current_user).for_modules(@modules).select([:context_module_id, :collapsed]).select{|p| p.collapsed? }.map(&:context_module_id)
       if @context.grants_right?(@current_user, session, :participate_as_student)
@@ -93,14 +92,10 @@ class ContextModulesController < ApplicationController
       else
         @module.workflow_state = 'active'
       end
-      context_module_group_id =params[:context_module][:context_module_group_id]
-      params[:context_module].delete :context_module_group_id
       @module.attributes = params[:context_module]
       respond_to do |format|
         if @module.save
-          context_module_association = @module.build_context_module_group_association(context_module_group_id: context_module_group_id)
-          context_module_association.position = ContextModuleGroupAssociation.infer_position(context_module_association)
-          context_module_association.save!
+          create_module_group_and_association
           format.html { redirect_to named_context_url(@context, :context_context_modules_url) }
           format.json { render :json => @module.to_json(:include => :content_tags, :methods => :workflow_state, :permissions => {:user => @current_user, :session => session}) }
         else
@@ -110,14 +105,23 @@ class ContextModulesController < ApplicationController
       end
     end
   end
+
+  def create_module_group_and_association
+    context_module_group = ContextModuleGroup.find_or_create_by_context_id_and_context_type_and_is_default(@context.id,
+                                                                                      @context.class.name,true,name: ContextModuleGroup::DEFAULT_MODULE_GROUP_NAME )
+    context_module_association = @module.build_context_module_group_association(context_module_group_id: context_module_group.id)
+    context_module_association.position = ContextModuleGroupAssociation.infer_position(context_module_association)
+    context_module_association.save!
+
+  end
   
   def reorder
     if authorized_action(@context.context_modules.new, @current_user, :update)
       m = @context.context_modules.not_deleted.first
       
       m.update_order(params[:order].split(","))
-      cmga=ContextModuleGroupAssociation.find_by_context_module_id(m.id)
-      cmga.update_order(params[:order].split(","))
+      #cmga=ContextModuleGroupAssociation.find_by_context_module_id(m.id)
+      #cmga.update_order(params[:order].split(","))
       # Need to invalidate the ordering cache used by context_module.rb
       @context.touch
 
@@ -395,7 +399,6 @@ class ContextModulesController < ApplicationController
         @module.unpublish
       end
       respond_to do |format|
-        params[:context_module].delete :context_module_group_id
         if @module.update_attributes(params[:context_module])
           format.json { render :json => @module.to_json(:include => :content_tags, :methods => :workflow_state, :permissions => {:user => @current_user, :session => session}) }
         else

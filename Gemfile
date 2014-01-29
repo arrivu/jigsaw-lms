@@ -20,8 +20,7 @@ else
   if lts_file
     eval(File.read(lts_file))
   else
-   #gem 'rails', :git => 'https://github.com/makandra/rails.git', :branch => '2-3-lts', :ref => 'e86daf8ff727d5efc0040c876ba00c9444a5d915'
-   gem 'rails', '2.3.18'
+    gem 'rails', :git => 'https://github.com/makandra/rails.git', :branch => '2-3-lts', :ref => 'e86daf8ff727d5efc0040c876ba00c9444a5d915'
   end
   gem 'authlogic',    '2.1.3'
 end
@@ -194,6 +193,9 @@ end
 gem 'acts-as-taggable-on',:git => 'http://github.com/arrivu/acts-as-taggable-on.git', :branch => 'multitenant'
 
 gem 'wistia-api' ,'~> 0.2.3'
+
+gem 'acts_as_commentable', '2.1.1'
+#gem 'acts_as_commentable', git: 'http://github.com/jackdempsey/acts_as_commentable.git'  , branch: '2.x'
 
 #group :development do
 #  gem "coffee-script-redux-debugger", :git => "git://github.com/JetBrains/coffee-script-redux-debugger.git"

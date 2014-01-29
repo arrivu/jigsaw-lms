@@ -237,6 +237,26 @@ Rails.configuration.to_prepare do
           :description => 'The course to report on'
         }
       }
-    }
+    },
+    'referral_export_csv'=> {
+      :title => 'Referral Export',
+      :description_partial => true,
+      :parameters_partial => true,
+      :parameters => {
+          :enrollment_term_id => {
+              :required => false,
+              :description => 'The canvas id of the term to get grades from'
+          }
+          #:start_at => {
+          #    :required => true,
+          #    :description => 'The beginning date for submissions'
+          #},
+          #:end_at => {
+          #    :required => true,
+          #    :description => 'The end date for submissions'
+          #}
+
+      }
+  }
   }
 end

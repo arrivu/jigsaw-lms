@@ -1,9 +1,10 @@
 class UserModuleGroupEnrollmentsController < ApplicationController
   before_filter :require_user
   before_filter :require_context
-  add_crumb(proc { t('#crumbs.permissions', "Permissions") }) { |c| c.send :named_context_url, c.instance_variable_get("@context"), :context_user_module_group_enrollments_url }
+  add_crumb(proc { t('#crumbs.classes', "Classes") }) { |c| c.send :named_context_url, c.instance_variable_get("@context"), :context_context_modules_url }
   def index
     if authorized_action(@context, @current_user, :read)
+      add_crumb(t('#crumbs.permissions', "Permissions"), course_user_module_group_enrollments_url(@context))
       @context_module_groups = @context.context_module_groups.active
       js_env :COURSE_MODULE_GROUPS_FOR_ENROLLMENT => @context_module_groups.map(&:attributes)
       js_env :ENROLLED_COURSE_USERS => @context.students.map(&:attributes)
@@ -43,6 +44,22 @@ class UserModuleGroupEnrollmentsController < ApplicationController
           end
         }
         end
+    end
+  end
+
+  def permission_groups
+    if authorized_action(@context, @current_user, :read)
+      add_crumb(t('#crumbs.permissions', "Permission groups"), permission_groups_course_context_modules_url(@context))
+      @modules = @context.modules_visible_to(@current_user)
+      @module_groups = @context.context_module_groups
+
+      @collapsed_modules = ContextModuleProgression.for_user(@current_user).for_modules(@modules).select([:context_module_id, :collapsed]).select{|p| p.collapsed? }.map(&:context_module_id)
+      if @context.grants_right?(@current_user, session, :participate_as_student)
+        return unless tab_enabled?(@context.class::TAB_MODULES)
+        ContextModule.send(:preload_associations, @modules, [:content_tags])
+        @modules.each{|m| m.evaluate_for(@current_user) }
+        session[:module_progressions_initialized] = true
+      end
     end
   end
 

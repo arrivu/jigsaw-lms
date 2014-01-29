@@ -39,8 +39,8 @@ $(document).ready(function() {
   INST.selectContentDialog = function(options) {
     var for_modules = options.for_modules;
     var select_button_text = options.select_button_text || I18n.t('buttons.add_item', "Add Item");
-    var holder_name = options.holder_name || "module";
-    var dialog_title = options.dialog_title || I18n.t('titles.add_item_to_module', "Add Item to Module");
+    var holder_name = options.holder_name || "class";
+    var dialog_title = options.dialog_title || I18n.t('titles.add_item_to_class', "Add Item to Class");
     var allow_external_urls = for_modules;
     $dialog.data('submitted_function', options.submit);
     $dialog.find(".context_module_content").showIf(for_modules);
@@ -98,7 +98,7 @@ $(document).ready(function() {
       }
     };
     var item_type = $("#add_module_item_select").val();
-    if(item_type == 'external_url') {
+     if(item_type == 'external_url') {
       var item_data = {
         'item[type]': $("#add_module_item_select").val(),
         'item[id]': $("#select_context_content_dialog .module_item_option:visible:first .module_item_select").val(),
@@ -152,7 +152,10 @@ $(document).ready(function() {
             // discussion_topics will come from real api v1 and so wont be nested behind a `discussion_topic` root object
             if (item_data['item[type]'] === 'discussion_topic') {
               obj = data;
-            } else {
+            }else if (item_data['item[type]'] === 'wiki' || item_data['item[type]'] === 'faq' ||  item_data['item[type]'] === 'career' ||  item_data['item[type]'] === 'video' ||  item_data['item[type]'] === 'offer' ){
+              obj = data['wiki_page']
+            }
+            else {
               obj = data[item_data['item[type]']]; // e.g. data['wiki_page'] for wiki pages
             }
 

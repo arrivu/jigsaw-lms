@@ -9,7 +9,7 @@ class ContextExternalTool < ActiveRecord::Base
                   :name, :description, :custom_fields, :custom_fields_string,
                   :course_navigation, :account_navigation, :user_navigation,
                   :resource_selection, :editor_button, :homework_submission,
-                  :config_type, :config_url, :config_xml, :tool_id
+                  :config_type, :config_url, :config_xml, :tool_id,:main_navigation
   validates_presence_of :context_id, :context_type, :workflow_state
   validates_presence_of :name, :consumer_key, :shared_secret
   validates_length_of :name, :maximum => maximum_string_length
@@ -60,7 +60,7 @@ class ContextExternalTool < ActiveRecord::Base
     can :read and can :update and can :delete
   end
   
-  EXTENSION_TYPES = [:user_navigation, :course_navigation, :account_navigation, :resource_selection, :editor_button, :homework_submission]
+  EXTENSION_TYPES = [:user_navigation, :course_navigation, :account_navigation, :resource_selection, :editor_button, :homework_submission,:main_navigation]
   def url_or_domain_is_set
     setting_types = EXTENSION_TYPES
     # url or domain (or url on canvas lti extension) is required
@@ -230,6 +230,14 @@ class ContextExternalTool < ActiveRecord::Base
 
   def user_navigation(setting = nil)
     extension_setting(:user_navigation, setting)
+  end
+
+  def main_navigation=(hash)
+    tool_setting(:main_navigation, hash)
+  end
+
+  def main_navigation(setting = nil)
+    extension_setting(:main_navigation, setting)
   end
 
   def resource_selection=(hash)

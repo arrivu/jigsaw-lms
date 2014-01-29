@@ -6,6 +6,6 @@ define [
 
     course_id = ENV.COURSE_ID
 
-    urlRoot: -> "/courses/#{course_id}/permissions"
+    urlRoot: -> "/courses/#{course_id}/modules/permissions"
 
     resourceName: 'user_module_group_enrollments'

@@ -209,6 +209,8 @@ class WikiPage < ActiveRecord::Base
   scope :pages, where(:wiki_type => 'wiki')
   scope :faqs, where(:wiki_type => 'faq')
   scope :careers, where(:wiki_type => 'career')
+  scope :videos, where(:wiki_type => 'video')
+  scope :offers, where(:wiki_type => 'offer')
 
   # needed for ensure_unique_url
   def not_deleted
@@ -463,7 +465,7 @@ class WikiPage < ActiveRecord::Base
     end
     return if hash[:type] && ['folder', 'FOLDER_TYPE'].member?(hash[:type]) && hash[:linked_resource_id]
     hash[:missing_links] = {}
-    allow_save = true
+    allow_savwikie = true
     if hash[:type] == 'linked_resource' || hash[:type] == "URL_TYPE"
       allow_save = false
     elsif ['folder', 'FOLDER_TYPE'].member? hash[:type]
@@ -589,8 +591,11 @@ class WikiPage < ActiveRecord::Base
   WIKI_TYPE_FAQS ='faq'
   WIKI_TYPE_CAREERS ='career'
   WIKI_TYPE_PAGES ='wiki'
+  WIKI_TYPE_VIDEOS ='video'
+  WIKI_TYPE_OFFERS ='offer'
 
   DEFAULT_FAQ_FRONT_PAGE_URL = 'faq-front-page'
   DEFAULT_CAREER_FRONT_PAGE_URL = 'career-front-page'
-
+  DEFAULT_VIDEO_FRONT_PAGE_URL = 'video-front-page'
+  DEFAULT_OFFER_FRONT_PAGE_URL = 'offer-front-page'
 end

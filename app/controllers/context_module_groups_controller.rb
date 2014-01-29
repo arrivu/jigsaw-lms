@@ -13,18 +13,13 @@ class ContextModuleGroupsController < ApplicationController
       orders.each do |id|
         ids << id.to_i
       end
-      cmga_ids = @module_group.context_module_group_association_ids
+      cmga_ids = @module_group.context_module_group_associations.pluck(:context_module_id)
 
       affected_ids = ids - cmga_ids
       affected_ids.map do |affected_id|
         module_group_association = ContextModuleGroupAssociation.find_by_context_module_id(affected_id)
         module_group_association.update_attributes(context_module_group_id: params[:context_module_group_id])
       end
-      #update order
-      cmga=@module_group.context_module_group_associations.first
-      cmga.update_order(params[:order].split(","))
-      @module_groups = @module_group.context_module_group_associations
-      @module_groups.each{|mg| mg.save_without_touching_context }
 
       respond_to do |format|
         format.json { render :json => @modules.to_json(:include => :content_tags, :methods => :workflow_state) }
@@ -38,7 +33,8 @@ class ContextModuleGroupsController < ApplicationController
      @context_module_group = ContextModuleGroup.new(:context_id=> @context.id, :context_type => @context.class.name,
                                                         :name => params[:context_module_group][:name],:workflow_state=> 'active')
      @context_module_group.save!
-      redirect_to course_context_modules_path(@context)
+     @context_module_group.update_order([@context_module_group.id])
+      redirect_to permission_groups_course_context_modules_url(@context)
    end
   end
 
@@ -56,7 +52,7 @@ class ContextModuleGroupsController < ApplicationController
   def update
     @context_module_group = ContextModuleGroup.find(params[:id].to_i)
       if  @context_module_group.update_attributes(params[:context_module_group])
-        redirect_to course_context_modules_path(@context)
+        redirect_to permission_groups_course_context_modules_url(@context)
       end
   end
 

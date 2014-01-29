@@ -93,7 +93,7 @@ define [
           return uid
 
     renderHeader: -> 
-      @$el.find('thead tr').html "<th>Module Groups</th><th class='permissionButtonView'></th>"
+      @$el.find('thead tr').html "<th>Class groupings</th><th class='permissionButtonView'></th>"
 
       @collection.each (module) =>
         moduleHeaderView = new ModuleHeaderView
@@ -129,23 +129,29 @@ define [
           modulePermissionButtonView = new ModulePermissionButtonView
                                    model: module
                                    user_id: enrolled_user.id
-                                   user_enrolled: @check_permission(module.id,enrolled_user.id)
+                                   user_enrolled: @check_permission(module,enrolled_user.id)
 
           @$el.find("tr")
               .last()
               .append modulePermissionButtonView.render().el
 
 
-    check_permission:(module_id,user_id) ->
+    check_permission:(module,user_id) ->
       for key, value of ENV.MODULE_GROUP_PERMISSION_USER_IDS
-        module_id = parseInt(module_id, 10)
+        module_id = parseInt(module.attributes.id, 10)
         key_module_id = parseInt(key, 10)
         if key_module_id == module_id
-          for item in value
-            user_id_in_array = parseInt(item, 10)
-            user_id = parseInt(user_id, 10)
-            return true if user_id_in_array == user_id
-          false
+          if value.length == 0
+            if module.attributes.is_default == true
+              return true
+            else
+              false
+          else
+            for item in value
+              user_id_in_array = parseInt(item, 10)
+              user_id = parseInt(user_id, 10)
+              return true if user_id_in_array == user_id
+            false
 #          @find_in_array(user_id, value)
 
 
@@ -161,7 +167,7 @@ define [
         if mid is module.id
           module.save {module_id: mid,user_id:sid,status:work_status},
             failure: ->
-              alert 'module was not be saved!'
+              alert 'Class was not be saved!'
 
     selectallmodule: (event) ->
       selected_module_id= $(event.currentTarget).attr("data-select_module_id")
@@ -186,4 +192,4 @@ define [
           if module_id is key_selected_module_id
             module.save {module_id: key_selected_module_id,user_id:enrolled_user.id,status:work_status},
               failure: ->
-                alert 'module was not be saved!'
+                alert 'Class was not be saved!'
