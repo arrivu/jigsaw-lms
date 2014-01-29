@@ -629,7 +629,7 @@ class PseudonymSessionsController < ApplicationController
   def oauth2_confirm
     @provider = Canvas::Oauth::Provider.new(session[:oauth2][:client_id], session[:oauth2][:redirect_uri], session[:oauth2][:scopes])
     badge_host = URI.parse(session[:oauth2][:redirect_uri]).host
-    if (request.domain == badge_host.split('.')[1]) or (badge_host == "localhost")
+    if (request.domain.split('.')[0] == badge_host.split('.')[1]) or (badge_host == "localhost")
       redirect_to :controller =>  'pseudonym_sessions',:action => 'oauth2_accept'
     end
     if mobile_device?
