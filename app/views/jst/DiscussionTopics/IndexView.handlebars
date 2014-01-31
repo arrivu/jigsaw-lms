@@ -12,6 +12,9 @@
 
 {{#ifAll atLeastOnePageFetched length}}
   <div id="edit_course_home_content" style="display: none;">
+   <h2>
+       {{#t "headings.set_layout"}}Set Home Page Layout{{/t}}
+   </h2>
   <form action={{options.course_url}} id="edit_course_home_content_form" method="post">
   <input name="_method" type="hidden" value="put">
   <h2>{{#t "headings.set_layout"}}Set Home Page Layout{{/t}}</h2>

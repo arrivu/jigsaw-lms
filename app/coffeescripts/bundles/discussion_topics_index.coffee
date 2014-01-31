@@ -27,6 +27,7 @@ require [
       '': 'index'
 
     initialize: ->
+      $("#announcements_dialog").dialog({modal: true,width:1000,height:485});
       @discussions =
         open: @_createListView 'open',
           comparator: 'dateComparator'

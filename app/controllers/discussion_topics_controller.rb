@@ -175,7 +175,6 @@ class DiscussionTopicsController < ApplicationController
   def index
     return unless authorized_action(@context.discussion_topics.new, @current_user, :read)
     return child_topic if is_child_topic?
-
     log_asset_access("topics:#{@context.asset_string}", 'topics', 'other')
 
     scope = if params[:only_announcements]
@@ -209,7 +208,11 @@ class DiscussionTopicsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @active_tab = 'discussions'
+        if params[:course_home_view]
+          @active_tab = 'home'
+        else
+         @active_tab = 'discussions'
+        end
         add_crumb(t('#crumbs.discussions', 'Discussions'),
                   named_context_url(@context, :context_discussion_topics_url))
 
