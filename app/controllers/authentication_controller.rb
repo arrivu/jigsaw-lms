@@ -1,12 +1,13 @@
 class AuthenticationController < ApplicationController
+  include ApplicationHelper
 
   def create
     auth = request.env["omniauth.auth"]
     provider = set_provider(auth)
-    pseudonyms=@domain_root_account.pseudonyms.active.custom_find_by_unique_id(auth[:info][:email])
-    unless pseudonyms.nil?
-    @user= pseudonyms.user
-    @authentication=OmniauthAuthentication.find_by_user_id(@user.id)
+    pseudonym = @domain_root_account.pseudonyms.active.custom_find_by_unique_id(auth[:info][:email])
+    unless pseudonym.nil?
+    @user = pseudonym.user
+    @authentication = OmniauthAuthentication.find_by_user_id(@user.id)
     end
     # Try to find authentication first
       if !!@authentication
@@ -15,8 +16,8 @@ class AuthenticationController < ApplicationController
             update_user_info(@authentication,auth)
             reset_session_for_login
             @pseudonym_session = @domain_root_account.pseudonym_sessions.new(@authentication.user)
-            @pseudonym = @domain_root_account.pseudonyms.custom_find_by_unique_id(@authentication.user.email)
-            @pseudonym_session=@domain_root_account.pseudonym_sessions.create!(@pseudonym, false)
+            @pseudonym = @domain_root_account.pseudonyms.active.custom_find_by_unique_id(@authentication.user.email)
+            @pseudonym_session = @domain_root_account.pseudonym_sessions.create!(@pseudonym, false)
             successful_login(@pseudonym_session)
           else
             activation_pending
@@ -25,8 +26,11 @@ class AuthenticationController < ApplicationController
           flash[:error] = " Sorry,You have already registred with #{@authentication.provider} account."
           redirect_to root_url
         end
+      elsif pseudonym.present? and @authentication.nil?
+        flash[:error] = " Sorry,You are not registered with social login."
+        redirect_to root_url
       else
-      password=(0...10).map{ ('a'..'z').to_a[rand(26)] }.join
+      password = (0...10).map{ ('a'..'z').to_a[rand(26)] }.join
       @user = User.create!(:name => auth[:info][:name],
                            :sortable_name => auth[:info][:name],
                            :avatar_image_url=>auth[:info][:image],
@@ -50,7 +54,7 @@ class AuthenticationController < ApplicationController
   def successful_login(pseudonym)
     @current_pseudonym = pseudonym
     flash[:notice] = "You are now logged in"
-    favourite_course_url_path
+    favourite_course
     #redirect_to root_url
   end
 
@@ -86,23 +90,4 @@ class AuthenticationController < ApplicationController
    authentication.user.save!
  end
 
- #redirect to the users favourite course home path if the user has one
-
- def favourite_course_url_path
-   @pseudonym = Pseudonym.find(@user)
-   if @user.enrollments.empty?
-     redirect_to root_url
-   else
-   @favourite_course_id = @pseudonym.settings
-   if @favourite_course_id.empty?
-    @context_id = @user.enrollments.first.course_id
-    @context = Course.active.find(@context_id)
-    redirect_to course_url(@context)
-   else
-    @context_id = @favourite_course_id[:favourite_course_id]
-    @context = Course.active.find(@context_id)
-    redirect_to course_url(@context)
-   end
-  end
- end
 end

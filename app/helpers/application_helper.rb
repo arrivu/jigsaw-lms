@@ -905,4 +905,20 @@ module ApplicationHelper
       }
     )
   end
+
+  def favourite_course
+    if @user.enrollments.active.nil? or @user.enrollments.active.empty?
+      redirect_to root_url
+    else
+      favourite_course_id = @pseudonym.settings[:favourite_course_id]
+      if favourite_course_id.nil? || favourite_course_id.empty?
+        @context = @user.enrollments.first.course
+        redirect_to course_url(@context)
+      else
+        @context = Course.active.find(favourite_course_id)
+        redirect_to course_url(@context)
+      end
+    end
+  end
+
 end
