@@ -1,0 +1,39 @@
+<div id="pre_class_videos" class="class_preview_box">
+  <div class="classes_header" > <b class="classes_header_text">Pre Class Videos</b>
+      <div class="admin_link" >
+        &nbsp; <a  style="background-color: #7c7c7c;border: none;
+              border-radius: 4px;
+              padding: 3px;
+              color: #FFF;
+              width: 130PX;margin-top: -10px; " href="<%=course_context_modules_path(@context) %>" >&nbsp;&nbsp;Back&nbsp;&nbsp;</a>
+      </div>
+  </div>
+
+  <%@module.content_tags.active.pre_class_videos.each do |tag|  %>
+      <div style="margin: 10px 15px; font-size: 150%;
+              font-weight: bold;
+              color: #7f8c8d;
+              line-height: 1.5;">
+        <%= image_tag "play_icon.png" ,:width=> 30%> &nbsp;&nbsp;&nbsp;&nbsp;
+        <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
+          <%= truncate(tag.title, length: 53, omission: '..') %>
+        </a>
+      </div>
+      <hr/>
+
+<% end %>
+
+  <div id="class_preview_blank" style="margin: 10px 15px; font-size: 150%;
+          font-weight: bold;
+          color: #7f8c8d;
+          line-height: 1.5;display: none">
+    <%= image_tag "play_icon.png" ,:width=> 30%> &nbsp;&nbsp;&nbsp;&nbsp;
+    <a class="add_pre_class_video_link" href="<%= context_url(@context, :context_url) %>/modules/items/">
+
+    </a>
+    <hr/>
+  </div>
+
+</div>
+
+<%= render :partial => "shared/select_content_dialog", :locals => {:for_modules => true,:only => [:videos]} %>

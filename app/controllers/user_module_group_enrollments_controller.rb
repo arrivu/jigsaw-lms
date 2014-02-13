@@ -4,10 +4,14 @@ class UserModuleGroupEnrollmentsController < ApplicationController
   add_crumb(proc { t('#crumbs.classes', "Classes") }) { |c| c.send :named_context_url, c.instance_variable_get("@context"), :context_context_modules_url }
   def index
     if authorized_action(@context, @current_user, :read)
+      @context_module_group = ContextModuleGroup.find_by_context_id_and_context_type_and_is_default(@context.id,@context.class.name,true)
+      if @context_module_group.try(:is_default)
+        create_default_permission(@context_module_group)
+      end
       add_crumb(t('#crumbs.permissions', "Permissions"), course_user_module_group_enrollments_url(@context))
       @context_module_groups = @context.context_module_groups.active
       js_env :COURSE_MODULE_GROUPS_FOR_ENROLLMENT => @context_module_groups.map(&:attributes)
-      js_env :ENROLLED_COURSE_USERS => @context.students.map(&:attributes)
+      js_env :ENROLLED_COURSE_USERS => @context.students.active.map(&:attributes)
       js_env :COURSE_ID => @context.id
       # { 1:  [2,3,4]}
       # module_group_id: user_id array of user ids
@@ -61,6 +65,14 @@ class UserModuleGroupEnrollmentsController < ApplicationController
         session[:module_progressions_initialized] = true
       end
     end
+  end
+
+  def create_default_permission(context_module_group)
+      if context_module_group
+        @context.students.active.each do |student|
+          UserModuleGroupEnrollment.find_or_create_by_user_id_and_context_module_group_id(student.id,context_module_group.id,workflow_state: UserModuleGroupEnrollment::ACTIVE)
+        end
+      end
   end
 
 end

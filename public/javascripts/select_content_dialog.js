@@ -77,7 +77,7 @@ $(document).ready(function() {
     $("#select_context_content_dialog .module_item_select").change();
     $("#select_context_content_dialog").dialog({
       title: dialog_title,
-      width: 400
+      width: 600
     }).fixDialogButtons();
     $("#select_context_content_dialog").dialog('option', 'title', dialog_title);
   }
@@ -106,7 +106,7 @@ $(document).ready(function() {
       }
       item_data['item[url]'] = $("#content_tag_create_url").val();
       item_data['item[title]'] = $("#content_tag_create_title").val();
-      submit(item_data);   
+      submit(item_data);
     } else if(item_type == 'context_external_tool') {
       var item_data = {
         'item[type]': $("#add_module_item_select").val(),
@@ -131,7 +131,7 @@ $(document).ready(function() {
         'item[indent]': $("#content_tag_indent").val()
       }
       item_data['item[title]'] = $("#sub_header_title").val();
-      submit(item_data);   
+      submit(item_data);
     } else {
       var $options = $("#select_context_content_dialog .module_item_option:visible:first .module_item_select option:selected");
       $options.each(function() {
@@ -191,9 +191,9 @@ $(document).ready(function() {
   });
   $("#context_external_tools_select .tools").delegate('.tool', 'click', function() {
     var $tool = $(this);
-    if($(this).hasClass('selected') && !$(this).hasClass('resource_selection')) { 
-      $(this).removeClass('selected'); 
-      return; 
+    if($(this).hasClass('selected') && !$(this).hasClass('resource_selection')) {
+      $(this).removeClass('selected');
+      return;
     }
     $tool.parents(".tools").find(".tool.selected").removeClass('selected');
     $tool.addClass('selected');
@@ -250,7 +250,7 @@ $(document).ready(function() {
       }
       $dialog.dialog('close')
         .dialog('option', 'width', width || 800)
-        .dialog('option', 'height', height || frameHeight || 400)
+        .dialog('option', 'height', height || frameHeight || 600)
         .dialog('open');
       $dialog.triggerHandler('dialogresize');
       var url = $.replaceTags($("#select_content_resource_selection_url").attr('href'), 'id', tool.id);

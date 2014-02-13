@@ -1,5 +1,11 @@
 <% js_bundle :select_content_dialog %>
 <% jammit_css :select_content_dialog %>
+<%# if !only || only.include?(:videos) %>
+    <%# dialog_id ="select_context_content_video_dialog" %>
+<% #else %>
+ <%# dialog_id ="select_context_content_dialog" %>
+<%# end  %>
+
 <% only ||= nil # only is an optimization, so that tabs that aren't going to be used won't have their data loaded %>
 <% cache([@context, 'select_context_content_dialog', only].cache_key) do %>
   <div id="select_context_content_dialog" style="display: none;">

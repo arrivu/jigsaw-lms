@@ -383,7 +383,8 @@ FakeRails3Routes.draw do
     resources :outcome_groups, :only => ["create", "update", "destroy"] do
       match 'reorder' => 'outcome_groups#reorder', :as => :reorder
     end
-
+    get 'flip_classes' => 'context_modules#flip_classes',:path => :classes, :via => :get
+    get 'classes' => 'context_modules#index',:path => :flip_classes, :via => :get
     resources :context_modules, :path => :classes do
       match 'items' => 'context_modules#add_item', :as => :add_item, :via => :post
       match 'reorder' => 'context_modules#reorder_items', :as => :reorder, :via => :post

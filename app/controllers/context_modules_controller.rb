@@ -35,6 +35,20 @@ class ContextModulesController < ApplicationController
     end
   end
 
+  def flip_classes
+    if authorized_action(@context, @current_user, :read)
+      @modules = @context.modules_visible_to(@current_user)
+
+      @collapsed_modules = ContextModuleProgression.for_user(@current_user).for_modules(@modules).select([:context_module_id, :collapsed]).select{|p| p.collapsed? }.map(&:context_module_id)
+      if @context.grants_right?(@current_user, session, :participate_as_student)
+        return unless tab_enabled?(@context.class::TAB_MODULES)
+        ContextModule.send(:preload_associations, @modules, [:content_tags])
+        @modules.each{|m| m.evaluate_for(@current_user) }
+        session[:module_progressions_initialized] = true
+      end
+    end
+  end
+
   def item_redirect
     if authorized_action(@context, @current_user, :read)
       @tag = @context.context_module_tags.not_deleted.find(params[:id])
@@ -257,10 +271,11 @@ class ContextModulesController < ApplicationController
   
   def show
     @module = @context.modules_visible_to(@current_user).find(params[:id])
-    respond_to do |format|
-      format.html { redirect_to named_context_url(@context, :context_context_modules_url, :anchor => "module_#{params[:id]}") }
-      format.json { render :json => (@module.content_tags_visible_to(@current_user).to_json) }
-    end
+    add_crumb("#{@module.name}", course_context_module_url(@context,@module))
+    #respond_to do |format|
+    #  format.html { redirect_to named_context_url(@context, :context_context_modules_url, :anchor => "module_#{params[:id]}") }
+    #  format.json { render :json => (@module.content_tags_visible_to(@current_user).to_json) }
+    #end
   end
   
   def reorder_items
@@ -280,6 +295,8 @@ class ContextModulesController < ApplicationController
           affected_items << item
         end
       end
+      dragged_item = ContentTag.find(params['dragged_item_id'])
+      dragged_item.update_attributes(category: params['category'])
       ContentTag.touch_context_modules(affected_module_ids)
       ContentTag.update_could_be_locked(affected_items)
       @context.touch
@@ -338,6 +355,9 @@ class ContextModulesController < ApplicationController
     @module = @context.context_modules.not_deleted.find(params[:context_module_id])
     if authorized_action(@module, @current_user, :update)
       @tag = @module.add_item(params[:item])
+      if  params['category']
+        @tag.update_attributes(category: params['category'])
+      end
       render :json => @tag.to_json
     end
   end

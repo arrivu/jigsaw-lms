@@ -50,7 +50,9 @@ class ContentTag < ActiveRecord::Base
 
   acts_as_list :scope => :context_module
 
-  attr_accessible :learning_outcome, :context, :tag_type, :mastery_score, :content_asset_string, :content, :title, :indent, :position, :url, :new_tab, :content_type
+  attr_accessible :learning_outcome, :context, :tag_type, :mastery_score, :content_asset_string, :content, :title,
+                  :indent, :position, :url, :new_tab, :content_type,:category
+
 
   set_policy do
     given {|user, session| self.context && self.context.grants_right?(user, session, :manage_content)}
@@ -67,8 +69,21 @@ class ContentTag < ActiveRecord::Base
     state :deleted
   end
 
+  PRE_CLASS_VIDEO = "pre_class_video"
+  PRE_CLASS_RECORDING = "pre_class_recording"
+  PRE_CLASS_PRESENTATION = "pre_class_presentation"
+  PRE_CLASS_ASSIGNMENTS = "pre_class_assignments"
+  PRE_CLASS_READING_MATERIALS = "pre_class_reading_materials"
+
+
   scope :active, where(:workflow_state => 'active')
   scope :not_deleted, where("content_tags.workflow_state<>'deleted'")
+  scope :pre_class_videos, where(:category => PRE_CLASS_VIDEO)
+  scope :pre_class_recording, where(:category => PRE_CLASS_RECORDING)
+  scope :pre_class_presentation, where(:category => PRE_CLASS_PRESENTATION)
+  scope :pre_class_assignments, where(:category => PRE_CLASS_ASSIGNMENTS)
+  scope :pre_class_reading_materials, where(:category => PRE_CLASS_READING_MATERIALS)
+
 
   attr_accessor :skip_touch
   def touch_context_module

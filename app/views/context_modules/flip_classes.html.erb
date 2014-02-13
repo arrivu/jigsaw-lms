@@ -1,0 +1,28 @@
+<% content_for :page_title, join_title(t('titles.course_modules', "Course Classes"), @context.name) %>
+<% jammit_css :flip_classes %>
+<div id="classes">
+  <div class="classes_header" > <b class="classes_header_text">Classes</b>
+    <% if can_do(@context, @current_user, :manage_content) %>
+      <div class="admin_link" >
+        <%= link_to "Design classes" ,course_classes_path(@context) %>
+      </div>
+    <% end  %>
+  </div>
+  <% @modules.each_with_index do |m,i| %>
+      <%= render :partial => 'context_modules/course_class', :object => m, :locals => {:index => i+1} %>
+  <% end %>
+    <% unless @modules.any? %>
+      <div style="text-align: center;
+              margin: 20px;">
+
+     <b>No classes designed yet</b>
+        <br/>
+        <br/>
+        <% if can_do(@context, @current_user, :manage_content) %>
+            <%= link_to "Click here to Design classes" ,course_classes_path(@context), :class=> "btn" %>
+
+        <% end  %>
+      </div>
+      <br/>
+    <% end %>
+</div>

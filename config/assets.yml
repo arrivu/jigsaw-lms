@@ -185,5 +185,7 @@ stylesheets:
     - public/stylesheets/compiled/mobile_auth.css
   token_input:
     - public/stylesheets/compiled/token_input.css
+  flip_classes:
+    - public/stylesheets/compiled/flip_classes.css
 
   <%= plugin_assets.anchors_yml %>

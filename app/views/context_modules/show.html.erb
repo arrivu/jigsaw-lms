@@ -1,0 +1,13 @@
+<% content_for :page_title, join_title(t('titles.course_class', "Class"), @module.name) %>
+<% jammit_css :flip_classes %>
+<% js_bundle :context_modules %>
+<%= render :partial => 'context_modules/class_videos' %>
+<%= render :partial => 'context_modules/class_recordings'%>
+<%= render :partial => 'context_modules/class_assignments'%>
+<%= render :partial => 'context_modules/class_reading_materials'%>
+
+<% if can_do(@context, @current_user, :manage_content) %>
+<div id="context_modules" class="editable">
+
+</div>
+<% end %>

@@ -141,18 +141,11 @@ define [
         module_id = parseInt(module.attributes.id, 10)
         key_module_id = parseInt(key, 10)
         if key_module_id == module_id
-          if value.length == 0
-            if module.attributes.is_default == true
-              return true
-            else
-              false
-          else
-            for item in value
-              user_id_in_array = parseInt(item, 10)
-              user_id = parseInt(user_id, 10)
-              return true if user_id_in_array == user_id
-            false
-#          @find_in_array(user_id, value)
+          for item in value
+            user_id_in_array = parseInt(item, 10)
+            user_id = parseInt(user_id, 10)
+            return true if user_id_in_array == user_id
+          false
 
 
     find_in_array:(my_item, my_array) ->

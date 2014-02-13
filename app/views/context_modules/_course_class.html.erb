@@ -1,0 +1,13 @@
+<a href="<%= course_context_module_path(@context,object) %>">
+<div class="course_class">
+  <div class="course_class_header" >
+  <div class="course_class_header_index" >
+    Class &nbsp;<%=sprintf '%02d', index %>
+  </div>
+  </div>
+  <div class="class_name" >
+    <%= truncate(object.name, length: 50, omission: '...') %>
+  </div>
+
+</div>
+</a>

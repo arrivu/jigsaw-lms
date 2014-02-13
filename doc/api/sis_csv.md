@@ -89,6 +89,11 @@ still be provided.</td>
 <td>enum</td>
 <td><b>Required field</b>. active, deleted</td>
 </tr>
+<tr>
+<td>provider</td>
+<td>text</td>
+<td>The User login from facebook,google and linkedin.</td>
+</tr>
 </table>
 
 <p>When a student is 'deleted' all of its enrollments will also be deleted and
@@ -99,10 +104,10 @@ student to be able to log in but just not participate, leave the student
 Sample:
 
 <pre>
-user_id,login_id,password,first_name,last_name,email,status
-01103,bsmith01,,Bob,Smith,bob.smith@myschool.edu,active
-13834,jdoe03,,John,Doe,john.doe@myschool.edu,active
-13aa3,psue01,,Peggy,Sue,peggy.sue@myschool.edu,active
+user_id,login_id,password,first_name,last_name,email,status,provider
+01103,bsmith01,,Bob,Smith,bob.smith@myschool.edu,active,facebook
+13834,jdoe03,,John,Doe,john.doe@myschool.edu,active,linkedin
+13aa3,psue01,,Peggy,Sue,peggy.sue@myschool.edu,active,google
 </pre>
 
 accounts.csv
@@ -382,6 +387,98 @@ E411208,01103,student,1B,active
 E411208,13834,student,2A,active
 E411208,13aa3,teacher,2A,active
 </pre>
+
+user and enrollments.csv
+------------------------
+
+<table class="sis_csv">
+<tr>
+<th>Field Name</th>
+<th>Data Type</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>user_id</td>
+<td>text</td>
+<td><b>Required field</b>. A unique identifier used to reference users in the enrollments table.
+This identifier must not change for the user, and must be globally unique. In the user interface,
+this is called the SIS ID.</td>
+</tr>
+<tr>
+<td>login_id</td>
+<td>text</td>
+<td><b>Required field</b>. The name that a user will use to login to Instructure. If you have an
+authentication service configured (like LDAP), this will be their username
+from the remote system.</td>
+</tr>
+<tr>
+<td>password</td>
+<td>text</td>
+<td><p>If the account is configured to use LDAP or an SSO protocol then
+this isn't needed. Otherwise this is the password that will be used to
+login to Canvas along with the 'login_id' above.</p>
+<p>If the user already has a password (from previous SIS import or
+otherwise) it will <em>not</em> be overwritten</p></td>
+</tr>
+<tr>
+<td>first_name</td>
+<td>text</td>
+<td>Given name of the user.</td>
+</tr>
+<tr>
+<td>last_name</td>
+<td>text</td>
+<td>Last name of the user.</td>
+</tr>
+<tr>
+<td>email</td>
+<td>text</td>
+<td>The email address of the user. This might be the same as login_id, but should
+still be provided.</td>
+</tr>
+<tr>
+<td>status</td>
+<td>enum</td>
+<td><b>Required field</b>. active, deleted</td>
+</tr>
+<tr>
+<td>provider</td>
+<td>text</td>
+<td>The User login  from facebook,google and linkedin.</td>
+</tr>
+<tr>
+<td>course_id</td>
+<td>text</td>
+<td><b>Required field if section_id is missing</b>. The course identifier from courses.csv</td>
+</tr>
+<tr>
+<td>role</td>
+<td>text</td>
+<td><b>Required field</b>. student, teacher, ta, observer, designer, or a custom role defined
+by the account</td>
+</tr>
+<tr>
+<td>section_id</td>
+<td>text</td>
+<td><b>Required field if course_id missing</b>. The section identifier from sections.csv, if none
+is specified the default section for the course will be used</td>
+</tr>
+<tr>
+<td>course_enrollment_status</td>
+<td>enum</td>
+<td><b>Required field</b>. active, deleted, completed</td>
+</tr>
+</table>
+
+Sample:
+
+<pre>
+user_id,login_id,password,first_name,last_name,email,status,provider,course_id,role,section_id,course_enrollment_status
+01103,bob.smith@myschool.edu,bob123$,Bob,Smith,bob.smith@myschool.edu,active,facebook,E411208,student,,active
+13834,john.doe@myschool.edu,,John,Doe,john.doe@myschool.edu,active,linkedin,E411208,student,2A,active
+13aa3,peggy.sue@myschool.edu,peggy123$,Peggy,Sue,peggy.sue@myschool.edu,active,google,E411208,teacher,2A,active
+</pre>
+
 
 groups.csv
 ------------
