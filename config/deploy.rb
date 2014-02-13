@@ -107,6 +107,7 @@ namespace :canvas do
     run "ln -nfs #{shared_path}/config/security.yml #{release_path}/config/security.yml"
     run "ln -nfs #{shared_path}/config/logging.yml #{release_path}/config/logging.yml"
     run "ln -nfs #{shared_path}/config/omniauth.yml #{release_path}/config/omniauth.yml"
+    run "ln -nfs #{shared_path}/config/session_store.yml #{release_path}/config/session_store.yml"
 
   end
 
