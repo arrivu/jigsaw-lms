@@ -817,7 +817,7 @@ define([
                 var options = {for_modules: true};
                 options.context_content_dialog = "#select_context_content_video_dialog";
                 options.select_button_text =  "Add Pre Class Video";
-                options.dialog_title = I18n.t('titles.add_item', "Add Pre Class Video");
+                options.dialog_title =  "Add Pre Class Video";
                 options.submit = function(item_data) {
                     var url = $(".add_class_video_link").attr('rel');
                     item_data.category = "pre_class_video";
