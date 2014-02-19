@@ -763,6 +763,7 @@ Allowing Draft State here will allow teachers to enable it in their individual c
           <th class="reports"></th>
         </tr>
         <% @available_reports.each do |report, details|
+          if report != "last_user_course_access_csv"
            title = details[:title] || details
            description = details[:description]
            description_partial = details[:description_partial]
@@ -774,7 +775,9 @@ Allowing Draft State here will allow teachers to enable it in their individual c
            in_progress = last_report && last_report.in_progress?
            #the extra text is added so that you can give more than the date for the last run report
            extra_text = last_complete.try(:parameters).try(:[], "extra_text")
+          end
         %>
+         <% if report != "last_user_course_access_csv" %>
           <tr id="<%= report %>" class="reports">
             <td class="title reports">
               <span class="title"><%= title %></span>
@@ -824,6 +827,7 @@ Allowing Draft State here will allow teachers to enable it in their individual c
               <% end %>
             </td>
           </tr>
+        <% end %>
         <% end %>
       </table>
     </div>

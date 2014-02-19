@@ -28,7 +28,7 @@ define [
 
     dialogOptions:
       width: 625
-      title: I18n.t 'titles.insert_edit_image', 'Insert Video '
+      title: 'Insert Video'
       id: "wistia-dialog"
 
     initialize: (@editor, selectedNode) ->

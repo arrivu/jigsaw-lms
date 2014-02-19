@@ -204,5 +204,40 @@ module Canvas::AccountReports
       send_report(file)
     end
 
+    def last_user_course_access
+      file = Canvas::AccountReports.generate_file(@account_report)
+      CSV.open(file, "w") do |csv|
+
+        students = root_account.pseudonyms.active.
+            select('pseudonyms.last_request_at, pseudonyms.user_id,
+                  pseudonyms.sis_user_id, users.sortable_name,
+                  pseudonyms.current_login_ip').
+            joins('INNER JOIN users ON users.id = pseudonyms.user_id')
+
+        students = add_user_sub_account_scope(students)
+
+         if section
+          students = students.
+              joins('INNER JOIN enrollments e ON e.user_id = pseudonyms.user_id
+                   INNER JOIN course_sections s on s.id = e.course_section_id').
+              where('s.id = ?', section)
+          @account_report.parameters['extra_text'] << " For Course Section: #{section.name};"
+        end
+
+        csv << ['user id','user sis id','user name','last access at','last ip']
+        Shackles.activate(:slave) do
+          students.find_each do |u|
+            row = []
+            row << u.user_id
+            row << u.sis_user_id
+            row << u.sortable_name
+            row << default_timezone_format(u.last_request_at)
+            row << u.current_login_ip
+            csv << row
+          end
+        end
+      end
+      send_report(file)
+    end
   end
 end

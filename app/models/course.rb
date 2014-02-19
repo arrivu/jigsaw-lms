@@ -2702,30 +2702,32 @@ class Course < ActiveRecord::Base
   TAB_REFERRALS=19
   TAB_VIDEOS=20
   TAB_OFFERS=21
-  TAB_COMMENTS=22
+  TAB_BONUSVIDEOS=22
+  TAB_COMMENTS=23
 
   def self.default_tabs
     [
       { :id => TAB_HOME, :label => t('#tabs.home', "Home"), :css_class => 'home', :href => :course_path },
       { :id => TAB_ANNOUNCEMENTS, :label => t('#tabs.announcements', "Announcements"), :css_class => 'announcements', :href => :course_announcements_path },
       { :id => TAB_ASSIGNMENTS, :label => t('#tabs.assignments', "Assignments"), :css_class => 'assignments', :href => :course_assignments_path },
-      { :id => TAB_DISCUSSIONS, :label => t('#tabs.discussions', "Discussions"), :css_class => 'discussions', :href => :course_discussion_topics_path },
+      { :id => TAB_DISCUSSIONS, :label => t('#tabs.forum', "Forum"), :css_class => 'discussions', :href => :course_discussion_topics_path },
       { :id => TAB_GRADES, :label => t('#tabs.grades', "Grades"), :css_class => 'grades', :href => :course_grades_path },
-      { :id => TAB_PEOPLE, :label => t('#tabs.people', "People"), :css_class => 'people', :href => :course_users_path },
+      { :id => TAB_PEOPLE, :label => t('#tabs.people', "Batch Mates"), :css_class => 'people', :href => :course_users_path },
       { :id => TAB_CHAT, :label => t('#tabs.chat', "Chat"), :css_class => 'chat', :href => :course_chat_path },
       { :id => TAB_PAGES, :label => t('#tabs.pages', "Pages"), :css_class => 'pages', :href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_PAGES },
       { :id => TAB_FILES, :label => t('#tabs.files', "Files"), :css_class => 'files', :href => :course_files_path },
-      { :id => TAB_SYLLABUS, :label => t('#tabs.syllabus', "Syllabus"), :css_class => 'syllabus', :href => :syllabus_course_assignments_path },
+      { :id => TAB_SYLLABUS, :label => t('#tabs.syllabus', "Schedule"), :css_class => 'syllabus', :href => :syllabus_course_assignments_path },
       { :id => TAB_OUTCOMES, :label => t('#tabs.outcomes', "Outcomes"), :css_class => 'outcomes', :href => :course_outcomes_path },
       { :id => TAB_QUIZZES, :label => t('#tabs.quizzes', "Quizzes"), :css_class => 'quizzes', :href => :course_quizzes_path },
       { :id => TAB_MODULES, :label => t('#tabs.modules', "Classes"), :css_class => 'classes', :href => :course_context_modules_path },
       { :id => TAB_CONFERENCES, :label => t('#tabs.conferences', "Conferences"), :css_class => 'conferences', :href => :course_conferences_path },
       { :id => TAB_COLLABORATIONS, :label => t('#tabs.collaborations', "Collaborations"), :css_class => 'collaborations', :href => :course_collaborations_path },
       { :id => TAB_FAQS, :label =>t('#tabs.faq', "FAQ"), :css_class => 'faq',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_FAQS  },
-      { :id => TAB_CAREERS, :label =>t('#tabs.career', "Career"), :css_class => 'career', :href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_CAREERS },
-      { :id => TAB_REFERRALS, :label => t('#tabs.referrals', "Referrals"), :css_class => 'referrals', :href => :course_referrals_path},
+      { :id => TAB_CAREERS, :label =>t('#tabs.careers', "Careers"), :css_class => 'career', :href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_CAREERS },
+      { :id => TAB_REFERRALS, :label => t('#tabs.referrals', "Refer a friend"), :css_class => 'referrals', :href => :course_referrals_path},
       { :id => TAB_VIDEOS, :label => t('#tabs.videos', "Videos"), :css_class => 'videos',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_VIDEOS },
       { :id => TAB_OFFERS, :label => t('#tabs.offers', "Offers"), :css_class => 'offer',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_OFFERS },
+      { :id => TAB_BONUSVIDEOS, :label => t('#tabs.bonusvideos', "BonusVideos"), :css_class => 'bonus_videos', :href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_BONUS_VIDEOS },
       {:id => TAB_COMMENTS, :label => t('#tabs.testimonial', "Testimonial"), :css_class => 'comments', :href => :course_comments_path},
       { :id => TAB_SETTINGS, :label => t('#tabs.settings', "Settings"), :css_class => 'settings', :href => :course_settings_path }
 
@@ -2806,6 +2808,7 @@ class Course < ActiveRecord::Base
         tab[:hidden_unused] = true if tab[:id] == TAB_CAREERS && !active_record_types[:career]
         tab[:hidden_unused] = true if tab[:id] == TAB_VIDEOS && !active_record_types[:videos]
         tab[:hidden_unused] = true if tab[:id] == TAB_OFFERS && !active_record_types[:offers]
+        tab[:hidden_unused] = true if tab[:id] == TAB_BONUSVIDEOS && !active_record_types[:bonus_videos]
       end
 
       # remove tabs that the user doesn't have access to

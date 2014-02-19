@@ -293,6 +293,8 @@ class WikiPagesController < ApplicationController
       @context.class::TAB_VIDEOS
     elsif wiki_type == 'offer'
       @context.class::TAB_OFFERS
+    elsif wiki_type == 'bonus_video'
+      @context.class::TAB_BONUSVIDEOS
     else
        @context.class::TAB_PAGES
     end

@@ -689,6 +689,7 @@ class CoursesController < ApplicationController
   #   }
   def settings
     get_context
+    last_user_access_course_report
     if authorized_action(@context, @current_user, :read_as_admin)
       if api_request?
         render :json => course_settings_json(@context)
@@ -1664,4 +1665,16 @@ class CoursesController < ApplicationController
     end
   end
 
-end
+  def  last_user_access_course_report
+    @available_reports = AccountReport.available_reports(@domain_root_account) if @domain_root_account.grants_right?(@current_user, @session, :read_reports)
+    if @available_reports
+      @last_complete_reports = {}
+      @last_reports = {}
+      @available_reports.keys.each do |report|
+          @last_complete_reports[report] = @domain_root_account.account_reports.last_complete_of_type(report).first
+          @last_reports[report] = @domain_root_account.account_reports.last_of_type(report).first
+      end
+    end
+  end
+ end
+

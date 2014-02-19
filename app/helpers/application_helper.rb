@@ -452,8 +452,13 @@ module ApplicationHelper
           hide = tab[:hidden] || tab[:hidden_unused]
           class_name = tab[:css_class].to_css_class
           class_name += ' active' if @active_tab == tab[:css_class]
-          unless tab[:label] == "Sub-Accounts"
-            html << "<li class='section #{"section-tab-hidden" if hide }'>" + link_to(tab[:label], path, :class => class_name) + "</li>" if tab[:href]
+          unless (tab[:label] == "Sub-Accounts") || (tab[:label] ==  "Quizzes") || (tab[:label] == "Outcomes") || (tab[:label] == "Files") || (tab[:label] == "Pages")
+            if FileTest.exist?("#{RAILS_ROOT}/public/images/#{tab[:css_class]}.png")
+              link_icon =  tab[:css_class]
+            else
+              link_icon = "missing"
+            end
+            html << "<li class='section #{"section-tab-hidden" if hide }'>" + "<a href='"+path+"' class='"+class_name+"'> "+image_tag("#{link_icon}.png",:style => 'padding: 0px 10px 0px 0px;' ) + tab[:label] + "</a>" + "</li>" if tab[:href]
           end
         end
         html << "</ul></nav>"

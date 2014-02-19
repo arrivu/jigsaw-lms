@@ -9,7 +9,7 @@
               font-weight: bold;
               color: #7f8c8d;
               line-height: 1.5;background-color: #e1f3fd;border-radius:5px;">
-        <div style="width:auto;padding:10px;float:left;"><%= image_tag "class_recordings.png" ,:width=> 50, :style=> "padding:5px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <div style="width:auto;padding:17px;float:left;"><%= image_tag "class_recordings.png" , :style=> "padding:5px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
         <div style="width:85%;padding:10px;">
         <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#239bc0;"> class recording&nbsp;<%=sprintf '%02d',idx + 1 %></a></span><br>
 
@@ -25,7 +25,7 @@
               font-weight: bold;
               color: #7f8c8d;
               line-height: 1.5;background-color: #fee8dd;border-radius:5px;">
-        <div style="width:auto;padding:10px;float:left;"><%= image_tag "pdf_icon.png" ,:width=> 50, :style=> "padding:5px;border-radius:35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <div style="width:auto;padding:17px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
         <div style="width:85%;padding:10px;">
           <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#c2401c;"> class  Presentation&nbsp;<%=sprintf '%02d',idx + 1%></a></span><br>
 

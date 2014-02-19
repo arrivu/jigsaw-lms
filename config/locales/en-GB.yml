@@ -292,6 +292,7 @@ en-GB:
       add_course_button: "Add course"
       add_course_link: "Add a new course"
       add_user_button: "Add user"
+      add_comment_button: "Add Comment"
       add_user_link: "Add a new user"
       display_name_help: "People will see this name in discussions, messages and comments."
       full_name_description: "This name will be used by teachers for grading."

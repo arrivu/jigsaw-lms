@@ -246,8 +246,8 @@ Rails.configuration.to_prepare do
           :enrollment_term_id => {
               :required => false,
               :description => 'The canvas id of the term to get grades from'
-          }
-          #:start_at => {
+          } ,
+         #:start_at => {
           #    :required => true,
           #    :description => 'The beginning date for submissions'
           #},
@@ -256,6 +256,21 @@ Rails.configuration.to_prepare do
           #    :description => 'The end date for submissions'
           #}
 
+      }
+  },
+  'last_user_course_access_csv'=> {
+      :title => 'Last User Course Access',
+      :description_partial => true,
+      :parameters_partial => 'term_selector_parameters',
+      :parameters => {
+          :enrollment_term_id => {
+              :required => false,
+              :description => 'The canvas id of the term to get grades from'
+          },
+          :course_id => {
+              :required => true,
+              :description => 'The course to report on'
+          }
       }
   }
   }

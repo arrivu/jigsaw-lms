@@ -285,6 +285,7 @@ en-AU:
       add_course_button: "Add Course"
       add_course_link: "Add a New Course"
       add_user_button: "Add User"
+      add_comment_button: "Add Comment"
       add_user_link: "Add a New User"
       display_name_help: "People will see this name in discussions, messages and comments."
       full_name_description: "This name will be used by teachers for grading."

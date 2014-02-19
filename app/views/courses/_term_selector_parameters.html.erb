@@ -1,0 +1,13 @@
+
+<table>
+<tr>
+  <!--Select the term to run the report on-->
+  <td><%= t('account_reports.default.parameters.header', %{Sections}) %>
+    <select name="parameters[section_id]">
+      <% @context.course_sections.active.each do |section| %>
+          <option value="<%= section.id %>" <%= 'selected' if section == @section %>><%= section.name %></option>
+      <% end %>
+    </select>
+  </td>
+</tr>
+</table>

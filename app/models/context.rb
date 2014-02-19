@@ -161,6 +161,7 @@ module Context
       res[:career] = self.respond_to?(:wiki) && self.wiki_id && !self.wiki.wiki_pages.careers.active.empty?
       res[:videos] = self.respond_to?(:wiki) && self.wiki_id && !self.wiki.wiki_pages.videos.active.empty?
       res[:offers] = self.respond_to?(:wiki) && self.wiki_id && !self.wiki.wiki_pages.offers.active.empty?
+      res[:bonus_videos] = self.respond_to?(:wiki) && self.wiki_id && !self.wiki.wiki_pages.bonusvideos.active.empty?
       res
     end
   end

@@ -24,6 +24,10 @@ class PseudonymSessionsController < ApplicationController
   before_filter :require_user, :only => [ :otp_login ]
   skip_before_filter :require_reacceptance_of_terms
 
+  def corp_login
+    redirect_to login_url :lms_login => 1
+  end
+
   def new
     if @current_user && !params[:re_login] && !params[:confirm] && !params[:expected_user_id] && !session[:used_remember_me_token]
       redirect_to dashboard_url

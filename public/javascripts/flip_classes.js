@@ -800,7 +800,7 @@ define([
             if(INST && INST.selectContentDialog) {
                 var module = $(this).parents(".context_module").find(".header").getTemplateData({textValues: ['name', 'id']});
                 var options = {for_modules: true};
-                options.select_button_text = I18n.t('buttons.add_item', "Add Item");
+                options.select_button_text =  "Add Item";
                 options.holder_name = module.name;
                 options.dialog_title = I18n.t('titles.add_item', "Add Item to %{module}", {'module': module.name});
                 options.submit = function(item_data) {

@@ -456,5 +456,47 @@ define([
     });
 
     $.scrollSidebar();
+      $(".configure_report_link").click(function(event) {
+          event.preventDefault();
+          var data = $(this).data(),
+              $dialog = data.$report_dialog;
+          if (!$dialog) {
+              $dialog = data.$report_dialog = $(this).parent("td").find(".report_dialog").dialog({
+                  autoOpen: false,
+                  width: 400,
+                  title: I18n.t('titles.configure_report', 'Configure Report')
+              });
+              $dialog.find(".datetime_field").datetime_field()
+          }
+          $dialog.dialog('open');
+      })
+
+      $(".run_report_link").click(function(event) {
+          event.preventDefault();
+          $(this).parent("form").submit();
+      });
+
+      $(".run_report_form").formSubmit({
+          resetForm: true,
+          beforeSubmit: function(data) {
+              $(this).loadingImage();
+              return true;
+          },
+          success: function(data) {
+              $(this).loadingImage('remove');
+              var report = $(this).attr('id').replace('_form', '');
+              $("#" + report).find('.run_report_link').hide()
+                  .end().find('.configure_report_link').hide()
+                  .end().find('.running_report_message').show();
+              $(this).parent(".report_dialog").dialog('close');
+          },
+          error: function(data) {
+              $(this).loadingImage('remove');
+              $(this).parent(".report_dialog").dialog('close');
+          }
+      });
+
+
+
   });
 });

@@ -14,7 +14,7 @@
               font-weight: bold;
               color: #7f8c8d;
               line-height: 1.5;">
-        <%= image_tag "play_icon.png" ,:width=> 30%> &nbsp;&nbsp;&nbsp;&nbsp;
+        <%= image_tag "play_icon.png" %> &nbsp;&nbsp;&nbsp;&nbsp;
         <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
           <%= truncate(tag.title, length: 53, omission: '..') %>
         </a>
@@ -27,7 +27,7 @@
           font-weight: bold;
           color: #7f8c8d;
           line-height: 1.5;display: none">
-    <%= image_tag "play_icon.png" ,:width=> 30%> &nbsp;&nbsp;&nbsp;&nbsp;
+    <%= image_tag "play_icon.png" %> &nbsp;&nbsp;&nbsp;&nbsp;
     <a class="add_pre_class_video_link" href="<%= context_url(@context, :context_url) %>/modules/items/">
 
     </a>

@@ -4,7 +4,11 @@
   <% if !course_home && can_do(@wiki, @current_user, :manage) && @context.wiki.wiki_pages.length < 2 || @context.wiki.wiki_pages.faqs.length < 2 || @context.wiki.wiki_pages.careers.length <  2 %>
     <div class="rs-margin-lr rs-margin-top">
     <p>
-      <b><%= t :wiki_description_header, "What's a #{@wiki_type} for?" %></b>
+      <% if @wiki_type == "bonus_video" %>
+         <b><%= t :wiki_description_header, "What's a Bonus Video for?" %></b>
+      <% else %>
+        <b><%= t :wiki_description_header, "What's a #{@wiki_type} for?" %></b>
+      <%end %>
       <% if @context.is_a?(Course) %>
         <% if @wiki_type == WikiPage::WIKI_TYPE_FAQS %>
               <%= <<-EOT
@@ -43,8 +47,10 @@
     <% pages = @context.wiki.wiki_pages.videos.not_deleted.select{|p| !p.new_record? }.sort_by{|p| p.title || ""} %>
     <% elsif @page.wiki_type == WikiPage::WIKI_TYPE_OFFERS%>
     <% pages = @context.wiki.wiki_pages.offers.not_deleted.select{|p| !p.new_record? }.sort_by{|p| p.title || ""} %>
-    <% else @page.wiki_type == WikiPage::WIKI_TYPE_CAREERS%>
+    <% elsif @page.wiki_type == WikiPage::WIKI_TYPE_CAREERS%>
     <% pages = @context.wiki.wiki_pages.careers.not_deleted.select{|p| !p.new_record? }.sort_by{|p| p.title || ""} %>
+    <% else @page.wiki_type == WikiPage::WIKI_TYPE_BONUS_VIDEOS%>
+    <% pages = @context.wiki.wiki_pages.bonusvideos.not_deleted.select{|p| !p.new_record? }.sort_by{|p| p.title || ""} %>
     <% end %>
     <% if pages.length > 10 %>
     <h2><%= t 'headers.common_pages', 'Common Pages' %></h2>
@@ -68,7 +74,11 @@
     </ul>
     </div>
     <% end %>
-    <h2><%= t 'headers.all_pages', "All #{@wiki_type}s" %></h2>
+    <% if @wiki_type == "bonus_video" %>
+        <h2><%= t 'headers.all_pages', "All Bonus Videos" %></h2>
+    <% else %>
+       <h2><%= t 'headers.all_pages', "All #{@wiki_type}s" %></h2>
+    <%end %>
     <div class="rs-margin-lr rs-margin-bottom">
     <% if pages.length < 8 %>
       <ul class="item_list limit_height">
@@ -87,15 +97,27 @@
   <div class="rs-margin-lr <%= "rs-margin-bottom" if course_home %>">
     <hr />
   <% if can_do(@page, @current_user, :update_content)%>
-    <%= link_to ('<i class="icon-edit"></i>').html_safe + " " + 'Edit this' +" #{@wiki_type}", "#edit", :class => "edit_link btn button-sidebar-wide" %>
+    <% if @wiki_type == "bonus_video" %>
+       <%= link_to ('<i class="icon-edit"></i>').html_safe + " " + 'Edit this Bonus Video', "#edit", :class => "edit_link btn button-sidebar-wide" %>
+    <% else %>
+            <%= link_to ('<i class="icon-edit"></i>').html_safe + " " + 'Edit this' +" #{@wiki_type}", "#edit", :class => "edit_link btn button-sidebar-wide" %>
+    <%end %>
   <% end %>
-  <% if can_do(@page, @current_user, :delete) && !@page.new_record? && !@page.is_front_page? && !@page.deleted? && @page.url != WikiPage::DEFAULT_FAQ_FRONT_PAGE_URL && @page.url != WikiPage::DEFAULT_CAREER_FRONT_PAGE_URL && @page.url != WikiPage::DEFAULT_VIDEO_FRONT_PAGE_URL && @page.url != WikiPage::DEFAULT_OFFER_FRONT_PAGE_URL %>
-    <%= link_to ('<i class="icon-trash"></i>').html_safe + " " + 'Delete this' +" #{@wiki_type}", context_url(@context, :context_wiki_page_url, @page.wiki_type, @page.url), :method => :delete, :confirm => t('delete_page_confirmation', 'Are you sure you want to delete this page? This cannot be undone!'), :class => "btn button-sidebar-wide" %>
+  <% if can_do(@page, @current_user, :delete) && !@page.new_record? && !@page.is_front_page? && !@page.deleted? && @page.url != WikiPage::DEFAULT_FAQ_FRONT_PAGE_URL && @page.url != WikiPage::DEFAULT_CAREER_FRONT_PAGE_URL && @page.url != WikiPage::DEFAULT_VIDEO_FRONT_PAGE_URL && @page.url != WikiPage::DEFAULT_OFFER_FRONT_PAGE_URL && @page.url != WikiPage::DEFAULT_BONUS_VIDEO_FRONT_PAGE_URL%>
+     <% if @wiki_type == "bonus_video" %>
+        <%= link_to ('<i class="icon-trash"></i>').html_safe + " " + 'Delete this Bonus Video', context_url(@context, :context_wiki_page_url, @page.wiki_type, @page.url), :method => :delete, :confirm => t('delete_page_confirmation', 'Are you sure you want to delete this page? This cannot be undone!'), :class => "btn button-sidebar-wide" %>
+     <%else %>
+        <%= link_to ('<i class="icon-trash"></i>').html_safe + " " + 'Delete this' +" #{@wiki_type}", context_url(@context, :context_wiki_page_url, @page.wiki_type, @page.url), :method => :delete, :confirm => t('delete_page_confirmation', 'Are you sure you want to delete this page? This cannot be undone!'), :class => "btn button-sidebar-wide" %>
+     <%end %>
   <% end %>
   <a href="<%= context_url(@context, :context_wiki_page_url, @wiki_type, @page) %>" class="wiki_page_url" style="display: none;">&nbsp;</a>
   <% if can_do(@wiki, @current_user, :create_page) %>
     <div id="wiki_page_new">
-      <a class="new btn button-sidebar-wide element_toggler" aria-controls="add_wiki_page_form" href="#"><i class="icon-add"></i> <%= 'Create a' +" #{@wiki_type}" %></a>
+      <% if @wiki_type == "bonus_video" %>
+          <a class="new btn button-sidebar-wide element_toggler" aria-controls="add_wiki_page_form" href="#"><i class="icon-add"></i> <%= 'Create a Bonus Video' %></a>
+      <%else %>
+         <a class="new btn button-sidebar-wide element_toggler" aria-controls="add_wiki_page_form" href="#"><i class="icon-add"></i> <%= 'Create a' +" #{@wiki_type}" %></a>
+      <%end %>
       <% form_for(:wiki_page, :url => context_url(@context, :context_wiki_pages_url, @wiki_type), :html => {:method => :post, :style => "display: none", :id => 'add_wiki_page_form'}) do |f| -%>
         <div class="input-append">
           <%= f.text_field :title, :style => "width: 182px;", :placeholder => t(:title, "New page title"), :maxlength => "255" %>

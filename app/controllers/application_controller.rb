@@ -53,6 +53,7 @@ class ApplicationController < ActionController::Base
   after_filter :update_enrollment_last_activity_at
   before_filter :get_wiki_type
   before_filter :get_badges
+  #before_filter :currently_logged_in_user_count
   include Tour
 
   add_crumb(proc {
@@ -1022,6 +1023,7 @@ class ApplicationController < ActionController::Base
     page_name ||= WikiPage::DEFAULT_CAREER_FRONT_PAGE_URL if (@wiki_type ==  WikiPage::WIKI_TYPE_CAREERS)
     page_name ||= WikiPage::DEFAULT_VIDEO_FRONT_PAGE_URL if (@wiki_type == WikiPage::WIKI_TYPE_VIDEOS)
     page_name ||= WikiPage::DEFAULT_OFFER_FRONT_PAGE_URL if (@wiki_type == WikiPage::WIKI_TYPE_OFFERS)
+    page_name ||= WikiPage::DEFAULT_BONUS_VIDEO_FRONT_PAGE_URL if (@wiki_type == WikiPage::WIKI_TYPE_BONUS_VIDEOS)
     page_name ||= (@wiki.get_front_page_url || Wiki::DEFAULT_FRONT_PAGE_URL) unless @context.draft_state_enabled?
     if(params[:format] && !['json', 'html'].include?(params[:format]))
       page_name += ".#{params[:format]}"
@@ -1062,9 +1064,14 @@ class ApplicationController < ActionController::Base
 
     @page.editing_roles = (@context.default_wiki_editing_roles rescue nil) || @page.default_roles
 
-    if @page.is_front_page? or @wiki.wiki_pages.faqs.empty? or @wiki.wiki_pages.careers.empty? or @wiki.wiki_pages.videos.empty? or @wiki.wiki_pages.offers.empty?
-      @page.body = t "#application.wiki_front_page_default_content_course", "Welcome to your new course #{@page.wiki_type}!" if @context.is_a?(Course)
-      @page.body = t "#application.wiki_front_page_default_content_group", "Welcome to your new group #{@page.wiki_type}!" if @context.is_a?(Group)
+    if @page.is_front_page? or @wiki.wiki_pages.faqs.empty? or @wiki.wiki_pages.careers.empty? or @wiki.wiki_pages.videos.empty? or @wiki.wiki_pages.offers.empty? or @wiki.wiki_pages.bonusvideos.empty?
+      if @page.wiki_type == "bonus_video"
+        @page.body = t "#application.wiki_front_page_default_content_course", "Welcome to your new course Bonus Video!" if @context.is_a?(Course)
+        @page.body = t "#application.wiki_front_page_default_content_group", "Welcome to your new group Bonus Video!" if @context.is_a?(Group)
+      else
+        @page.body = t "#application.wiki_front_page_default_content_course", "Welcome to your new course #{@page.wiki_type}!" if @context.is_a?(Course)
+        @page.body = t "#application.wiki_front_page_default_content_group", "Welcome to your new group #{@page.wiki_type}!" if @context.is_a?(Group)
+      end
     end
   end
 
@@ -1637,6 +1644,8 @@ class ApplicationController < ActionController::Base
       @context.wiki.wiki_pages.videos.count == 0
     elsif @wiki_type == WikiPage::WIKI_TYPE_OFFERS
       @context.wiki.wiki_pages.offers.count == 0
+    elsif @wiki_type == WikiPage::WIKI_TYPE_BONUS_VIDEOS
+      @context.wiki.wiki_pages.bonusvideos.count == 0
     else
        @context.wiki.wiki_pages.pages.count == 0
     end
@@ -1660,4 +1669,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def currently_logged_in_user_count
+    @users = User.currently_logged_in
+    @totalcount = 0
+    @users.each do |student|
+      @enrollment_type = Enrollment.find_by_user_id(student.id)
+      if @enrollment_type.type == "StudentEnrollment"
+           @totalcount+=1
+      end
+    end
+  end
 end

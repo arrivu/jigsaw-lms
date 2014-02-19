@@ -260,6 +260,12 @@ class User < ActiveRecord::Base
         order("pseudonyms.current_login_at DESC").
         limit(25)
   }
+  scope :currently_logged_in, lambda {
+    includes(:pseudonyms).
+        where("pseudonyms.last_request_at>?", 10.seconds.ago).
+        order("pseudonyms.last_request_at DESC").
+        limit(9999)
+  }
   scope :include_pseudonym, includes(:pseudonym)
   scope :restrict_to_sections, lambda { |sections|
     if sections.empty?

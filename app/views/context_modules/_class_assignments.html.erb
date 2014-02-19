@@ -9,7 +9,7 @@
               font-weight: bold;
               color: #7f8c8d;
               line-height: 1.5;background-color: #fcfbdf;border-radius:5px;">
-        <div style="width:auto;padding:10px;float:left;"><%= image_tag "course_assignment.png" ,:width=> 50, :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <div style="width:auto;padding:17px;float:left;"><%= image_tag "course_assignment.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
         <div style="width:85%;padding:10px;">
           <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#d4811b;"> Assignment&nbsp;<%= sprintf '%02d',idx + 1 %></a></span><br>
 

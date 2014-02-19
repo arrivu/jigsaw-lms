@@ -17,7 +17,7 @@
 #
 
 class PseudonymSession < Authlogic::Session::Base
-  last_request_at_threshold  10.minutes
+  last_request_at_threshold  5.seconds
   verify_password_method :valid_arbitrary_credentials?
   login_field :unique_id
   find_by_login_method :custom_find_by_unique_id
