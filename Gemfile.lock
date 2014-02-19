@@ -209,6 +209,11 @@ GEM
     omniauth-oauth2 (1.0.2)
       oauth2 (~> 0.6.0)
       omniauth (~> 1.0)
+    omniauth-windowslive (0.0.8.1)
+      multi_json (>= 1.0.3)
+      omniauth-oauth2 (~> 1.0)
+    omniauth-yahoo (0.0.4)
+      omniauth-oauth (~> 1.0)
     parallel (0.5.16)
     parallelized_specs (0.4.64)
       parallel
@@ -378,6 +383,8 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-google-oauth2
   omniauth-linkedin
+  omniauth-windowslive
+  omniauth-yahoo
   parallel (= 0.5.16)
   parallelized_specs (= 0.4.64)
   pg (= 0.15.0)
