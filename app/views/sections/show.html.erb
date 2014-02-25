@@ -106,7 +106,7 @@ h3 .tally {
   </tr>
   <% if @section.sis_source_id && can_do(@context.root_account, @current_user, :read_sis) || can_do(@context.root_account, @current_user, :manage_sis) %>
     <tr>
-      <td><%= f.blabel :sis_source_id, :en => "SIS ID" %></td>
+      <td><%= f.blabel :sis_source_id, "Section SIS ID" %></td>
       <td>
         <span class="course_form">
           <% if can_do(@context.root_account, @current_user, :manage_sis) %>
@@ -167,7 +167,7 @@ h3 .tally {
     </table>
   </div>
   <% if @section && ( @section.sis_source_id && can_do(@context.root_account, @current_user, :read_sis) || can_do(@context.root_account, @current_user, :manage_sis))%>
-    <div><%= before_label('sis_id', "SIS ID") %> <span class="sis_source_id"><%= @section.sis_source_id %></span></div>
+    <div><%= "Section SIS ID:" %> <span class="sis_source_id"><%= @section.sis_source_id %></span></div>
   <% end %>
   <% if @section.start_at || @section.end_at %>
     <div>

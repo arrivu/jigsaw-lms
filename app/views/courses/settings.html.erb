@@ -63,7 +63,7 @@
       </td>
       <% if @context.sis_source_id && can_do(@context.root_account, @current_user, :read_sis) || can_do(@context.root_account, @current_user, :manage_sis) %>
           </tr><tr>
-      <td class="form-label"><%= f.blabel :sis_source_id, :en => "SIS ID" %></td>
+      <td class="form-label"><%= f.blabel :sis_source_id, "Course SIS ID" %></td>
       <td>
             <span class="course_form">
               <% if can_do(@context.root_account, @current_user, :manage_sis) %>

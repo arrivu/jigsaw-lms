@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   before_filter :require_context
-  add_crumb(proc { t '#crumbs.comments', "Comments" }, :except => [:new,:destroy]) { |c| c.send :course_comments_path, c.instance_variable_get("@context") }
+  add_crumb(proc { t '#crumbs.testimonial', "Testimonial" }, :except => [:new,:destroy]) { |c| c.send :course_comments_path, c.instance_variable_get("@context") }
   before_filter { |c| c.active_tab = "Comments" }
 
   def create

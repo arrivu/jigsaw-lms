@@ -3,8 +3,8 @@
 <% js_bundle :context_modules %>
 <%= render :partial => 'context_modules/class_videos' %>
 <%= render :partial => 'context_modules/class_recordings'%>
-<%= render :partial => 'context_modules/class_assignments'%>
 <%= render :partial => 'context_modules/class_reading_materials'%>
+<%= render :partial => 'context_modules/class_assignments'%>
 
 <% if can_do(@context, @current_user, :manage_content) %>
 <div id="context_modules" class="editable">

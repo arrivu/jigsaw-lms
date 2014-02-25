@@ -78,25 +78,25 @@ define [
       , $.ajaxJSON(@options.assignment_groups_url, "GET", {}, @gotAssignmentGroups)
       , $.ajaxJSON( @options.sections_url, "GET", {}, @gotSections))
       .then ([students, status, xhr]) =>
-        @gotChunkOfStudents students
+          @gotChunkOfStudents students
 
-        paginationLinks = xhr.getResponseHeader('Link')
-        lastLink = paginationLinks.match(/<[^>]+>; *rel="last"/)
-        unless lastLink?
-          @gotAllStudents()
-          return
-        lastPage = lastLink[0].match(/page=(\d+)/)[1]
-        lastPage = parseInt lastPage, 10
+          paginationLinks = xhr.getResponseHeader('Link')
+          lastLink = paginationLinks.match(/<[^>]+>; *rel="last"/)
+          unless lastLink?
+            @gotAllStudents()
+            return
+          lastPage = lastLink[0].match(/page=(\d+)/)[1]
+          lastPage = parseInt lastPage, 10
 
-        fetchEnrollments = (page) =>
-          $.ajaxJSON @options[enrollmentsUrl], "GET", {page}
-        dfds = (fetchEnrollments(page) for page in [2..lastPage])
-        $.when(dfds...).then (responses...) =>
-          if dfds.length == 1
-            @gotChunkOfStudents responses[0]
-          else
-            @gotChunkOfStudents(students) for [students, x, y] in responses
-          @gotAllStudents()
+          fetchEnrollments = (page) =>
+            $.ajaxJSON @options[enrollmentsUrl], "GET", {page}
+          dfds = (fetchEnrollments(page) for page in [2..lastPage])
+          $.when(dfds...).then (responses...) =>
+            if dfds.length == 1
+              @gotChunkOfStudents responses[0]
+            else
+              @gotChunkOfStudents(students) for [students, x, y] in responses
+            @gotAllStudents()
 
       @spinner = new Spinner()
       $(@spinner.spin().el).css(
@@ -138,14 +138,7 @@ define [
         @students[student.id].sections ||= []
         @students[student.id].sections.push(studentEnrollment.course_section_id)
 
-    can_display_link: (student_id) ->
-      if @options.gradebook_is_editable
-        true
-      else
-        (ENV.current_user.id == student_id)
-
-
-     gotAllStudents: ->
+    gotAllStudents: ->
       for id, student of @students
         student.computed_current_score ||= 0
         student.computed_final_score ||= 0
@@ -157,7 +150,6 @@ define [
         student.display_name = rowStudentNameTemplate
           avatar_image_url: student.avatar_url
           display_name: student.name
-          display_url: @can_display_link(student.id)
           url: student.enrollment.grades.html_url
           sectionNames: sectionNames
 
@@ -172,7 +164,7 @@ define [
       @initHeader()
 
     defaultSortType: 'assignment_group'
-      
+
 
     getStoredSortOrder: =>
       userSettings.contextGet('sort_grade_columns_by') || { sortType: @defaultSortType }
@@ -242,7 +234,7 @@ define [
         bIndex = sortMap[String(b.object.id)]
         if aIndex? and bIndex?
           return aIndex - bIndex
-        # if there's a new assignment and its order has not been stored, it should come at the end
+          # if there's a new assignment and its order has not been stored, it should come at the end
         else if aIndex? and not bIndex?
           return -1
         else if bIndex?
@@ -336,9 +328,9 @@ define [
         idToMatch = "assignment_#{submission.assignment_id}"
         cell = index for column, index in columns when column.id is idToMatch
         thisCellIsActive = activeCell? and
-          editing and
-          activeCell.row is student.row and
-          activeCell.cell is cell
+        editing and
+        activeCell.row is student.row and
+        activeCell.cell is cell
         @updateSubmission(submission)
         @calculateStudentGrade(student)
         @gradeGrid.updateCell student.row, cell unless thisCellIsActive
@@ -483,8 +475,8 @@ define [
 
     hoverMinimizedCell: (event) =>
       $hoveredCell = $(event.currentTarget)
-                     # get rid of hover class so that no other tooltips show up
-                     .removeClass('hover')
+      # get rid of hover class so that no other tooltips show up
+      .removeClass('hover')
       columnDef = @gradeGrid.getColumns()[$hoveredCell.index()]
       assignment = columnDef.object
       offset = $hoveredCell.offset()
@@ -533,11 +525,11 @@ define [
       if e.target.className.match(/cell|slick/) or !@gradeGrid.getActiveCell
         return
 
-      if e.target.className is 'grade' and @gradeGrid.getCellEditor() instanceof SubmissionCell.out_of 
+      if e.target.className is 'grade' and @gradeGrid.getCellEditor() instanceof SubmissionCell.out_of
         # We can assume that a user clicked the up or down arrows on the
         # number input, we want to allow them to keep doing that.
         return
-      
+
       @gradeGrid.getEditorLock().commitCurrentEdit()
 
     onGridInit: () ->
@@ -545,22 +537,22 @@ define [
       $(@spinner.el).remove()
       $('#gradebook_wrapper').show()
       @$grid = grid = $('#gradebook_grid')
-        .fillWindowWithMe({
-          alsoResize: '#gradebook_students_grid',
-          onResize: => @multiGrid.resizeCanvas()
-        })
-        .delegate '.slick-cell',
+      .fillWindowWithMe({
+            alsoResize: '#gradebook_students_grid',
+            onResize: => @multiGrid.resizeCanvas()
+          })
+      .delegate '.slick-cell',
           'mouseenter.gradebook focusin.gradebook' : @highlightColumn
           'mouseleave.gradebook focusout.gradebook' : @unhighlightColumns
           'mouseenter focusin' : (event) ->
             grid.find('.hover, .focus').removeClass('hover focus')
             $(this).addClass (if event.type == 'mouseenter' then 'hover' else 'focus')
           'mouseleave focusout' : -> $(this).removeClass('hover focus')
-        .delegate '.gradebook-cell-comment', 'click.gradebook', (event) =>
+      .delegate '.gradebook-cell-comment', 'click.gradebook', (event) =>
           event.preventDefault()
           data = $(event.currentTarget).data()
           SubmissionDetailsDialog.open @assignments[data.assignmentId], @students[data.userId], @options
-        .delegate '.minimized',
+      .delegate '.minimized',
           'mouseenter' : @hoverMinimizedCell,
           'mouseleave' : @unhoverMinimizedCell
 
@@ -633,13 +625,13 @@ define [
             action: "#{@options.context_url}/gradebook_uploads"
             authenticityToken: ENV.AUTHENTICITY_TOKEN
           $upload_modal = $(gradebook_uploads_form(locals))
-            .dialog
+          .dialog
               bgiframe: true
               autoOpen: false
               modal: true
               width: 720
               resizable: false
-            .fixDialogButtons()
+          .fixDialogButtons()
         $upload_modal.dialog('open')
 
       $settingsMenu.find('.student_names_toggle').click (e) ->
@@ -713,7 +705,7 @@ define [
       for column in @allAssignmentColumns
         submissionType = ''+ column.object.submission_types
         res.push(column) unless submissionType is "not_graded" or
-                                submissionType is "attendance" and !@show_attendance
+        submissionType is "attendance" and !@show_attendance
       res.concat(@aggregateColumns)
 
     assignmentHeaderHtml: (assignment) ->
@@ -742,21 +734,21 @@ define [
         resizable: false
         sortable: true
       },
-      {
-        id: 'secondary_identifier'
-        name: I18n.t 'secondary_id', 'Secondary ID'
-        field: 'secondary_identifier'
-        width: 100
-        cssClass: "meta-cell secondary_identifier_cell"
-        resizable: false
-        sortable: true
-      }]
+        {
+          id: 'secondary_identifier'
+          name: I18n.t 'secondary_id', 'Secondary ID'
+          field: 'secondary_identifier'
+          width: 100
+          cssClass: "meta-cell secondary_identifier_cell"
+          resizable: false
+          sortable: true
+        }]
 
       @allAssignmentColumns = for id, assignment of @assignments
         outOfFormatter = assignment &&
-                         assignment.grading_type == 'points' &&
-                         assignment.points_possible? &&
-                         SubmissionCell.out_of
+        assignment.grading_type == 'points' &&
+        assignment.points_possible? &&
+        SubmissionCell.out_of
         minWidth = if outOfFormatter then 70 else 90
         fieldName = "assignment_#{id}"
         columnDef =
@@ -766,8 +758,8 @@ define [
           object: assignment
           formatter: this.cellFormatter
           editor: outOfFormatter ||
-                  SubmissionCell[assignment.grading_type] ||
-                  SubmissionCell
+          SubmissionCell[assignment.grading_type] ||
+          SubmissionCell
           minWidth: columnWidths.assignment.min,
           maxWidth: columnWidths.assignment.max,
           width: testWidth(assignment.name, minWidth, columnWidths.assignment.default_max),
@@ -779,9 +771,9 @@ define [
           columnDef.width = 10
           do (fieldName) =>
             $(document)
-              .bind('gridready', => @minimizeColumn(@$grid.find("[id*='#{fieldName}']")))
-              .unbind('gridready.render')
-              .bind('gridready.render', => @gradeGrid.invalidate() )
+            .bind('gridready', => @minimizeColumn(@$grid.find("[id*='#{fieldName}']")))
+            .unbind('gridready.render')
+            .bind('gridready.render', => @gradeGrid.invalidate() )
         columnDef
 
       @aggregateColumns = for id, group of @assignmentGroups
@@ -794,18 +786,18 @@ define [
             </div>
           """
         {
-          id: "assignment_group_#{id}"
-          field: "assignment_group_#{id}"
-          formatter: @groupTotalFormatter
-          name: html
-          toolTip: group.name
-          object: group
-          minWidth: columnWidths.assignmentGroup.min,
-          maxWidth: columnWidths.assignmentGroup.max,
-          width: testWidth(group.name, columnWidths.assignmentGroup.min, columnWidths.assignmentGroup.default_max)
-          cssClass: "meta-cell assignment-group-cell",
-          sortable: true
-          type: 'assignment_group'
+        id: "assignment_group_#{id}"
+        field: "assignment_group_#{id}"
+        formatter: @groupTotalFormatter
+        name: html
+        toolTip: group.name
+        object: group
+        minWidth: columnWidths.assignmentGroup.min,
+        maxWidth: columnWidths.assignmentGroup.max,
+        width: testWidth(group.name, columnWidths.assignmentGroup.min, columnWidths.assignmentGroup.default_max)
+        cssClass: "meta-cell assignment-group-cell",
+        sortable: true
+        type: 'assignment_group'
         }
 
       total = I18n.t "total", "Total"
@@ -905,9 +897,9 @@ define [
           groupNames = (ag.name for ag in invalidAssignmentGroups)
           @totalGradeWarning = I18n.t 'invalid_assignment_groups_warning',
             one: "Score does not include %{groups} because it has
-                  no points possible"
+                              no points possible"
             other: "Score does not include %{groups} because they have
-                    no points possible"
+                                no points possible"
           ,
             groups: $.toSentence(groupNames)
             count: groupNames.length

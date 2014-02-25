@@ -45,14 +45,14 @@ class RoleOverride < ActiveRecord::Base
   end
 
   ENROLLMENT_TYPES =
-    [
-      # StudentViewEnrollment permissions will mirror StudentPermissions
-      {:base_role_name => 'StudentEnrollment', :name => 'StudentEnrollment', :label => lambda { t('roles.student', 'Student') }, :plural_label => lambda { t('roles.students', 'Students') } },
-      {:base_role_name => 'TeacherEnrollment', :name => 'TeacherEnrollment', :label => lambda { t('roles.teacher', 'Teacher') }, :plural_label => lambda { t('roles.teachers', 'Teachers') } },
-      {:base_role_name => 'TaEnrollment', :name => 'TaEnrollment', :label => lambda { t('roles.ta', 'TA') }, :plural_label => lambda { t('roles.tas', 'TAs') } },
-      {:base_role_name => 'DesignerEnrollment', :name => 'DesignerEnrollment', :label => lambda { t('roles.designer', 'Designer') }, :plural_label => lambda { t('roles.designers', 'Designers') } },
-      {:base_role_name => 'ObserverEnrollment', :name => 'ObserverEnrollment', :label => lambda { t('roles.observer', 'Observer') }, :plural_label => lambda { t('roles.observers', 'Observers') } }
-    ].freeze
+      [
+          # StudentViewEnrollment permissions will mirror StudentPermissions
+          {:base_role_name => 'StudentEnrollment', :name => 'StudentEnrollment', :label => lambda { t('roles.student', 'Student') }, :plural_label => lambda { t('roles.students', 'Students') } },
+          {:base_role_name => 'TeacherEnrollment', :name => 'TeacherEnrollment', :label => lambda { t('roles.teacher', 'Teacher') }, :plural_label => lambda { t('roles.teachers', 'Teachers') } },
+          {:base_role_name => 'TaEnrollment', :name => 'TaEnrollment', :label => lambda { t('roles.ta', 'TA') }, :plural_label => lambda { t('roles.tas', 'TAs') } },
+          {:base_role_name => 'DesignerEnrollment', :name => 'DesignerEnrollment', :label => lambda { t('roles.designer', 'Designer') }, :plural_label => lambda { t('roles.designers', 'Designers') } },
+          {:base_role_name => 'ObserverEnrollment', :name => 'ObserverEnrollment', :label => lambda { t('roles.observer', 'Observer') }, :plural_label => lambda { t('roles.observers', 'Observers') } }
+      ].freeze
 
   def self.enrollment_types
     ENROLLMENT_TYPES
@@ -67,18 +67,18 @@ class RoleOverride < ActiveRecord::Base
   NO_PERMISSIONS_TYPE = 'NoPermissions'
 
   KNOWN_ROLE_TYPES =
-    [
-      'TeacherEnrollment',
-      'TaEnrollment',
-      'DesignerEnrollment',
-      'StudentEnrollment',
-      'StudentViewEnrollment',
-      'ObserverEnrollment',
-      'TeacherlessStudentEnrollment',
-      'AccountAdmin',
-      'AccountMembership',
-      NO_PERMISSIONS_TYPE
-    ].freeze
+      [
+          'TeacherEnrollment',
+          'TaEnrollment',
+          'DesignerEnrollment',
+          'StudentEnrollment',
+          'StudentViewEnrollment',
+          'ObserverEnrollment',
+          'TeacherlessStudentEnrollment',
+          'AccountAdmin',
+          'AccountMembership',
+          NO_PERMISSIONS_TYPE
+      ].freeze
   def self.known_role_types
     KNOWN_ROLE_TYPES
   end
@@ -89,636 +89,634 @@ class RoleOverride < ActiveRecord::Base
   # NOTE: if you add a permission, please also update the API documentation for
   # RoleOverridesController#add_role
   Permissions.register({
-      :manage_wiki => {
-        :label => lambda { t('permissions.manage_wiki', "Manage wiki (add / edit / delete pages)") },
-        :available_to => [
-          'TaEnrollment',
-          'TeacherEnrollment',
-          'DesignerEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'TeacherEnrollment',
-          'DesignerEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :read_forum => {
-        :label => lambda { t('permissions.read_forum', "View discussions") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'ObserverEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :post_to_forum => {
-        :label => lambda { t('permissions.post_to_forum', "Post to discussions") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :moderate_forum => {
-        :label => lambda { t('permissions.moderate_form', "Moderate discussions ( delete / edit other's posts, lock topics)") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :send_messages => {
-        :label => lambda { t('permissions.send_messages', "Send messages to individual course members") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :send_messages_all => {
-        :label => lambda { t('permissions.send_messages_all', "Send messages to the entire class") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :manage_outcomes => {
-        :label => lambda { t('permissions.manage_outcomes', "Manage learning outcomes") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :create_conferences => {
-        :label => lambda { t('permissions.create_conferences', "Create web conferences") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :create_collaborations => {
-        :label => lambda { t('permissions.create_collaborations', "Create student collaborations") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :read_roster => {
-        :label => lambda { t('permissions.read_roster', "See the list of users") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :view_all_grades => {
-        :label => lambda { t('permissions.view_all_grades', "View all grades") },
-        :available_to => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin',
-          'AccountMembership',
-          'StudentEnrollment'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin',
-          'StudentEnrollment'
-        ]
-      },
-      :manage_grades => {
-        :label => lambda { t('permissions.manage_grades', "Edit grades") },
-        :available_to => [
-          'TaEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :manage_rubrics => {
-          :label => lambda { t('permissions.manage_rubrics', "Create and edit assessing rubrics") },
-          :available_to => [
-              'TaEnrollment',
-              'DesignerEnrollment',
-              'TeacherEnrollment',
-              'AccountAdmin',
-              'AccountMembership'
-          ],
-          :true_for => [
-              'DesignerEnrollment',
-              'TaEnrollment',
-              'TeacherEnrollment',
-              'AccountAdmin'
-          ]
-      },
-      :comment_on_others_submissions => {
-        :label => lambda { t('permissions.comment_on_others_submissions', "View all students' submissions and make comments on them") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :manage_students => {
-        :label => lambda { t('permissions.manage_students', "Add/remove students for the course") },
-        :available_to => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :manage_admin_users => {
-        :label => lambda { t('permissions.manage_admin_users', "Add/remove other teachers, course designers or TAs to the course") },
-        :available_to => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :manage_role_overrides => {
-        :label => lambda { t('permissions.manage_role_overrides', "Manage permissions") },
-        :account_only => true,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountMembership)
-      },
-      :manage_account_memberships => {
-        :label => lambda { t('permissions.manage_account_memberships', "Add/remove other admins for the account") },
-        :available_to => [
-          'AccountMembership'
-        ],
-        :true_for => [
-          'AccountAdmin'
-        ],
-        :account_only => true
-      },
-      :manage_account_settings => {
-        :label => lambda { t('permissions.manage_account_settings', "Manage account-level settings") },
-        :available_to => [
-          'AccountMembership'
-        ],
-        :true_for => [
-          'AccountAdmin'
-        ],
-        :account_only => true
-      },
-      :manage_groups => {
-        :label => lambda { t('permissions.manage_groups', "Manage (create / edit / delete) groups") },
-        :available_to => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :view_group_pages => {
-        :label => lambda { t('permissions.view_group_pages', "View the group pages of all student groups") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :manage_files => {
-        :label => lambda { t('permissions.manage_files', "Manage (add / edit / delete) course files") },
-        :available_to => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :manage_assignments => {
-        :label => lambda { t('permissions.manage_assignments', "Manage (add / edit / delete) assignments and quizzes") },
-        :available_to => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :undelete_courses => {
-        :label => lambda { t('permissions.undelete_courses', "Undelete courses") },
-        :admin_tool => true,
-        :account_only => true, 
-        :available_to => [
-          'AccountAdmin',
-          'AccountMembership'
-        ], 
-        :true_for => [ 'AccountAdmin' ]
-      },
-      :view_notifications => {
-        :label => lambda { t('permissions.view_notifications', "View notifications") },
-        :admin_tool => true,
-        :account_only => true,
-        :available_to => [
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [],
-        :account_allows => lambda {|acct| acct.settings[:admins_can_view_notifications]}
-      },
-      :read_question_banks => {
-        :label => lambda { t('permissions.read_question_banks', "View and link to question banks") },
-        :available_to => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :manage_calendar => {
-        :label => lambda { t('permissions.manage_calendar', "Add, edit and delete events on the course calendar") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :read_reports => {
-        :label => lambda { t('permissions.read_reports', "View usage reports for the course") },
-        :available_to => [
-          'StudentEnrollment',
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'DesignerEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :manage_courses => {
-        :label => lambda { t('permissions.manage_courses', "Manage ( add / edit / delete ) courses") },
-        :available_to => [
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :account_only => true,
-        :true_for => [
-          'AccountAdmin'
-        ]
-      },
-      :manage_user_logins => {
-        :label => lambda { t('permissions.manage_user_logins', "Modify login details for users") },
-        :available_to => [
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :account_only => true,
-        :true_for => [
-          'AccountAdmin'
-        ]
-      },
-      :manage_alerts => {
-        :label => lambda { t('permissions.manage_announcements', "Manage global announcements") },
-        :account_only => true,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership),
-      },
+                           :manage_wiki => {
+                               :label => lambda { t('permissions.manage_wiki', "Manage wiki (add / edit / delete pages)") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'TeacherEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'TeacherEnrollment',
+                                   'DesignerEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :read_forum => {
+                               :label => lambda { t('permissions.read_forum', "View discussions") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'ObserverEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :post_to_forum => {
+                               :label => lambda { t('permissions.post_to_forum', "Post to discussions") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :moderate_forum => {
+                               :label => lambda { t('permissions.moderate_form', "Moderate discussions ( delete / edit other's posts, lock topics)") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :send_messages => {
+                               :label => lambda { t('permissions.send_messages', "Send messages to individual course members") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :send_messages_all => {
+                               :label => lambda { t('permissions.send_messages_all', "Send messages to the entire class") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_outcomes => {
+                               :label => lambda { t('permissions.manage_outcomes', "Manage learning outcomes") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :create_conferences => {
+                               :label => lambda { t('permissions.create_conferences', "Create web conferences") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :create_collaborations => {
+                               :label => lambda { t('permissions.create_collaborations', "Create student collaborations") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :read_roster => {
+                               :label => lambda { t('permissions.read_roster', "See the list of users") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :view_all_grades => {
+                               :label => lambda { t('permissions.view_all_grades', "View all grades") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_grades => {
+                               :label => lambda { t('permissions.manage_grades', "Edit grades") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_rubrics => {
+                               :label => lambda { t('permissions.manage_rubrics', "Create and edit assessing rubrics") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'DesignerEnrollment',
+                                   'TaEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :comment_on_others_submissions => {
+                               :label => lambda { t('permissions.comment_on_others_submissions', "View all students' submissions and make comments on them") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_students => {
+                               :label => lambda { t('permissions.manage_students', "Add/remove students for the course") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_admin_users => {
+                               :label => lambda { t('permissions.manage_admin_users', "Add/remove other teachers, course designers or TAs to the course") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_role_overrides => {
+                               :label => lambda { t('permissions.manage_role_overrides', "Manage permissions") },
+                               :account_only => true,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountMembership)
+                           },
+                           :manage_account_memberships => {
+                               :label => lambda { t('permissions.manage_account_memberships', "Add/remove other admins for the account") },
+                               :available_to => [
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'AccountAdmin'
+                               ],
+                               :account_only => true
+                           },
+                           :manage_account_settings => {
+                               :label => lambda { t('permissions.manage_account_settings', "Manage account-level settings") },
+                               :available_to => [
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'AccountAdmin'
+                               ],
+                               :account_only => true
+                           },
+                           :manage_groups => {
+                               :label => lambda { t('permissions.manage_groups', "Manage (create / edit / delete) groups") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :view_group_pages => {
+                               :label => lambda { t('permissions.view_group_pages', "View the group pages of all student groups") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_files => {
+                               :label => lambda { t('permissions.manage_files', "Manage (add / edit / delete) course files") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_assignments => {
+                               :label => lambda { t('permissions.manage_assignments', "Manage (add / edit / delete) assignments and quizzes") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :undelete_courses => {
+                               :label => lambda { t('permissions.undelete_courses', "Undelete courses") },
+                               :admin_tool => true,
+                               :account_only => true,
+                               :available_to => [
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [ 'AccountAdmin' ]
+                           },
+                           :view_notifications => {
+                               :label => lambda { t('permissions.view_notifications', "View notifications") },
+                               :admin_tool => true,
+                               :account_only => true,
+                               :available_to => [
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [],
+                               :account_allows => lambda {|acct| acct.settings[:admins_can_view_notifications]}
+                           },
+                           :read_question_banks => {
+                               :label => lambda { t('permissions.read_question_banks', "View and link to question banks") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_calendar => {
+                               :label => lambda { t('permissions.manage_calendar', "Add, edit and delete events on the course calendar") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :read_reports => {
+                               :label => lambda { t('permissions.read_reports', "View usage reports for the course") },
+                               :available_to => [
+                                   'StudentEnrollment',
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_courses => {
+                               :label => lambda { t('permissions.manage_courses', "Manage ( add / edit / delete ) courses") },
+                               :available_to => [
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :account_only => true,
+                               :true_for => [
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_user_logins => {
+                               :label => lambda { t('permissions.manage_user_logins', "Modify login details for users") },
+                               :available_to => [
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :account_only => true,
+                               :true_for => [
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_alerts => {
+                               :label => lambda { t('permissions.manage_announcements', "Manage global announcements") },
+                               :account_only => true,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                           },
 
-      :read_messages => {
-        :label => lambda { t('permissions.read_messages', "View notifications sent to users") },
-        :account_only => :site_admin,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership),
-      },
-      :become_user => {
-        :label => lambda { t('permissions.become_user', "Become other users") },
-        :account_only => :root,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership),
-      },
-      :manage_site_settings => {
-        :label => lambda { t('permissions.manage_site_settings', "Manage site-wide and plugin settings") },
-        :account_only => :site_admin,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership),
-      },
-      :manage_developer_keys => {
-        :label => lambda { t('permissions.manage_developer_keys', "Manage developer keys") },
-        :account_only => :site_admin,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership),
-      },
-      :manage_sis => {
-        :label => lambda { t('permissions.manage_sis', "Import and manage SIS data") },
-        :account_only => true,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership),
-      },
-      :read_sis => {
-        :label => lambda { t('permission.read_sis', "Read SIS data") },
-        :account_only => true,
-        :true_for => %w(AccountAdmin TeacherEnrollment),
-        :available_to => %w(AccountAdmin AccountMembership TeacherEnrollment TaEnrollment StudentEnrollment)
-      },
-      :read_course_list => {
-        :label => lambda { t('permissions.read_course_list', "View the list of courses") },
-        :account_only => true,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership)
-      },
-      :view_statistics => {
-        :label => lambda { t('permissions.view_statistics', "View statistics") },
-        :account_only => true,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership)
-      },
-      :manage_storage_quotas => {
-          :label => lambda { t('permissions.manage_storage_quotas', "Manage storage quotas") },
-          :account_only => true,
-          :true_for => %w(AccountAdmin),
-          :available_to => %w(AccountAdmin AccountMembership)
-      },
-      :manage_user_notes => {
-        :label => lambda { t('permissions.manage_user_notes', "Manage faculty journal entries") },
-        :available_to => [
-          'TaEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'TeacherEnrollment',
-          'AccountAdmin'
-        ],
-        :if => :enable_user_notes
-      },
-      :read_course_content => {
-        :label => lambda { t('permissions.read_course_content', "View course content") },
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership)
-      },
-      :manage_content => {
-        :label => lambda { t('permissions.manage_content', "Manage all other course content") },
-        :available_to => [
-          'TaEnrollment',
-          'TeacherEnrollment',
-          'DesignerEnrollment',
-          'TeacherlessStudentEnrollment',
-          'ObserverEnrollment',
-          'AccountAdmin',
-          'AccountMembership'
-        ],
-        :true_for => [
-          'TaEnrollment',
-          'TeacherEnrollment',
-          'DesignerEnrollment',
-          'AccountAdmin'
-        ]
-      },
-      :manage_interaction_alerts => {
-        :label => lambda { t('permissions.manage_interaction_alerts', "Manage alerts") },
-        :true_for => %w(AccountAdmin TeacherEnrollment),
-        :available_to => %w(AccountAdmin AccountMembership TeacherEnrollment TaEnrollment),
-      },
-      :manage_jobs => {
-        :label => lambda { t('permissions.managed_jobs', "Manage background jobs") },
-        :account_only => :site_admin,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership),
-      },
-      :view_jobs => {
-          :label => lambda { t('permissions.view_jobs', "View background jobs") },
-          :account_only => :site_admin,
-          :true_for => %w(AccountAdmin),
-          :available_to => %w(AccountAdmin AccountMembership),
-      },
-      :view_error_reports => {
-        :label => lambda { t('permissions.view_error_reports', "View error reports") },
-        :account_only => :site_admin,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership),
-      },
-      :manage_global_outcomes => {
-        :label => lambda { t('permissions.manage_global_outcomes', "Manage global learning outcomes") },
-        :account_only => :site_admin,
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership),
-      },
-      :change_course_state => {
-        :label => lambda { t('permissions.change_course_state', "Change course state") },
-        :true_for => %w(AccountAdmin TeacherEnrollment DesignerEnrollment),
-        :available_to => %w(AccountAdmin AccountMembership TeacherEnrollment TaEnrollment DesignerEnrollment),
-      },
-      :manage_sections => {
-        :label => lambda { t('permissions.manage_sections', "Manage (create / edit / delete) course sections") },
-        :true_for => %w(AccountAdmin TeacherEnrollment DesignerEnrollment),
-        :available_to => %w(AccountAdmin AccountMembership TeacherEnrollment TaEnrollment DesignerEnrollment),
-      },
-      :manage_frozen_assignments => {
-        :label => lambda { t('permissions.manage_frozen_assignment', "Manage (edit / delete) frozen assignments") },
-        :true_for => %w(AccountAdmin),
-        :available_to => %w(AccountAdmin AccountMembership),
-        :enabled_for_plugin => :assignment_freezer
-      }
-    })
+                           :read_messages => {
+                               :label => lambda { t('permissions.read_messages', "View notifications sent to users") },
+                               :account_only => :site_admin,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                           },
+                           :become_user => {
+                               :label => lambda { t('permissions.become_user', "Become other users") },
+                               :account_only => :root,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                           },
+                           :manage_site_settings => {
+                               :label => lambda { t('permissions.manage_site_settings', "Manage site-wide and plugin settings") },
+                               :account_only => :site_admin,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                           },
+                           :manage_developer_keys => {
+                               :label => lambda { t('permissions.manage_developer_keys', "Manage developer keys") },
+                               :account_only => :site_admin,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                           },
+                           :manage_sis => {
+                               :label => lambda { t('permissions.manage_sis', "Import and manage SIS data") },
+                               :account_only => true,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                           },
+                           :read_sis => {
+                               :label => lambda { t('permission.read_sis', "Read SIS data") },
+                               :account_only => true,
+                               :true_for => %w(AccountAdmin TeacherEnrollment),
+                               :available_to => %w(AccountAdmin AccountMembership TeacherEnrollment TaEnrollment StudentEnrollment)
+                           },
+                           :read_course_list => {
+                               :label => lambda { t('permissions.read_course_list', "View the list of courses") },
+                               :account_only => true,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership)
+                           },
+                           :view_statistics => {
+                               :label => lambda { t('permissions.view_statistics', "View statistics") },
+                               :account_only => true,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership)
+                           },
+                           :manage_storage_quotas => {
+                               :label => lambda { t('permissions.manage_storage_quotas', "Manage storage quotas") },
+                               :account_only => true,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership)
+                           },
+                           :manage_user_notes => {
+                               :label => lambda { t('permissions.manage_user_notes', "Manage faculty journal entries") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'TeacherEnrollment',
+                                   'AccountAdmin'
+                               ],
+                               :if => :enable_user_notes
+                           },
+                           :read_course_content => {
+                               :label => lambda { t('permissions.read_course_content', "View course content") },
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership)
+                           },
+                           :manage_content => {
+                               :label => lambda { t('permissions.manage_content', "Manage all other course content") },
+                               :available_to => [
+                                   'TaEnrollment',
+                                   'TeacherEnrollment',
+                                   'DesignerEnrollment',
+                                   'TeacherlessStudentEnrollment',
+                                   'ObserverEnrollment',
+                                   'AccountAdmin',
+                                   'AccountMembership'
+                               ],
+                               :true_for => [
+                                   'TaEnrollment',
+                                   'TeacherEnrollment',
+                                   'DesignerEnrollment',
+                                   'AccountAdmin'
+                               ]
+                           },
+                           :manage_interaction_alerts => {
+                               :label => lambda { t('permissions.manage_interaction_alerts', "Manage alerts") },
+                               :true_for => %w(AccountAdmin TeacherEnrollment),
+                               :available_to => %w(AccountAdmin AccountMembership TeacherEnrollment TaEnrollment),
+                           },
+                           :manage_jobs => {
+                               :label => lambda { t('permissions.managed_jobs', "Manage background jobs") },
+                               :account_only => :site_admin,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                           },
+                           :view_jobs => {
+                               :label => lambda { t('permissions.view_jobs', "View background jobs") },
+                               :account_only => :site_admin,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                           },
+                           :view_error_reports => {
+                               :label => lambda { t('permissions.view_error_reports', "View error reports") },
+                               :account_only => :site_admin,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                           },
+                           :manage_global_outcomes => {
+                               :label => lambda { t('permissions.manage_global_outcomes', "Manage global learning outcomes") },
+                               :account_only => :site_admin,
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                           },
+                           :change_course_state => {
+                               :label => lambda { t('permissions.change_course_state', "Change course state") },
+                               :true_for => %w(AccountAdmin TeacherEnrollment DesignerEnrollment),
+                               :available_to => %w(AccountAdmin AccountMembership TeacherEnrollment TaEnrollment DesignerEnrollment),
+                           },
+                           :manage_sections => {
+                               :label => lambda { t('permissions.manage_sections', "Manage (create / edit / delete) course sections") },
+                               :true_for => %w(AccountAdmin TeacherEnrollment DesignerEnrollment),
+                               :available_to => %w(AccountAdmin AccountMembership TeacherEnrollment TaEnrollment DesignerEnrollment),
+                           },
+                           :manage_frozen_assignments => {
+                               :label => lambda { t('permissions.manage_frozen_assignment', "Manage (edit / delete) frozen assignments") },
+                               :true_for => %w(AccountAdmin),
+                               :available_to => %w(AccountAdmin AccountMembership),
+                               :enabled_for_plugin => :assignment_freezer
+                           }
+                       })
 
   def self.permissions
     Permissions.retrieve
@@ -731,13 +729,13 @@ class RoleOverride < ActiveRecord::Base
     permissions.reject!{ |k, p| !p[:available_to].include?(base_role_type)} unless base_role_type.nil?
     permissions.reject!{ |k, p| p[:account_allows] && !p[:account_allows].call(context)}
     permissions.reject!{ |k, p| p[:enabled_for_plugin] &&
-      !((plugin = Canvas::Plugin.find(p[:enabled_for_plugin])) && plugin.enabled?)}
+        !((plugin = Canvas::Plugin.find(p[:enabled_for_plugin])) && plugin.enabled?)}
     permissions
   end
 
   def self.css_class_for(context, permission, base_role, custom_role=nil)
     generated_permission = self.permission_for(context, permission, base_role, custom_role)
-    
+
     css = []
     if generated_permission[:readonly]
       css << "six-checkbox-disabled-#{generated_permission[:enabled] ? 'checked' : 'unchecked' }"
@@ -749,11 +747,11 @@ class RoleOverride < ActiveRecord::Base
     end
     css.join(' ')
   end
-  
+
   def self.readonly_for(context, permission, base_role, custom_role=nil)
     self.permission_for(context, permission, base_role, custom_role)[:readonly]
   end
-  
+
   def self.title_for(context, permission, base_role, custom_role=nil)
     generated_permission = self.permission_for(context, permission, base_role, custom_role)
     if generated_permission[:readonly]
@@ -762,11 +760,11 @@ class RoleOverride < ActiveRecord::Base
       t 'tooltips.toogle', "Click to toggle this permission ON or OFF"
     end
   end
-  
+
   def self.locked_for(context, permission, base_role, custom_role=nil)
     self.permission_for(context, permission, base_role, custom_role)[:locked]
   end
-  
+
   def self.hidden_value_for(context, permission, base_role, custom_role=nil)
     generated_permission = self.permission_for(context, permission, base_role, custom_role)
     if !generated_permission[:readonly] && generated_permission[:explicit]
@@ -775,16 +773,16 @@ class RoleOverride < ActiveRecord::Base
       ''
     end
   end
-  
+
   def self.teacherless_permissions
     @teacherless_permissions ||= permissions.select{|p, data| data[:available_to].include?('TeacherlessStudentEnrollment') }.map{|p, data| p }
   end
-  
+
   def self.clear_cached_contexts
     @@role_override_chain = {}
     @cached_permissions = {}
   end
-  
+
   def self.permission_for(role_context, permission, base_role, custom_role=nil)
     base_role = 'StudentEnrollment' if base_role == 'StudentViewEnrollment'
     custom_role = nil if base_role == NO_PERMISSIONS_TYPE
@@ -800,7 +798,7 @@ class RoleOverride < ActiveRecord::Base
     key = [role_context.cache_key, role_context.global_id, permission.to_s, custom_role.to_s].join
     permissionless_key = [role_context.cache_key, role_context.global_id, custom_role.to_s].join
     return @cached_permissions[key] if @cached_permissions[key]
-    
+
     if !self.known_role_types.include?(base_role)
       raise ArgumentError.new("Invalid base_role #{base_role}")
     end
@@ -810,14 +808,14 @@ class RoleOverride < ActiveRecord::Base
     account_allows = !!(default_data[:account_allows].nil? || (default_data[:account_allows].respond_to?(:call) &&
         default_data[:account_allows].call(role_context.root_account)))
     generated_permission = {
-      :account_allows => account_allows,
-      :permission =>  default_data,
-      :enabled    =>  account_allows && (default_data[:true_for].include?(base_role) ? [:self, :descendants] : false),
-      :locked     => !default_data[:available_to].include?(base_role),
-      :readonly   => !default_data[:available_to].include?(base_role),
-      :explicit   => false,
-      :base_role_type => base_role,
-      :enrollment_type => custom_role
+        :account_allows => account_allows,
+        :permission =>  default_data,
+        :enabled    =>  account_allows && (default_data[:true_for].include?(base_role) ? [:self, :descendants] : false),
+        :locked     => !default_data[:available_to].include?(base_role),
+        :readonly   => !default_data[:available_to].include?(base_role),
+        :explicit   => false,
+        :base_role_type => base_role,
+        :enrollment_type => custom_role
     }
     if default_data[:account_only]
       if role_context.is_a? Account
@@ -892,8 +890,8 @@ class RoleOverride < ActiveRecord::Base
     role_override = context.role_overrides.find_by_permission_and_enrollment_type(permission, role)
     if !settings[:override].nil? || settings[:locked]
       role_override ||= context.role_overrides.build(
-        :permission => permission,
-        :enrollment_type => role)
+          :permission => permission,
+          :enrollment_type => role)
       role_override.enabled = settings[:override] unless settings[:override].nil?
       role_override.locked = settings[:locked] unless settings[:locked].nil?
       role_override.save!

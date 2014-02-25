@@ -1,42 +1,17 @@
+<% content_for :page_title, join_title(t(:page_title, "Testimonials"), @context.name) %>
 <% content_for :right_side do %>
     <% if @comment.new_record? %>
-    <button class="btn element_toggler btn-primary" aria-controls="add_comment_dialog"><i class="icon-discussion"></i> Add Comment</button>
-    <div id="add_comment_dialog" data-turn-into-dialog='{"width":600,"modal":true}' style="display:none"  >
+        <button class="btn element_toggler btn-primary" aria-controls="add_comment_dialog"><i class="icon-discussion"></i> Add Testimonial</button>
+        <div id="add_comment_dialog" data-turn-into-dialog='{"width":600,"modal":true}' style="display:none"  >
 
-   <% form_for @comment, :url => course_comments_path(@context_id,@comment.id), :html => { :id => 'add_comment_dialog',
-                                                                           :title => t('start_a_new_comment', 'Add comment') } do |f| %>
+          <% form_for @comment, :url => course_comments_path(@context_id,@comment.id), :html => { :id => 'add_comment_dialog',
+                                                                                                  :title => t('start_a_new_comment', 'Add Testimonial') } do |f| %>
 
-    <table class="formtable" style="width: 100%">
-
-
-            <tr>
-              <td><%= f.blabel :comment, :en => "Comment" %></td>
-              <td><%= f.text_area :comment, :style => "width: 400px; height: 75px;", :maxlength=>"250"%>
-              </td> </tr>
-
-
-            <tr><td>
-              <div class="button-container">
-                <a class="btn dialog_closer">Cancel</a>
-                <button id="add_comment_submit" type="submit" class="btn btn-primary submit_button"><%= t(:add_comment_button, "Add Comment") %></button>
-              </div>
-            </td>
-            </tr>
-          </table>
-      <% end %>
-    </div>
-
-        <% else %>
-
-        <button class="btn element_toggler btn-primary" aria-controls="edit_comment_dialog"><i class="icon-discussion"></i> Edit Comment</button>
-        <div id="edit_comment_dialog" data-turn-into-dialog='{"width":600,"modal":true}' style="display:none"  >
-
-
-
-              <% form_for @comment, :url => course_comment_path(@context,@comment), :html => {:id => 'edit_comment_dialog',:title => t('edit_comment', 'Edit comment'),:style => 'display:none;' } do |f| %>
               <table class="formtable" style="width: 100%">
+
+
                 <tr>
-                  <td><%= f.blabel :comment, :en => "Comment" %></td>
+                  <td><%= f.blabel :comment, :en => "Testimonial" %></td>
                   <td><%= f.text_area :comment, :style => "width: 400px; height: 75px;", :maxlength=>"250"%>
                   </td> </tr>
 
@@ -44,7 +19,33 @@
                 <tr><td>
                   <div class="button-container">
                     <a class="btn dialog_closer">Cancel</a>
-                    <button type="submit" id="update_comment" class="btn btn-primary submit_button"><%= t(:add_user_button, "Update Comment") %></button>
+                    <button id="add_comment_submit" type="submit" class="btn btn-primary submit_button"><%= t(:add_comment_button, "Add Testimonial") %></button>
+                  </div>
+                </td>
+                </tr>
+              </table>
+          <% end %>
+        </div>
+
+    <% else %>
+
+        <button class="btn element_toggler btn-primary" aria-controls="edit_comment_dialog"><i class="icon-discussion"></i> Edit Testimonial</button>
+        <div id="edit_comment_dialog" data-turn-into-dialog='{"width":600,"modal":true}' style="display:none"  >
+
+
+
+          <% form_for @comment, :url => course_comment_path(@context,@comment), :html => {:id => 'edit_comment_dialog',:title => t('edit_comment', 'Edit Testimonial'),:style => 'display:none;' } do |f| %>
+              <table class="formtable" style="width: 100%">
+                <tr>
+                  <td><%= f.blabel :comment, :en => "Testimonial" %></td>
+                  <td><%= f.text_area :comment, :style => "width: 400px; height: 75px;", :maxlength=>"250"%>
+                  </td> </tr>
+
+
+                <tr><td>
+                  <div class="button-container">
+                    <a class="btn dialog_closer">Cancel</a>
+                    <button type="submit" id="update_comment" class="btn btn-primary submit_button"><%= t(:add_user_button, "Update Testimonial") %></button>
                   </div>
                 </td>
                 </tr>
@@ -57,48 +58,57 @@
 <% end %>
 
 
-        <% @comments.each do |comment| %>
+<% @comments.each do |comment| %>
 
-        <table>
+    <table>
 
-            <div class="comment" id="comment_<%= comment ? comment.id : "{{ blank }}" %>" style="<%= hidden unless comment %> border: 0px solid #aaa; margin-bottom: 10px;">
-              <div style="float: left;" class="user_name">
+      <div class="comment" id="comment_<%= comment ? comment.id : "{{ blank }}" %>" style="<%= hidden unless comment %> border: 0px solid #aaa; margin-bottom: 10px;">
+        <div style="float: left;" class="user_name">
 
-                <% if service_enabled?(:avatars) %>
-                    <%= avatar_image(comment.user_id) %>
-                <% end  %>
-                <%= comment.user_name rescue nbsp %></div>
-                <%= comment.user.name  %>
-            <br>
-              <%= comment.comment  %>
+          <% if service_enabled?(:avatars) %>
+              <%= avatar_image(comment.user_id) %>
+          <% end  %>
+          <%= comment.user_name rescue nbsp %></div>
+        <%= comment.user.name  %>
+        <br>
+        <%= comment.comment  %>
 
-              <div style="float: right;">
+        <div style="float: right;">
                 <span class="created_at" style="color: #888; font-size: 0.8em;">
                   <%= datetime_string(comment.updated_at) rescue nbsp %></span>
-                <% owner_id = (comment.user_id) rescue nbsp %>
-                <% if owner_id == @current_user.id %>
+          <% owner_id = (comment.user_id) rescue nbsp %>
+          <% if owner_id == @current_user.id %>
 
-                    <%= link_to "Delete",course_comment_path(@context,@comment, :destroy => true),
-                                :confirm =>"Are you sure delete this comment?", :method => :delete %>
+              <%= link_to "Delete",course_comment_path(@context,@comment, :destroy => true),
+                          :confirm =>"Are you sure delete this testimonial?", :method => :delete %>
 
-                <%end %>
-              </div>
+          <%end %>
+        </div>
 
-              <div class="clear" style="border-top: 1px solid #ccc;"></div>
-              <!--<div class="message message-eportfolios"><%= comment.message rescue nbsp %></div>-->
-            </div>
+        <div class="clear" style="border-top: 1px solid #ccc;"></div>
+        <!--<div class="message message-eportfolios"><%= comment.message rescue nbsp %></div>-->
+      </div>
 
-          </table>
-    <%end %>
+    </table>
+<%end %>
 <%= will_paginate(@comments, :style=>"text-align: center;") %>
 
 <% js_block do %>
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    require([
-        'jquery'
-    ], function($) {
+        require([
+            'jquery'
+        ], function($) {
             $('#add_comment_submit').click(function(event) {
+
+                if( $('#comment_comment').val() == "")
+                {
+                    event.preventDefault();
+                    alert('Testimonial required');
+                }
+            });
+
+            $('#update_comment').click(function(event) {
 
                 if( $('#comment_comment').val() == "")
                 {
@@ -107,16 +117,7 @@
                 }
             });
 
-        $('#update_comment').click(function(event) {
-
-            if( $('#comment_comment').val() == "")
-            {
-                event.preventDefault();
-                alert('Comment required');
-            }
         });
 
-        });
-
-</script>
+    </script>
 <%end %>

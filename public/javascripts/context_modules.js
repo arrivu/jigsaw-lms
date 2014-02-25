@@ -683,6 +683,8 @@ define([
                 .find(".type option.any").show().attr('disabled', false).end()
                 .find(".type option." + data.type).show().attr('disabled', false);
             $option.find(".type").val($option.find(".type option." + data.criterion_type + ":first").val())
+            console.log(data);
+            console.log($option);
             $option.find(".type").change();
         });
         $("#completion_criterion_option .type").change(function() {

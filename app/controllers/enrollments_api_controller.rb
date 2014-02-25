@@ -310,12 +310,7 @@ class EnrollmentsApiController < ApplicationController
     if authorized_action(@context, @current_user, [:read_roster, :view_all_grades, :manage_grades])
       scope = @context.enrollments_visible_to(@current_user, :type => :all, :include_priors => true).scoped(scope_arguments)
       unless params[:state].present?
-        if @current_user.highest_role == 'student'
-          section_id=@current_user.enrollments[0].course_section_id
-          scope = scope.where("enrollments.workflow_state NOT IN ('rejected', 'completed', 'deleted', 'inactive') and enrollments.course_section_id IN (#{section_id})")
-        else
-          scope = scope.where("enrollments.workflow_state NOT IN ('rejected', 'completed', 'deleted', 'inactive')")
-        end
+        scope = scope.where("enrollments.workflow_state NOT IN ('rejected', 'completed', 'deleted', 'inactive')")
       end
       scope
     else

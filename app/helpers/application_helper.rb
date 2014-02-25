@@ -452,7 +452,7 @@ module ApplicationHelper
           hide = tab[:hidden] || tab[:hidden_unused]
           class_name = tab[:css_class].to_css_class
           class_name += ' active' if @active_tab == tab[:css_class]
-          unless (tab[:label] == "Sub-Accounts") || (tab[:label] ==  "Quizzes") || (tab[:label] == "Outcomes") || (tab[:label] == "Files") || (tab[:label] == "Pages")
+          unless (tab[:label] == "Sub-Accounts") || (tab[:label] == "Outcomes")  || (tab[:label] == "Pages")
             if FileTest.exist?("#{RAILS_ROOT}/public/images/#{tab[:css_class]}.png")
               link_icon =  tab[:css_class]
             else

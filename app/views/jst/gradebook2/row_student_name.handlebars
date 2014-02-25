@@ -1,9 +1,9 @@
 {{>avatar}}
-<div class='student-name'><a class='student-grades-link' {{#if display_url}} href="{{url}}" {{/if}}">{{{display_name}}}</a></div>
+<div class='student-name'><a class='student-grades-link' href="{{url}}">{{{display_name}}}</a></div>
 {{#if sectionNames}}
-  <div class='student-section'>{{{sectionNames}}}</div>
+    <div class='student-section'>{{{sectionNames}}}</div>
 {{/if}}
 
 <div class="student-placeholder">
-  {{#t "student_placeholder"}}Student{{/t}}
+    {{#t "student_placeholder"}}Student{{/t}}
 </div>
