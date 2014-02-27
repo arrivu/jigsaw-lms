@@ -890,8 +890,8 @@ define([
                   tag.title += " (" + I18n.t("draft", "Draft") + ")"
                 }
                 tag.text = (label == 'previous' ?
-                  I18n.t('buttons.previous_module', "Previous Module") :
-                  I18n.t('buttons.next_module', "Next Module"));
+                  I18n.t('buttons.previous_class', "Previous Class") :
+                  I18n.t('buttons.next_class', "Next Class"));
                 $link.addClass('module_button');
               }
               $link.fillTemplateData({ data: tag });

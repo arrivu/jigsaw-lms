@@ -11,4 +11,7 @@ require [
 
   previewDiv = $("#doc_preview")
   previewDiv.fillWindowWithMe()
-  previewDiv.loadDocPreview $.merge(previewDefaults, previewDiv.data())
+  setTimeout (->
+    console.log("inside timeout in files")
+    previewDiv.loadDocPreview $.merge(previewDefaults, previewDiv.data())
+  ), 1000

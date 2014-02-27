@@ -2,8 +2,9 @@
   js_bundle :wiki
   jammit_css :tinymce
   content_for :page_title, join_title(@page.title.to_s, @context.name)
-  content_for :right_side, render(:partial => 'wiki_pages/wiki_right_side')
-
+  if Enrollment.find_by_course_id_and_user_id(@context.id,@current_user.id).type != "StudentEnrollment"
+   content_for :right_side, render(:partial => 'wiki_pages/wiki_right_side')
+  end
 %>
 
 <% if reason = @page.locked_for?(@current_user, :context => @context) %>

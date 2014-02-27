@@ -117,6 +117,6 @@ ul.quiz_list li.quiz div.description {
 <% if (@quizzes.any?{|q| q.lock_at || q.unlock_at} || @context.try_rescue(:module_based?)) && !can_do(@context, @current_user, :manage_content) %>
   <a href="<%= context_url(@context, :context_locks_url) %>" id="quiz_locks_url" style="display: none;">&nbsp;</a>
   <%= image_tag "lock_small.png", :style => "display: none;", :class => "content_lock_icon", :id => "quiz_lock_icon", :title => t('titles.this_quiz_is_locked', "This quiz is currently locked.  Click for more details."), :alt => "locked" %>
-  <a href="<%= context_url(@context, :context_context_classes_url) %>" id="context_modules_url" style="display: none;">&nbsp;</a>
+  <a href="<%= context_url(@context, :context_context_modules_url) %>" id="context_modules_url" style="display: none;">&nbsp;</a>
 <% end %>
 <% end %>

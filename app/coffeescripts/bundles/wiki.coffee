@@ -6,6 +6,10 @@ require ['wiki'
   $(document).ready ->
     $(".accordion").accordion()
     $('.ui-accordion-header-icon').remove()
+    setTimeout (->
+      console.log("inside timeout in wiki")
+      $(".scribd_file_preview_link").click()
+    ), 1000
 
 
 

@@ -1,4 +1,4 @@
-<% jammit_css :login %>
+<% jammit_css :login ,:login_box%>
 <% @body_classes << "modal" if @body_classes %>
 <% hide_fft ||= false %>
 <% js_block do %>
@@ -78,7 +78,7 @@ $(document).ready(function() {
     <a href="/login?lms_login=1"><button class="btn" style="float: right; padding: 10px;background: #f68121;margin: 30px 0px; color: #fff; border-radius: 7px;border: none;text-shadow: 0 0px 0px rgba(255, 255, 255, 0.75)">Corporate Login</button></a>
   <% end%>
 </h4>
-<div id="modal-box" class="login-box">
+<div id="login_box" class="login-box">
     <div id="modal-box-inner" style="margin-top: 0px;">
     <h1></h1>
     <% if @is_delegated %>

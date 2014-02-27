@@ -116,6 +116,8 @@ stylesheets:
     - public/stylesheets/compiled/grading_standards.css
   login:
     - public/stylesheets/compiled/login.css
+  login_box:
+    - public/stylesheets/compiled/login_box.css
   roster:
     - public/stylesheets/compiled/roster.css
   roster_user:

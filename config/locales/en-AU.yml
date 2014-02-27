@@ -2793,7 +2793,7 @@ en-AU:
       page_locked_no_reason: "This page is locked.  No other reason has been provided."
       page_locked_until: "This page is locked until %{date}."
       quiz_locked_at: "This quiz was locked %{at}."
-      quiz_locked_module: "This quiz is part of the module *%{module}* and hasn't been unlocked yet."
+      quiz_locked_module: "This quiz is part of the class *%{module}* and hasn't been unlocked yet."
       quiz_locked_no_reason: "This quiz is locked.  No other reason has been provided."
       quiz_locked_until: "This quiz is locked until %{date}."
       topic_locked_at: "This topic was locked %{at}."
@@ -3111,6 +3111,7 @@ en-AU:
       min_score: "must score at least a %{score}"
       must_contribute: "must contribute to the page"
       must_submit: "must submit the assignment"
+      must_submit_survey: "must submit the survey"
       must_view: "must view the page"
   context_module_items_api: 
     invalid_content: "Could not find content"
@@ -3224,6 +3225,7 @@ en-AU:
         must_contribute: "contribute to the page"
         must_score_at_least: "score at least"
         must_submit: "submit the assignment"
+        must_submit_survey: "must submit the survey"
         must_view: "view the item"
       select_module: 
         instructions: "Select Module"
@@ -6557,7 +6559,9 @@ en-AU:
       unrecognized: "Unrecognized Browser"
     buttons: 
       next_module: "Next Module"
+      next_class: "Next Class"
       previous_module: "Previous Module"
+      previous_class: "Previous Class"
       search: Search
       search_by_tag: "Search by Tag"
     confirms: 
@@ -8448,7 +8452,7 @@ en-AU:
         subject: "Finish Registration: Canvas"
     quiz_locked: "This quiz is currently locked."
     quiz_locked_at: "This quiz was locked %{at}."
-    quiz_locked_module: "This quiz is part of the module *%{module}* and hasn't been unlocked yet."
+    quiz_locked_module: "This quiz is part of the class *%{module}* and hasn't been unlocked yet."
     quiz_locked_until: "This quiz is locked until %{date}."
     quiz_regrade_finished: 
       sms: 

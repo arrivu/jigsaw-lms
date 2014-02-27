@@ -10,11 +10,12 @@
   </div>
 
   <%@module.content_tags.active.pre_class_videos.each do |tag|  %>
-      <div style="margin: 10px 15px; font-size: 150%;
+      <div style="margin: 5px 15px; font-size: 120%;
               font-weight: bold;
               color: #7f8c8d;
-              line-height: 1.5;">
-        <%= image_tag "play_icon.png" %> &nbsp;&nbsp;&nbsp;&nbsp;
+              line-height: 1;
+               height:18px;">
+        <%= image_tag "play_icon.png", :style=>"line-height:20px;height:35px;margin-top:-3px" %> &nbsp;&nbsp;&nbsp;&nbsp;
         <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
           <%= truncate(tag.title, length: 53, omission: '..') %>
         </a>
@@ -23,10 +24,10 @@
 
 <% end %>
 
-  <div id="class_preview_blank" style="margin: 10px 15px; font-size: 150%;
-          font-weight: bold;
+  <div id="class_preview_blank" style="margin: 10px 15px; font-size: 130%;
+          font-weight: normal;
           color: #7f8c8d;
-          line-height: 1.5;display: none">
+          line-height: 1;display: none">
     <%= image_tag "play_icon.png" %> &nbsp;&nbsp;&nbsp;&nbsp;
     <a class="add_pre_class_video_link" href="<%= context_url(@context, :context_url) %>/modules/items/">
 

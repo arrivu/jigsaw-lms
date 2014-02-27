@@ -49,11 +49,11 @@
                 </div>
               </div>
           <% elsif tag.content && (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[application/pdf].include?(tag.content.content_type) %>
-              <div style="margin: 10px 17px; font-size: 150%;
+              <div style="margin: 14px 17px 10px; font-size: 150%;
                       font-weight: bold;
                       color: #7f8c8d;
-                      line-height: 1.5;background-color: #fee8dd;border-radius:5px;">
-                <div style="width:auto;padding:17px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+                      line-height: 1;background-color: #fee8dd;border-radius:5px;">
+                <div style="width:auto;padding:17px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;line-height:20px;margin-top:-8px;width:33px"  %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
                 <div style="width:95%;padding:10px;">
                   <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#c2401c;">Reading Material &nbsp;</a></span><br>
 
@@ -110,11 +110,11 @@
             </div>
           </div>
         <% else %>
-          <div style="margin: 10px 17px; font-size: 150%;
+          <div style="margin: 10px 17px; font-size: 130%;
                   font-weight: bold;
                   color: #7f8c8d;
-                  line-height: 1.5;background-color: #fcfbdf;border-radius:5px;">
-            <div style="width:auto;padding:17px;float:left;"><%= image_tag "un_categorized.png" ,:width=> 38, :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+                  line-height: 1;background-color: #fcfbdf;border-radius:5px;">
+            <div style="width:auto;padding:17px;float:left;"><%= image_tag "un_categorized.png" ,:width=> 34, :style=> "padding:5px;border-radius: 35px;margin-top:-12px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#d4811b;"> Supplementary Material</a></span><br>
               <%= truncate(tag.title, length: 53, omission: '..') %>
@@ -124,7 +124,7 @@
                         float: right;
                         padding: 3px;
                         color: #FFF;
-                        width: 130PX;margin-top: -10px; ">Download</button>
+                        width: 130PX;margin-top: -12px; ">Download</button>
               </a>
             </div>
           </div>

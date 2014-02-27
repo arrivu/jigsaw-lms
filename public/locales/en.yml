@@ -6805,6 +6805,7 @@ en:
     buttons: 
       next_module: "Next Module"
       previous_module: "Previous Module"
+      previous_class: "Previous Class"
       search: Search
       search_by_tag: "Search by Tag"
     confirms: 

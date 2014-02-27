@@ -2841,7 +2841,7 @@ fr:
       page_locked_no_reason: "Cette page est verrouillée. Aucune autre raison n’a été fournie."
       page_locked_until: "Cette page est verrouillée jusqu’au %{date}."
       quiz_locked_at: "Ce questionnaire a été verrouillé le %{at}."
-      quiz_locked_module: "Ce questionnaire fait partie du module *%{module}* et n’a pas encore été déverrouillé."
+      quiz_locked_module: "Ce questionnaire fait partie du class *%{module}* et n’a pas encore été déverrouillé."
       quiz_locked_no_reason: "Ce questionnaire est verrouillé. Aucune autre raison n’a été fournie."
       quiz_locked_until: "Ce questionnaire est verrouillé jusqu’au %{date}."
       topic_locked_at: "Ce sujet a été verrouillé le %{at}."

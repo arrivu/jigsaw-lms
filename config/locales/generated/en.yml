@@ -6804,7 +6804,9 @@ en:
       unrecognized: "Unrecognized Browser"
     buttons: 
       next_module: "Next Module"
+      next_class: "Next Class"
       previous_module: "Previous Module"
+      previous_class: "Previous Class"
       search: Search
       search_by_tag: "Search by Tag"
     confirms: 
@@ -11828,6 +11830,7 @@ en:
   sequence_footer: 
     next_colon: ":"
     next_module: "Next Module"
+    next_class: "Next Class"
     prev_colon: ":"
     prev_module: "Previous Module"
   services_api: 

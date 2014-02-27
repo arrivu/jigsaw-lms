@@ -379,8 +379,17 @@ class ContextModule < ActiveRecord::Base
       t('requirements.must_view', "must view the page")
     when 'must_contribute'
       t('requirements.must_contribute', "must contribute to the page")
-    when 'must_submit'
-      t('requirements.must_submit', "must submit the assignment")
+      when 'must_submit'
+      content_tag = ContentTag.find(req[:id])
+      if content_tag.try(:content_type) == "Quiz"
+        if content_tag.content.survey?
+          t('requirements.must_submit_survey', "must submit the survey")
+        else
+          t('requirements.must_submit', "must submit the assignment")
+        end
+      else
+        t('requirements.must_submit', "must submit the assignment")
+      end
     when 'min_score'
       t('requirements.min_score', "must score at least a %{score}", :score => req[:min_score])
     when 'max_score'

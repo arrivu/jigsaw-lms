@@ -1,9 +1,9 @@
 {{#if options.permissions.change_settings}}
- {{#if options.home_page_announcement}}
+
   <div id="course_home_content">
      <a href="#" style="margin-left: 900px;" class="edit_course_home_content_link">{{#t "links.change_layout"}}Change Home Page Layout{{/t}}</a>
   </div>
-  {{/if}}
+
 {{/if}}
 
 <h1 class="screenreader-only">
@@ -12,9 +12,6 @@
 
 {{#ifAll atLeastOnePageFetched length}}
   <div id="edit_course_home_content" style="display: none;">
-   <h2>
-       {{#t "headings.set_layout"}}Set Home Page Layout{{/t}}
-   </h2>
   <form action={{options.course_url}} id="edit_course_home_content_form" method="post">
   <input name="_method" type="hidden" value="put">
   <h2>{{#t "headings.set_layout"}}Set Home Page Layout{{/t}}</h2>

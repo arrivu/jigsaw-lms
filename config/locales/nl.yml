@@ -2709,7 +2709,7 @@ nl:
       page_locked_no_reason: "Deze pagina is vergrendeld. Er is geen andere reden opgegeven."
       page_locked_until: "Deze pagina is vergrendeld tot %{date}."
       quiz_locked_at: "Deze quiz is vergrendeld op %{at}."
-      quiz_locked_module: "Deze quiz is onderdeel van de module *%{module}* en is nog niet ontgrendeld."
+      quiz_locked_module: "Deze quiz is onderdeel van de class *%{module}* en is nog niet ontgrendeld."
       quiz_locked_no_reason: "Deze quiz is vergrendeld. Er is geen andere reden opgegeven."
       quiz_locked_until: "Deze quiz is vergrendeld tot %{date}."
       topic_locked_at: "Dit onderwerp is vergrendeld %{at}."

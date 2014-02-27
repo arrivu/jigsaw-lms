@@ -352,7 +352,7 @@ class ContextModulesController < ApplicationController
   end
 
   def add_item
-    @module = @context.context_modules.not_deleted.find(params[:context_module_id])
+    @module = ContextModule.not_deleted.find(params[:context_module_id])
     if authorized_action(@module, @current_user, :update)
       @tag = @module.add_item(params[:item])
       if  params['category']
