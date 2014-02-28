@@ -1,15 +1,15 @@
 <div class="class_preview_box">
   <div class="classes_header" > <b class="classes_header_text">Assignments</b>
-  <div class="admin_link" >
-    <!--add video link-->
-  </div>
+    <div class="admin_link" >
+      <!--add video link-->
+    </div>
   </div>
   <%@module.content_tags.pre_class_assignments.active.each_with_index do |tag, idx|  %>
-      <div style="margin: 10px 17px; font-size: 130%;
+      <div style="margin:14px 10px 17px; font-size: 130%;
               font-weight: bold;
               color: #7f8c8d;
-              line-height: 1;background-color: #fcfbdf;border-radius:5px;">
-        <div style="width:auto;padding:17px;float:left;"><%= image_tag "course_assignment.png" , :style=> "padding:5px;border-radius: 35px;width:35px;margin-top:-12px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+              line-height: 1.2;background-color: #fcfbdf;border-radius:5px;">
+        <div style="width:auto;padding:6px 17px;float:left;"><%= image_tag "course_assignment.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
         <div style="width:85%;padding:10px;">
           <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#d4811b;"> Assignment&nbsp;<%= sprintf '%02d',idx + 1 %></a></span><br>
 
