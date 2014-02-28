@@ -61,7 +61,7 @@ namespace :deploy do
   end
 
   task :cleanup, :except => { :no_release => true } do
-    count = fetch(:keep_releases, 5).to_i
+    count = fetch(:keep_releases, 10).to_i
     sudo "ls -1dt #{releases_path}/* | tail -n +#{count + 1} | xargs rm -rf"
   end
 end
