@@ -1,5 +1,5 @@
 <div class="class_preview_box">
-  <div class="classes_header" > <b class="classes_header_text">Useful Reading Materials</b>
+  <div class="classes_header" > <b class="classes_header_text">Pre Class Reading Materials</b>
     <div class="admin_link" >
       <!--add video link-->
     </div>
@@ -14,7 +14,7 @@
               <%= image_tag "image-icon.png" ,:width=> 38, :style=> "padding:5px;border-radius: 35px;" %>
               &nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="width:95%;padding:10px;">
-              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#6d7d3f;"> Reading Material &nbsp; <%= sprintf '%02d',idx + 1  %></a></span><br>
+              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#6d7d3f;"> Pre Class Reading Materials &nbsp; <%= sprintf '%02d',idx + 1  %></a></span><br>
 
               Format:Image | <%= truncate(tag.title, length: 53, omission: '..') %>
               <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
@@ -34,7 +34,7 @@
                   line-height: 1.2;background-color: #e1f3fd;border-radius:5px;">
             <div style="width:auto;padding : 6px 17px;float:left;"><%= image_tag "word_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="width:95%;padding:10px;">
-              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#0092b9;"> Reading Material &nbsp;</a></span><br>
+              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#0092b9;"> Pre Class Reading Materials &nbsp;</a></span><br>
 
               Format:MS Word | <%= truncate(tag.title, length: 53, omission: '..') %>
               <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
@@ -55,7 +55,7 @@
                   line-height: 1;background-color: #fee8dd;border-radius:5px;">
             <div style="width:auto;padding: 13px 21px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;line-height:20px;margin-top:-8px;width:33px"  %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="width:95%;padding:10px;">
-              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#c2401c;">Reading Material &nbsp;</a></span><br>
+              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#c2401c;">Pre Class Reading Materials &nbsp;</a></span><br>
 
               Format:PDF | <%= truncate(tag.title, length: 53, omission: '..') %>
               <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
@@ -96,7 +96,7 @@
                   line-height: 1.2;background-color: #e4f1d5;border-radius:5px;">
             <div style="width:auto;padding : 6px 17px;float:left;"><%= image_tag "practice_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="width:95%;padding:10px;">
-              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#6d7d3f;"> Reading Material</a></span><br>
+              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#6d7d3f;"> Pre Class Reading Materials</a></span><br>
 
               Format:MS Excel | <%= truncate(tag.title, length: 53, omission: '..') %>
               <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
