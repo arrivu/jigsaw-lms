@@ -68,6 +68,7 @@ class Pseudonym < ActiveRecord::Base
   end
 
   add_setting :favourite_course_id
+  add_setting :is_terms_and_conditions_accepted, :boolean => true,:default => false
 
 
   def settings=(hash)

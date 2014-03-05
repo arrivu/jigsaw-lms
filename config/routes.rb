@@ -632,6 +632,7 @@ FakeRails3Routes.draw do
     member do
       get :statistics
     end
+    resources :terms_and_conditions
   end
 
   match 'images/users/:user_id' => 'users#avatar_image', :as => :avatar_image, :via => :get

@@ -912,14 +912,41 @@ module ApplicationHelper
   end
 
   def favourite_course
-    if @user.enrollments.active.nil? or @user.enrollments.active.empty?
+  @check_terms = @current_user.pseudonym.settings[:is_terms_and_conditions_accepted]
+  unless @check_terms.nil?
+      if @current_user.enrollments.active.nil? or @current_user.enrollments.active.empty?
+        redirect_to root_url
+      else
+        favourite_course_id = @pseudonym.settings[:favourite_course_id]
+        if favourite_course_id.nil? || favourite_course_id.empty?
+          @context = @current_user.enrollments.first.course
+          if Enrollment.find_by_course_id_and_user_id(@context.id,@current_user.id).workflow_state == "invited"
+             redirect_to course_url(@context)
+          else
+            redirect_to course_url(@context)
+          end
+        else
+          workflow_state = Course.find(favourite_course_id).workflow_state
+          if workflow_state == "available"
+            @context=Course.find(favourite_course_id)
+            redirect_to course_url(@context)
+          elsif
+            redirect_to root_url
+          end
+        end
+      end
+    end
+  end
+
+  def favourites
+    if @current_user.enrollments.active.nil? or @current_user.enrollments.active.empty?
       redirect_to root_url
     else
       favourite_course_id = @pseudonym.settings[:favourite_course_id]
       if favourite_course_id.nil? || favourite_course_id.empty?
-        @context = @user.enrollments.first.course
-        if Enrollment.find_by_course_id_and_user_id(@context.id,@user.id).workflow_state == "invited"
-           redirect_to course_url(@context)
+        @context = @current_user.enrollments.first.course
+        if Enrollment.find_by_course_id_and_user_id(@context.id,@current_user.id).workflow_state == "invited"
+          redirect_to course_url(@context)
         else
           redirect_to course_url(@context)
         end
@@ -929,10 +956,11 @@ module ApplicationHelper
           @context=Course.find(favourite_course_id)
           redirect_to course_url(@context)
         elsif
-          redirect_to root_url
+        redirect_to root_url
         end
       end
     end
   end
 
 end
+

@@ -56,6 +56,7 @@
     <% if @context.root_account.settings[:enable_alerts] && can_do(@context, @current_user, :manage_interaction_alerts) %>
       <li><a href="#tab-alerts" id="tab-alerts-link"><%= t(:tab_alerts, "Alerts") %></a></li>
     <% end %>
+    <li id="terms_tab"><a href="#tab-terms"><%= t('tabs.terms',%{Terms and Conditions}) %></a></li>
   </ul>
   <% if can_do(@context, @current_user, :manage_account_settings) %>
     <div id="tab-settings">
@@ -843,4 +844,7 @@ Allowing Draft State here will allow teachers to enable it in their individual c
         <%= render :partial => 'alerts/alerts' %>
       </div>
   <% end %>
+  <div id="tab-terms">
+    <%= render :partial =>'accounts/terms_and_conditions' %>
+  </div>
 </div>

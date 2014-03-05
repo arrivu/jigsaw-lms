@@ -1,29 +1,39 @@
 <%
   content_for :page_title, t('updated_terms_of_use', 'Updated Terms of Use')
-
-  js_bundle :reaccept_terms
-  jammit_css :login
+  jammit_css :terms_and_condition
   @headers = false
-  @body_classes ||= []
-  @body_classes << "modal"
 %>
 
-<form id="modal-box" class="reaccept_terms clearfix" action="/api/v1/users/self" method="PUT">
-  <h2><%= t 'updated_terms_of_use', 'Updated Terms of Use' %></h2>
-  <p>
-    <%= t 'terms_have_changed',
-          'The *terms of use* have changed. Please take a moment to review them before you continue using Jigsaw LMS.',
-          wrapper: link_to('\1', @domain_root_account.terms_of_use_url, target: '_blank')
-    %>
-  </p>
-  <p>
-    <label class="checkbox">
-      <input type="checkbox" name="user[terms_of_use]" value="1">
-      <%= agree_to_terms %>
-    </label>
-  </p>
-  <p>
-    <button type="submit" class="btn btn-primary"><%= t "#buttons.submit", "Submit" %></button>
-    <a class="btn logout" href="/logout"><%= t "#buttons.cancel", "Cancel" %></a>
-  </p>
-</form>
+<% @terms = @domain_root_account.terms_and_condition %>
+<div id="modal-box" class="login-box">
+    <div id="modal-box-inner">
+      <h2 style="width: 50%;"><%= t 'updated_terms_of_use', ' Terms and Conditions  ' %></h2>
+      <div>
+        <h3>
+          <%= "In order to finish signing you up for the Jigsaw, You have to accept the Terms and Conditions" %>
+        </h3>
+      </div>
+      <% form_for :terms_and_condition,:url=> account_terms_and_condition_url(@domain_root_account,@terms),:html=>{:method => :put,:id => "modal-box-inner"} do |f|%>
+
+    <div style="margin-top: 35px">
+        <%= @terms.terms_and_conditions.html_safe %>
+      </div>
+      <div align="right">
+        <input type="checkbox"  id="receive_informations" value="1"    />
+        <%= f.label :information, :en => "I want to receive information, news and tips from Jigsaw Academy"%>
+      </div>
+      <div id="check_box" style="text-align: center" class="<%= root_url %>">
+        <input type="checkbox"  id="enable_terms_and_conditions" value="1" class="<%= account_terms_and_condition_url(@domain_root_account,@terms) %>"   />
+        <%= f.label :enable_terms_and_conditions, :en => " I Agree to the Terms of Jigsaw Academy" %>
+      </div>
+      <div>
+        <button id="terms_accept_submit" type="submit" class="btn btn-primary submit_button" onclick="validateCheckbox(event)"><%= t(:accept_terms_and_conditions, "Accept") %></button>
+      </div>
+      <%end %>
+    </div>
+
+</div>
+
+
+
+

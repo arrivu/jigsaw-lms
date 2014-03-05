@@ -367,6 +367,7 @@ class UsersController < ApplicationController
   end
 
   def user_dashboard
+    check_for_terms_and_conditions
     check_incomplete_registration
     get_context
 

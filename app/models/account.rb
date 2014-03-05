@@ -26,6 +26,7 @@ class Account < ActiveRecord::Base
 
   include Workflow
   has_many :rewards
+  has_one :terms_and_condition
   belongs_to :parent_account, :class_name => 'Account'
   belongs_to :root_account, :class_name => 'Account'
   authenticates_many :pseudonym_sessions
@@ -63,6 +64,7 @@ class Account < ActiveRecord::Base
   has_many :roles
   has_many :all_roles, :class_name => 'Role', :foreign_key => 'root_account_id'
   has_many :progresses, :as => :context
+  has_one :terms_and_conditions
   def inherited_assessment_question_banks(include_self = false, *additional_contexts)
     sql = []
     conds = []

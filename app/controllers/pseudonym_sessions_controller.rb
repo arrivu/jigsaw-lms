@@ -23,6 +23,7 @@ class PseudonymSessionsController < ApplicationController
   before_filter :require_password_session, :only => [ :otp_login, :disable_otp_login ]
   before_filter :require_user, :only => [ :otp_login ]
   skip_before_filter :require_reacceptance_of_terms
+  skip_before_filter :check_for_terms_and_conditions
 
   def corp_login
     redirect_to login_url :lms_login => 1
@@ -569,8 +570,18 @@ class PseudonymSessionsController < ApplicationController
         # assumed that if that URL is found rather than using the default,
         # they must have cookies enabled and we don't need to worry about
         # adding the :login_success param to it.
-        #format.html { redirect_back_or_default(dashboard_url(:login_success => '1')) }
-        format.html {favourite_course}
+        # #format.html { redirect_back_or_default(dashboard_url(:login_success => '1')) }
+        unless can_do(@domain_root_account, @current_user, :manage_account_settings)
+          @check_terms = @current_pseudonym.settings[:is_terms_and_conditions_accepted]
+          unless @check_terms.nil?
+            format.html {favourite_course}
+          else
+            format.html {check_for_terms_and_conditions}
+          end
+        else
+          format.html{favourites}
+        end
+
       end
       format.json { render :json => pseudonym.to_json(:methods => :user_code), :status => :ok }
     end
