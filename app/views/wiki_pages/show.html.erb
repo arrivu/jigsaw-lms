@@ -2,7 +2,7 @@
   js_bundle :wiki
   jammit_css :tinymce
   content_for :page_title, join_title(@page.title.to_s, @context.name)
-  if Enrollment.find_by_course_id_and_user_id(@context.id,@current_user.id).type != "StudentEnrollment"
+  if authorized_action(@page, @current_user, :update_content)
    content_for :right_side, render(:partial => 'wiki_pages/wiki_right_side')
   end
 %>

@@ -1,120 +1,120 @@
 <div class="class_preview_box">
-  <div class="classes_header" > <b class="classes_header_text">Useful Reading Materials</b>
-  <div class="admin_link" >
-    <!--add video link-->
-  </div>
+  <div class="classes_header" > <b class="classes_header_text">Pre Class Reading Materials</b>
+    <div class="admin_link" >
+      <!--add video link-->
+    </div>
   </div>
   <% @module.content_tags.pre_class_reading_materials.active.each_with_index do |tag , idx|  %>
-            <% if tag.content && (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[image/jpeg image/pjpeg image/png image/gif image/x-psd].include?(tag.content.content_type) %>
-          <div style="margin: 10px 17px; font-size: 150%;
+      <% if tag.content && (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[image/jpeg image/pjpeg image/png image/gif image/x-psd].include?(tag.content.content_type) %>
+          <div style="margin: 14px 10px 17px; font-size: 130%;
                   font-weight: bold;
                   color: #7f8c8d;
-                  line-height: 1.5;background-color: #e4f1d5;border-radius:5px;">
-            <div style="width:auto;padding:17px;float:left;">
+                  line-height: 1.2;background-color: #e4f1d5;border-radius:5px;">
+            <div style="width:auto;padding : 6px 17px;float:left;">
               <%= image_tag "image-icon.png" ,:width=> 38, :style=> "padding:5px;border-radius: 35px;" %>
               &nbsp;&nbsp;&nbsp;&nbsp;</div>
-                     <div style="width:95%;padding:10px;">
-                     <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#6d7d3f;"> Reading Material &nbsp; <%= sprintf '%02d',idx + 1  %></a></span><br>
+            <div style="width:95%;padding:10px;">
+              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#6d7d3f;"> Pre Class Reading Materials &nbsp; <%= sprintf '%02d',idx + 1  %></a></span><br>
 
               Format:Image | <%= truncate(tag.title, length: 53, omission: '..') %>
               <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
                 <button style="background-color: #6d7d3f;border: none;
-                      border-radius: 4px;
-                      float: right;
-                      padding: 3px;
-                      color: #FFF;
-                      width: 130PX;margin-top: -10px; ">Download</button>
+                        border-radius: 4px;
+                        float: right;
+                        padding: 3px;
+                        color: #FFF;
+                        width: 130PX;margin-top: -10px; ">Download</button>
               </a>
-         </div>
-       </div>
-          <% elsif tag.content && (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[application/rtf text/rtf application/vnd.oasis.opendocument.text application/vnd.openxmlformats-officedocument.wordprocessingml.document application/x-docx application/msword ].include?(tag.content.content_type) %>
-              <div style="margin: 10px 17px; font-size: 150%;
-                      font-weight: bold;
-                      color: #7f8c8d;
-                      line-height: 1.5;background-color: #e1f3fd;border-radius:5px;">
-                <div style="width:auto;padding:17px;float:left;"><%= image_tag "word_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
-                <div style="width:95%;padding:10px;">
-                  <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#0092b9;"> Reading Material &nbsp;</a></span><br>
-
-                  Format:MS Word | <%= truncate(tag.title, length: 53, omission: '..') %>
-                <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
-                    <button style="background-color: #0092b9;border: none;
-                            border-radius: 4px;
-                            float: right;
-                            padding: 3px;
-                            color: #FFF;
-                            width: 130PX;margin-top: -10px; ">Download
-                    </button>
-              </a>
-                </div>
-              </div>
-          <% elsif tag.content && (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[application/pdf].include?(tag.content.content_type) %>
-              <div style="margin: 14px 17px 10px; font-size: 150%;
-                      font-weight: bold;
-                      color: #7f8c8d;
-                      line-height: 1;background-color: #fee8dd;border-radius:5px;">
-                <div style="width:auto;padding:17px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;line-height:20px;margin-top:-8px;width:33px"  %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
-                <div style="width:95%;padding:10px;">
-                  <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#c2401c;">Reading Material &nbsp;</a></span><br>
-
-                  Format:PDF | <%= truncate(tag.title, length: 53, omission: '..') %>
-                <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
-                  <button style="background-color: #c2401c;border: none;
-                          border-radius: 4px;
-                          float: right;
-                          padding: 3px;
-                          color: #FFF;
-                          width: 130PX;margin-top: -10px; ">Download</button>
-                </a>
-                </div>
-              </div>
-        <% elsif  tag && tag.content_type == 'ExternalUrl'%>
-          <div style="margin: 10px 17px; font-size: 150%;
+            </div>
+          </div>
+      <% elsif tag.content && (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[application/rtf text/rtf application/vnd.oasis.opendocument.text application/vnd.openxmlformats-officedocument.wordprocessingml.document application/x-docx application/msword ].include?(tag.content.content_type) %>
+          <div style="margin: 14px 10px 17px; font-size: 130%;
                   font-weight: bold;
                   color: #7f8c8d;
-                  line-height: 1.5;background-color: #fcfbdf;border-radius:5px;">
-            <div style="width:auto;padding:17px;float:left;"><%= image_tag "external_link_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+                  line-height: 1.2;background-color: #e1f3fd;border-radius:5px;">
+            <div style="width:auto;padding : 6px 17px;float:left;"><%= image_tag "word_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <div style="width:95%;padding:10px;">
+              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#0092b9;"> Pre Class Reading Materials &nbsp;</a></span><br>
+
+              Format:MS Word | <%= truncate(tag.title, length: 53, omission: '..') %>
+              <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
+                <button style="background-color: #0092b9;border: none;
+                        border-radius: 4px;
+                        float: right;
+                        padding: 3px;
+                        color: #FFF;
+                        width: 130PX;margin-top: -10px; ">Download
+                </button>
+              </a>
+            </div>
+          </div>
+      <% elsif tag.content && (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[application/pdf].include?(tag.content.content_type) %>
+          <div style="margin: 14px 10px 10px; font-size: 130%;
+                  font-weight: bold;
+                  color: #7f8c8d;
+                  line-height: 1;background-color: #fee8dd;border-radius:5px;">
+            <div style="width:auto;padding: 13px 21px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;line-height:20px;margin-top:-8px;width:33px"  %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <div style="width:95%;padding:10px;">
+              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#c2401c;">Pre Class Reading Materials &nbsp;</a></span><br>
+
+              Format:PDF | <%= truncate(tag.title, length: 53, omission: '..') %>
+              <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
+                <button style="background-color: #c2401c;border: none;
+                        border-radius: 4px;
+                        float: right;
+                        padding: 3px;
+                        color: #FFF;
+                        width: 130PX;margin-top: -10px; ">Download</button>
+              </a>
+            </div>
+          </div>
+      <% elsif  tag && tag.content_type == 'ExternalUrl'%>
+          <div style="margin: 14px 10px 17px; font-size: 130%;
+                  font-weight: bold;
+                  color: #7f8c8d;
+                  line-height: 1.2;background-color: #fcfbdf;border-radius:5px;">
+            <div style="width:auto;padding : 6px 17px;float:left;"><%= image_tag "external_link_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#d4811b;"> External Link</a></span><br>
 
               Format:External Url | <%= truncate(tag.title, length: 53, omission: '..') %>
               <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
-              <button style="background-color: #d4811b;border: none;
-                      border-radius: 4px;
-                      float: right;
-                      padding: 3px;
-                      color: #FFF;
-                      width: 130PX;margin-top: -10px; ">Download</button>
-                  </a>
+                <button style="background-color: #d4811b;border: none;
+                        border-radius: 4px;
+                        float: right;
+                        padding: 3px;
+                        color: #FFF;
+                        width: 130PX;margin-top: -10px; ">Download</button>
+              </a>
 
             </div>
           </div>
       <% elsif tag.content &&  (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.oasis.opendocument.spreadsheet].include?(tag.content.content_type) %>
-          <div style="margin: 10px 17px; font-size: 150%;
+          <div style="margin: 14px 10px 17px; font-size: 130%;
                   font-weight: bold;
                   color: #7f8c8d;
-                  line-height: 1.5;background-color: #e4f1d5;border-radius:5px;">
-            <div style="width:auto;padding:17px;float:left;"><%= image_tag "practice_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+                  line-height: 1.2;background-color: #e4f1d5;border-radius:5px;">
+            <div style="width:auto;padding : 6px 17px;float:left;"><%= image_tag "practice_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="width:95%;padding:10px;">
-              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#6d7d3f;"> Reading Material</a></span><br>
+              <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#6d7d3f;"> Pre Class Reading Materials</a></span><br>
 
               Format:MS Excel | <%= truncate(tag.title, length: 53, omission: '..') %>
               <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
-              <button style="background-color: #6d7d3f;border: none;
-                      border-radius: 4px;
-                      float: right;
-                      padding: 3px;
-                      color: #FFF;
-                      width: 130PX;margin-top: -10px; ">Download</button>
+                <button style="background-color: #6d7d3f;border: none;
+                        border-radius: 4px;
+                        float: right;
+                        padding: 3px;
+                        color: #FFF;
+                        width: 130PX;margin-top: -10px; ">Download</button>
               </a>
             </div>
           </div>
-        <% else %>
-          <div style="margin: 10px 17px; font-size: 130%;
+      <% else %>
+          <div style="margin: 14px 10px 17px; font-size: 130%;
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1;background-color: #fcfbdf;border-radius:5px;">
-            <div style="width:auto;padding:17px;float:left;"><%= image_tag "un_categorized.png" ,:width=> 34, :style=> "padding:5px;border-radius: 35px;margin-top:-12px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <div style="width:auto;padding : 18px 17px;float:left;"><%= image_tag "un_categorized.png" ,:width=> 34, :style=> "padding:5px;border-radius: 35px;margin-top:-12px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#d4811b;"> Supplementary Material</a></span><br>
               <%= truncate(tag.title, length: 53, omission: '..') %>
@@ -129,7 +129,7 @@
             </div>
           </div>
 
-        <% end  %>
+      <% end  %>
 
   <% end %>
 

@@ -1,5 +1,5 @@
 @import environment.sass
-$modal_box_width: 623px
+$modal_box_width: 360px
 $modal_box_padding: 20px
 
 body.modal
@@ -15,9 +15,9 @@ body.modal
     padding: 0
     max-width: none
 
-  #modal-box, #login-box
-    box-shadow: 0 4px 20px -2px rgba(0,0,0,1)
-    margin: 75px auto 20px
+  #login_box, #login-box
+    //box-shadow: 0 4px 20px -2px rgba(0,0,0,1)
+    margin: 35px auto 20px
     position: relative
     .icon_url
       width: 72px
@@ -30,8 +30,8 @@ body.modal
 
     .btn
       float: right
-      padding: 10px 36px
-      margin: 2px 7px 0 0
+      padding: 10px 15px
+      margin: 2px 47% 0 0
       font-size: 15px
 
     .button_box
@@ -41,12 +41,13 @@ body.modal
       .btn
         float: none
 
-  #modal-box
+  #login_box
     border: 1px solid #888
     border-top-color: #ccc
     width: $modal_box_width - (2 * $modal_box_padding)
     padding: 2 * $modal_box_padding
-    @include vertical-gradient-no-ie(#f4f4f4, #e2e2e2)
+    background: #ffffff
+    //@include vertical-gradient-no-ie(#f4f4f4, #e2e2e2)
     .bootstrap-form
       p.instructions
         font-weight: bold
@@ -71,19 +72,36 @@ body.modal
         border-bottom: 1px solid #fff
         height: 0
     &.login-box
-      height: 331px
+      height: auto
       width: $modal_box_width
-      padding: $modal_box_padding
+      //padding: $modal_box_padding
+      padding: 0px
       color: #b3b3b3
-      border: none
+      border: 1px solid #B8B3B3
+      border-radius: 5px
+      padding-bottom: 50px
       h1, .h1
-        height: 107px
-        margin: 0 0 50px
-        background-size: 40% 90%
-        @include bg-image(jigsaw_logo, png, no-repeat, 68px, 46px, transparent, 136px, 33px)
-        text-indent: -999em
+        //height: 107px
+        //margin: 0 0 50px
+        //background-size: 40% 90%
+        //@include bg-image(jigsaw_logo, png, no-repeat, 68px, 46px, transparent, 136px, 33px)
+        //text-indent: -999em
+        @include bg-image(login_header, png, no-repeat, transparent, 100%)
+        height: 60px
+        width: 360px
+        text-align: center
+        border-radius: 5px 5px 0px 0px
+        background-color: #efefef
+        margin: 0px
+        line-height: 50px
+      h3
+        color: #696969
+        font-size: 14px
+        text-align: left
+        margin: 25px 55px
+        line-height: 20px
       a
-        color: #64b9f9 !important
+        //color: #64b9f9 !important
         &:hover
           text-decoration: underline
 
@@ -91,7 +109,7 @@ body.modal
         background: url(/images/login-input-bg.png) no-repeat
         border: 0 none
         font-size: 13px
-        padding: 19px 9px 18px 22px
+        //padding: 19px 9px 18px 22px
         width: 204px
         color: #303030
         margin: 0 6px 6px 0
@@ -102,14 +120,20 @@ body.modal
 
 
 // weird specificity here is to match the input.text above
-body.webkit #modal-box.login-box input.text
-  background: #F6F6F6 none
-  border: 6px solid rgba(255, 255, 255, 0.25)
+body.webkit #login_box.login-box input.text
+  //background: #F6F6F6 none
+  //border: 6px solid rgba(255, 255, 255, 0.25)
+  //border-radius: 7px
+  //padding: 12px 9px 12px 17px
+  //box-shadow: inset 2px 2px 5px rgba(0,0,0,0.4)
+  //background-clip: padding-box
+  //width: 197px
+  background: #fff none
+  border: 1px solid #D3D3D3
   border-radius: 7px
-  padding: 12px 9px 12px 17px
-  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.4)
   background-clip: padding-box
-  width: 197px
+  width: 230px
+  height: 45px
 
 #login_form
   margin: 0 auto
@@ -117,8 +141,8 @@ body.webkit #modal-box.login-box input.text
   .login-options
     input
       margin-left: 0
-    float: left
-    line-height: 1.75em
+//float: left
+//line-height: 1.75em
 body.modal
   #forgot_password_form
     margin: 0 auto
@@ -195,7 +219,7 @@ span.field-with-fancyplaceholder
   box-shadow: 0 4px 20px -2px rgba(0,0,0,1)
   margin: 30px auto 20px
   width: $modal_box_width + (2 * $modal_box_padding)
-  #modal-box.login-box
+  #login_box.login-box
     margin: 0
     box-shadow: none
   #unauthorized_message

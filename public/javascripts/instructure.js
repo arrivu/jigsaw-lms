@@ -388,7 +388,7 @@ define([
           $link.removeClass('instructure_file_link').before($span).appendTo($span);
           if($link.attr('target') != '_blank') {
             $span.append("<a href='" + $link.attr('href') + "' target='_blank' title='" + htmlEscape(I18n.t('titles.view_in_new_window', "View in a new window")) +
-                "' style='padding-left: 5px;'><img src='/images/popout.png' alt='" + htmlEscape(I18n.t('titles.view_in_new_window', "View in a new window")) + "'/></a>");
+                "' style='padding-left: 5px;'><img src='/images/download_icon.png' alt='" + htmlEscape(I18n.t('titles.view_in_new_window', "View in a new window")) + "'/></a>");
           }
         });
       if ($.filePreviewsEnabled()) {
