@@ -1,4 +1,4 @@
-<% jammit_css :login %>
+<% jammit_css :login_box %>
 <% @body_classes << "modal" if @body_classes %>
 <% hide_fft ||= false %>
 <% js_block do %>
@@ -92,7 +92,7 @@ $(document).ready(function() {
            login_message = t('default_login_message', "Log in at your institution")
            if @domain_root_account && @domain_root_account.display_name
              login_message = t('login_at_account', "Log in at %{school_name}", :school_name => @domain_root_account.display_name)
-           endk..
+           end
         %>
         <a href="<%= login_path %>" style="font-size: 1.3em;" class="btn"><%= login_message %></a>
       </div>

@@ -116,13 +116,8 @@ stylesheets:
     - public/stylesheets/compiled/grading_standards.css
   login:
     - public/stylesheets/compiled/login.css
-<<<<<<< HEAD
-  terms_and_condition:
-    - public/stylesheets/compiled/terms_and_condition.css
-=======
   login_box:
     - public/stylesheets/compiled/login_box.css
->>>>>>> fa66fa4b6cb27e79822ce375d0763662997740ee
   roster:
     - public/stylesheets/compiled/roster.css
   roster_user:
