@@ -54,6 +54,9 @@ class ApplicationController < ActionController::Base
   before_filter :get_wiki_type
   before_filter :get_badges
   #before_filter :currently_logged_in_user_count
+  before_filter :check_for_terms_and_conditions
+
+  include ApplicationHelper
   include Tour
 
   add_crumb(proc {
@@ -1678,5 +1681,16 @@ class ApplicationController < ActionController::Base
            @totalcount+=1
       end
     end
+  end
+
+  def check_for_terms_and_conditions
+   if @domain_root_account.terms_and_condition and @current_user and @current_pseudonym
+    unless can_do(@domain_root_account, @current_user, :manage_account_settings)
+      @check_terms = @current_pseudonym.settings[:is_terms_and_conditions_accepted]
+      if @check_terms.nil?
+          render :template => "shared/terms_required", :layout => "application", :status => :authorized
+      end
+    end
+   end
   end
 end

@@ -270,12 +270,37 @@ class ContextModulesController < ApplicationController
   end
   
   def show
-    @module = @context.modules_visible_to(@current_user).find(params[:id])
-    add_crumb("#{@module.name}", course_context_module_url(@context,@module))
-    #respond_to do |format|
-    #  format.html { redirect_to named_context_url(@context, :context_context_modules_url, :anchor => "module_#{params[:id]}") }
-    #  format.json { render :json => (@module.content_tags_visible_to(@current_user).to_json) }
-    #end
+    if authorized_action(@context, @current_user, :read)
+      @module = @context.modules_visible_to(@current_user).find(params[:id])
+      add_crumb("#{@module.name}", course_context_module_url(@context,@module))
+      #Try to find the default module group first
+      default_module_group = @context.context_module_groups.default.first
+      default_module_association = ContextModuleGroupAssociation.find_by_context_module_group_id_and_context_module_id(default_module_group.id, @module.id)
+      if default_module_association
+        default_enrollment = UserModuleGroupEnrollment.find_by_context_module_group_id_and_user_id(default_module_group.id,@current_user.id)
+        if  default_enrollment
+          if default_enrollment.workflow_state == UserModuleGroupEnrollment::ACTIVE
+           @authorized_for_user = true
+          end
+         else
+           @authorized_for_user = true
+        end
+      else
+        enrollment = UserModuleGroupEnrollment.find_by_context_module_group_id_and_user_id(@module.context_module_group_association.try(:context_module_group_id),@current_user.id)
+        @authorized_for_user =  ( enrollment and (enrollment.workflow_state == UserModuleGroupEnrollment::ACTIVE))
+      end
+
+      @live_class_links = []
+      @sections = @context.sections_visible_to(@current_user)
+        @sections.map do |section|
+          LiveClassLink.find_all_by_context_module_id_and_course_section_id(@module.id,section.id).each do |live_class_link|
+             @live_class_links <<  live_class_link
+           end
+        end
+        LiveClassLink.find_all_by_context_module_id_and_course_section_id(@module.id,0).each do |live_class_link|
+          @live_class_links <<  live_class_link
+        end
+      end
   end
   
   def reorder_items

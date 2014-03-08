@@ -26,6 +26,7 @@ class ContextModule < ActiveRecord::Base
   has_many :context_module_progressions, :dependent => :destroy
   has_many :content_tags, :dependent => :destroy, :order => 'content_tags.position, content_tags.title'
   has_many :user_module_group_enrollments , :dependent => :destroy
+  has_many :live_class_links
   has_one :context_module_group_association
   acts_as_list :scope => :context
   

@@ -73,7 +73,7 @@ class Course < ActiveRecord::Base
   belongs_to :grading_standard
   belongs_to :template_course, :class_name => 'Course'
   has_many :templated_courses, :class_name => 'Course', :foreign_key => 'template_course_id'
-
+  has_many :live_class_links
   has_many :course_sections
   has_many :active_course_sections, :class_name => 'CourseSection', :conditions => {:workflow_state => 'active'}
   has_many :enrollments, :include => [:user, :course], :conditions => ['enrollments.workflow_state != ?', 'deleted'], :dependent => :destroy
@@ -2703,7 +2703,8 @@ class Course < ActiveRecord::Base
   TAB_VIDEOS=20
   TAB_OFFERS=21
   TAB_BONUSVIDEOS=22
-  TAB_COMMENTS=23
+  TAB_LIVECLASSLINKS=23
+  TAB_COMMENTS=24
 
   def self.default_tabs
     [
@@ -2719,7 +2720,7 @@ class Course < ActiveRecord::Base
       { :id => TAB_SYLLABUS, :label => t('#tabs.syllabus', "Schedule"), :css_class => 'syllabus', :href => :syllabus_course_assignments_path },
       { :id => TAB_OUTCOMES, :label => t('#tabs.outcomes', "Outcomes"), :css_class => 'outcomes', :href => :course_outcomes_path },
       { :id => TAB_QUIZZES, :label => t('#tabs.quizzes', "Quizzes"), :css_class => 'quizzes', :href => :course_quizzes_path },
-      { :id => TAB_MODULES, :label => t('#tabs.modules', "Classes"), :css_class => 'classes', :href => :course_context_modules_path },
+      { :id => TAB_MODULES, :label => t('#tabs.classes', "Classes"), :css_class => 'classes', :href => :course_context_modules_path },
       { :id => TAB_CONFERENCES, :label => t('#tabs.conferences', "Conferences"), :css_class => 'conferences', :href => :course_conferences_path },
       { :id => TAB_COLLABORATIONS, :label => t('#tabs.collaborations', "Collaborations"), :css_class => 'collaborations', :href => :course_collaborations_path },
       { :id => TAB_FAQS, :label =>t('#tabs.faq', "FAQ"), :css_class => 'faq',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_FAQS  },
@@ -2727,8 +2728,9 @@ class Course < ActiveRecord::Base
       { :id => TAB_REFERRALS, :label => t('#tabs.referrals', "Refer a friend"), :css_class => 'referrals', :href => :course_referrals_path},
       { :id => TAB_VIDEOS, :label => t('#tabs.videos', "Videos"), :css_class => 'videos',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_VIDEOS },
       { :id => TAB_OFFERS, :label => t('#tabs.offers', "Offers"), :css_class => 'offer',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_OFFERS },
-      { :id => TAB_BONUSVIDEOS, :label => t('#tabs.bonusvideos', "BonusVideos"), :css_class => 'bonus_videos', :href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_BONUS_VIDEOS },
+      { :id => TAB_BONUSVIDEOS, :label => t('#tabs.bonusvideos', "Bonus Videos"), :css_class => 'bonus_videos', :href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_BONUS_VIDEOS },
       {:id => TAB_COMMENTS, :label => t('#tabs.testimonial', "Testimonial"), :css_class => 'comments', :href => :course_comments_path},
+      {:id => TAB_LIVECLASSLINKS, :label => t('#tabs.live_class_links', "Live Class Links"), :css_class => 'live_class_links', :href => :course_live_class_links_path},
       { :id => TAB_SETTINGS, :label => t('#tabs.settings', "Settings"), :css_class => 'settings', :href => :course_settings_path }
 
     ]
@@ -2822,6 +2824,7 @@ class Course < ActiveRecord::Base
           tabs.delete_if { |t| t[:id] == TAB_CONFERENCES }
           tabs.delete_if { |t| t[:id] == TAB_COLLABORATIONS }
           tabs.delete_if { |t| t[:id] == TAB_MODULES }
+          tabs.delete_if { |t| t[:id] == TAB_LIVECLASSLINKS }
         end
         unless self.grants_rights?(user, opts[:session], :participate_as_student, :manage_content).values.any?
           tabs.delete_if{ |t| t[:visibility] == 'members' }
@@ -2849,6 +2852,8 @@ class Course < ActiveRecord::Base
         tabs.delete_if { |t| t[:id] == TAB_DISCUSSIONS } unless self.grants_rights?(user, opts[:session], :read_forum, :moderate_forum, :post_to_forum).values.any?
         tabs.detect { |t| t[:id] == TAB_DISCUSSIONS }[:manageable] = true if self.grants_right?(user, opts[:session], :moderate_forum)
         tabs.delete_if { |t| t[:id] == TAB_SETTINGS } unless self.grants_right?(user, opts[:session], :read_as_admin)
+        tabs.detect { |t| t[:id] == TAB_LIVECLASSLINKS }[:manageable] = true if self.grants_right?(user, opts[:session], :manage_content)
+        tabs.delete_if { |t| t[:id] == TAB_LIVECLASSLINKS } unless self.grants_right?(user, opts[:session], :read_as_admin)
 
         if !user || !self.grants_right?(user, nil, :manage_content)
           # remove some tabs for logged-out users or non-students

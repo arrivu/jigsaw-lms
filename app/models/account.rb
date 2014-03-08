@@ -85,7 +85,7 @@ class Account < ActiveRecord::Base
   has_many :alerts, :as => :context, :include => :criteria
   has_many :user_account_associations
   has_many :report_snapshots
-
+  has_one :terms_and_condition
   before_validation :verify_unique_sis_source_id
   before_save :ensure_defaults
   before_save :set_update_account_associations_if_changed

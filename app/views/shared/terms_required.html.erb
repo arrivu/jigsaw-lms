@@ -1,29 +1,71 @@
 <%
-  content_for :page_title, t('updated_terms_of_use', 'Updated Terms of Use')
+   content_for :page_title, 'Updated Terms of Use'
+   jammit_css :login_box
+   @headers = false
+   @body_classes << "modal" if @body_classes
 
-  js_bundle :reaccept_terms
-  jammit_css :login
-  @headers = false
-  @body_classes ||= []
-  @body_classes << "modal"
 %>
 
-<form id="modal-box" class="reaccept_terms clearfix" action="/api/v1/users/self" method="PUT">
-  <h2><%= t 'updated_terms_of_use', 'Updated Terms of Use' %></h2>
-  <p>
-    <%= t 'terms_have_changed',
-          'The *terms of use* have changed. Please take a moment to review them before you continue using Jigsaw LMS.',
-          wrapper: link_to('\1', @domain_root_account.terms_of_use_url, target: '_blank')
-    %>
-  </p>
-  <p>
-    <label class="checkbox">
-      <input type="checkbox" name="user[terms_of_use]" value="1">
-      <%= agree_to_terms %>
-    </label>
-  </p>
-  <p>
-    <button type="submit" class="btn btn-primary"><%= t "#buttons.submit", "Submit" %></button>
-    <a class="btn logout" href="/logout"><%= t "#buttons.cancel", "Cancel" %></a>
-  </p>
-</form>
+<% @terms = @domain_root_account.terms_and_condition %>
+<div id="login_box" style="width:50%" class="login-box" >
+  <div style="height: 70px;
+          margin: 0 0 16px;
+          background-color: #efefef;
+          text-align: center;"><%= image_tag "jigsaw_logo.png" ,:style => "height: 67px;" %></div>
+  <% form_for :terms_and_condition,:url=> account_terms_and_condition_url(@domain_root_account,@terms),:html=> {:method => :put} do |f|%>
+
+      <div id="login_form" style="width:auto;margin-left: 28px">
+        <div class="error_box errorBox" style="display: block; position:relative; top: auto; left: auto; max-width: 400px">
+          <div class="error_text" style="text-align: center;margin-left: 97px;color: #131212;margin-top: 20px" >
+            <h4><%="Accept the Terms and Conditions" %></h4>
+          </div>
+        </div>
+        <div style="color: #131212;">
+          <h5>
+            <%= "In order to finish signing you up for the Jigsaw, You have to accept the Terms and Conditions" %>
+          </h5>
+        </div>
+        <hr>
+
+        <div style="margin-top: 35px;height: 200px;overflow: auto;color: #131212;">
+          <%= @terms.terms_and_conditions.html_safe %>
+        </div>
+        <hr>
+        <div style="color: #131212;margin-left: 113px;width:auto">
+         <%= f.blabel :time_zone, :en => "Time Zone" %>
+
+          <span class="edit_data"><%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, :model => I18nTimeZone, :default => ((@domain_root_account && @domain_root_account.default_time_zone.name) || "Mountain Time (US & Canada)") %></span>
+        </div>
+        <div align="right" style="color: #131212;margin-right: 61px">
+          <input type="checkbox"  id="enable_terms_and_conditions" value="1"    />
+          <%= f.label :information, :en => "I want to receive information, news and tips from Jigsaw Academy"%>
+        </div>
+        <div id="check_box" style="text-align: center;color: #131212;margin-right: 107px" class="<%= root_url %>">
+          <input type="checkbox"  id="agree_terms_and_conditions" value="1" class="<%= account_terms_and_condition_url(@domain_root_account,@terms) %>"   />
+          <%= f.label :enable_terms_and_conditions, :en => " I Agree to the Terms of Jigsaw Academy" %>
+        </div>
+        <div>
+          <button id="terms_accept_submit" type="submit" class="btn btn-primary submit_button"><%= "Accept"%></button>
+        </div>
+
+      </div>
+  <% end %>
+</div>
+
+<% js_block do %>
+    <script type="text/javascript">
+        require([
+            'jquery' /* $ */,
+            'jquery.disableWhileLoading'
+        ], function($) {
+            $(".error_text").hide();
+            $("#terms_accept_submit").click(function() {
+                if(!$('#agree_terms_and_conditions:checked').length) {
+                    $(".error_text").show();
+                    return false;
+                }
+                return true;
+            });
+        });
+    </script>
+<%end %>

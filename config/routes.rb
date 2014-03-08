@@ -213,7 +213,7 @@ FakeRails3Routes.draw do
     match 'users/prior' => 'context#prior_users', :as => :prior_users
     resources :rewards
     resources :comments ,:path => :testimonial
-
+    resources :live_class_links
     concerns :users
     match 'statistics' => 'courses#statistics', :as => :statistics
     match 'unenroll/:id' => 'courses#unenroll_user', :as => :unenroll, :via => :delete
@@ -632,6 +632,7 @@ FakeRails3Routes.draw do
     member do
       get :statistics
     end
+    resources :terms_and_conditions
   end
 
   match 'images/users/:user_id' => 'users#avatar_image', :as => :avatar_image, :via => :get
@@ -1033,6 +1034,16 @@ FakeRails3Routes.draw do
       end
       et_routes("course")
       et_routes("account")
+    end
+
+    scope(:controller => :live_class_links) do
+      def et_routes(context)
+        get "#{context}s/:#{context}_id/live_class_links", :action => :index, :path_name => "#{context}_live_class_links"
+        post "#{context}s/:#{context}_id/live_class_links", :action => :create, :path_name => "#{context}_live_class_links_create"
+        put "#{context}s/:#{context}_id/live_class_links/:live_class_link_id", :action => :update, :path_name => "#{context}_live_class_links_update"
+        delete "#{context}s/:#{context}_id/live_class_links/:live_class_link_id", :action => :destroy, :path_name => "#{context}_live_class_links_delete"
+      end
+      et_routes("course")
     end
 
     scope(:controller => :referrals) do

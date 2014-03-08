@@ -1,0 +1,2 @@
+module LiveClassLinksHelper
+end

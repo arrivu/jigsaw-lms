@@ -54,19 +54,18 @@ class AuthenticationController < ApplicationController
   def successful_login(pseudonym)
     @current_pseudonym = pseudonym
     flash[:notice] = "You are now logged in"
-    favourite_course
-    #redirect_to root_url
+    favourites
   end
 
   def un_successful_login
     reset_session_for_login
     @current_pseudonym=nil
-    flash[:error] = "Account is queued for verification,Once it completed the admin will contact you ."
+    flash[:error] = "Account is queued for verification,Once it is completed the admin will contact you ."
     redirect_to root_url
   end
 
   def activation_pending
-    flash[:error] = "Your account is not yet processed,Once it completed you will get a activation mail ."
+    flash[:error] = "Your account is not yet processed,Once it is completed you will get a activation mail ."
     redirect_to root_url
   end
 
@@ -77,7 +76,7 @@ class AuthenticationController < ApplicationController
 
  def set_provider(auth)
    if auth['provider'] == "google_oauth2"
-     provider = "Google"
+     provider = "google"
    else
      provider = auth['provider']
    end

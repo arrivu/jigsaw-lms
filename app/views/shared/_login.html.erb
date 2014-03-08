@@ -1,4 +1,4 @@
-<% jammit_css :login ,:login_box%>
+<% jammit_css :login_box%>
 <% @body_classes << "modal" if @body_classes %>
 <% hide_fft ||= false %>
 <% js_block do %>
@@ -80,7 +80,7 @@ $(document).ready(function() {
 </h4>
 <div id="login_box" class="login-box">
     <div id="modal-box-inner" style="margin-top: 0px;">
-    <h1></h1>
+    <h1 class="login_box_h1"></h1>
     <% if @is_delegated %>
       <div id="login_form">
         <% if flash[:delegated_message] %>

@@ -1,0 +1,62 @@
+
+<%
+   jammit_css :tinymce
+%>
+<div id="add_terms_and_conditions" rel="<%= account_terms_and_conditions_path(@context) %>">
+  <table class="formtable" style="width: 100%">
+    <tr>
+      <td>
+        <%= "Enter Terms and Conditions" %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <textarea rows="10" cols="240"
+                  id="terms_conditions"
+                  class="rich_editor"
+                  name="terms_template_txt"
+                  style="width: 800px;"
+        ><%= @account.terms_and_condition.terms_and_conditions if @account.terms_and_condition%></textarea>
+
+      </td>
+    <tr>
+      <td>
+        <div class="button-container">
+          <a href="<%= :back %>" class="btn dialog_closer">Cancel</a>
+          <button id="add_comment_submit" type="submit" class="btn btn-primary submit_button"><%="Add Terms and Conditions" %></button>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<% js_block do %>
+    <script type="text/javascript">
+        require([
+            'jquery' /* $ */,
+            'compiled/tinymce',
+            'tinymce.editor_box',
+            'jquery.disableWhileLoading'
+        ], function($) {
+            setTimeout((function() {
+                tinymce.execCommand("mceAddControl", true, "terms_conditions");
+                return  $("#terms_conditions").editorBox();
+            }), 1000);
+            $("#add_comment_submit").click(function() {
+                $("#content").disableWhileLoading($.ajax({
+                    type: 'POST',
+                    url: $("#add_terms_and_conditions").attr('rel'),
+                    data: {'terms_and_conditions': tinymce.get('terms_conditions').getContent()},
+                    success: function(res){
+                        $.flashMessage('Terms and conditions updated for this account!')
+
+                    },
+                    error: function(res){
+                        $.flashMessage('There is some errors .Please contact admin')
+                    }
+                })
+                );
+            });
+        });
+    </script>
+<% end %>

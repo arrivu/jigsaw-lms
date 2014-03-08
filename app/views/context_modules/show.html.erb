@@ -1,13 +1,13 @@
+<% is_managable = can_do(@context, @current_user, :manage_content)  %>
 <% content_for :page_title, join_title(t('titles.course_class', "Class"), @module.name) %>
 <% jammit_css :flip_classes %>
 <% js_bundle :context_modules %>
-<%= render :partial => 'context_modules/class_videos' %>
-<%= render :partial => 'context_modules/class_recordings'%>
-<%= render :partial => 'context_modules/class_reading_materials'%>
-<%= render :partial => 'context_modules/class_assignments'%>
+<%= render :partial => 'context_modules/class_videos', :locals => {:is_managable => is_managable} %>
+<%= render :partial => 'context_modules/class_recordings' , :locals => {:is_managable => is_managable} %>
+<%= render :partial => 'context_modules/class_reading_materials' , :locals => {:is_managable => is_managable} %>
+<%= render :partial => 'context_modules/class_assignments' , :locals => {:is_managable => is_managable} %>
 
-<% if can_do(@context, @current_user, :manage_content) %>
+<% if is_managable %>
 <div id="context_modules" class="editable">
-
 </div>
 <% end %>

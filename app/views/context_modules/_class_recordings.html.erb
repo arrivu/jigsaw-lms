@@ -4,30 +4,37 @@
     <!--add video link-->
   </div>
   </div>
-  <%@module.content_tags.pre_class_recording.active.each_with_index do |tag,idx|  %>
+  <% @live_class_links.each_with_index do |live_class_link,idx|  %>
       <div style="margin: 10px 17px; font-size: 130%;
               font-weight: bold;
               color: #7f8c8d;
               line-height: 1.3;background-color: #e1f3fd;border-radius:5px;">
         <div style="width:auto;padding:17px;float:left;"><%= image_tag "class_recordings.png" , :style=> "padding:1px;line-height:20px;height:33px;margin-top:-8px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
         <div style="width:85%;padding:5px;">
-        <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#239bc0;"> class recording&nbsp;<%=sprintf '%02d',idx + 1 %></a></span><br>
-
-          <%= tag.title %>
+        <span ><a class="title "
+                  <% if is_managable or @authorized_for_user  %>
+                  href="<%= live_class_link.link_url%>"
+                  <% end  %>
+                  style="color:#239bc0;"><%=live_class_link.course_section.name  if live_class_link.course_section%> class recording</a></span><br>
+          <%= live_class_link.name %>
 
         </div>
       </div>
 
 
   <% end %>
-  <%@module.content_tags.pre_class_presentation.active.each_with_index do |tag,idx|  %>
+  <% @module.content_tags.pre_class_presentation.active.each_with_index do |tag,idx|  %>
       <div style="margin: 14px 17px 10px; font-size: 130%;
               font-weight: bold;
               color: #7f8c8d;
               line-height: 1.1;background-color: #fee8dd;border-radius:5px;">
         <div style="width:auto;padding:17px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;margin-top:-8px;width:33px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
         <div style="width:85%;padding:10px;">
-          <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>" style="color:#c2401c;"> class  Presentation&nbsp;<%=sprintf '%02d',idx + 1%></a></span><br>
+          <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
+                    <% if is_managable or @authorized_for_user  %>
+                        href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+                    <% end %>
+                    style="color:#c2401c;"> class  Presentation&nbsp;<%=sprintf '%02d',idx + 1%></a></span><br>
 
           <%= truncate(tag.title, length: 53, omission: '..') %>
 

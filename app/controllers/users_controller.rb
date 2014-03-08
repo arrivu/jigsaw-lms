@@ -105,6 +105,7 @@ class UsersController < ApplicationController
   include LinkedIn
   include DeliciousDiigo
   include SearchHelper
+  include ApplicationHelper
   before_filter :require_user, :only => [:grades, :merge, :kaltura_session,
     :ignore_item, :ignore_stream_item, :close_notification, :mark_avatar_image,
     :user_dashboard, :toggle_dashboard, :masquerade, :external_tool,
@@ -375,7 +376,8 @@ class UsersController < ApplicationController
     clear_crumbs
 
     if request.path =~ %r{\A/dashboard\z}
-      return redirect_to(dashboard_url, :status => :moved_permanently)
+      favourites
+      #return redirect_to(dashboard_url, :status => :moved_permanently)
     end
     disable_page_views if @current_pseudonym && @current_pseudonym.unique_id == "pingdom@instructure.com"
 
@@ -383,6 +385,7 @@ class UsersController < ApplicationController
     @announcements = AccountNotification.for_user_and_account(@current_user, @domain_root_account)
     @pending_invitations = @current_user.cached_current_enrollments(:include_enrollment_uuid => session[:enrollment_uuid]).select { |e| e.invited? }
     @stream_items = @current_user.try(:cached_recent_stream_items) || []
+    favourites
   end
 
   def cached_upcoming_events(user)

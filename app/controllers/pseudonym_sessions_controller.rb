@@ -23,6 +23,7 @@ class PseudonymSessionsController < ApplicationController
   before_filter :require_password_session, :only => [ :otp_login, :disable_otp_login ]
   before_filter :require_user, :only => [ :otp_login ]
   skip_before_filter :require_reacceptance_of_terms
+  skip_before_filter :check_for_terms_and_conditions
 
   def corp_login
     redirect_to login_url :lms_login => 1
@@ -570,9 +571,10 @@ class PseudonymSessionsController < ApplicationController
         # they must have cookies enabled and we don't need to worry about
         # adding the :login_success param to it.
         #format.html { redirect_back_or_default(dashboard_url(:login_success => '1')) }
-        format.html {favourite_course}
+        format.html {favourites}
+
       end
-      format.json { render :json => pseudonym.to_json(:methods => :user_code), :status => :ok }
+      #format.json { render :json => pseudonym.to_json(:methods => :user_code), :status => :ok }
     end
   end
 

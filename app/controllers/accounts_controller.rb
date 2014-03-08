@@ -21,7 +21,7 @@ class AccountsController < ApplicationController
   before_filter :require_user, :only => [:index]
   before_filter :reject_student_view_student
   before_filter :get_context
-
+  skip_before_filter :check_for_terms_and_conditions
   include Api::V1::Account
 
   INTEGER_REGEX = /\A[+-]?\d+\z/

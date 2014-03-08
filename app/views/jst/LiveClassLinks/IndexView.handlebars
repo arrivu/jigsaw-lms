@@ -1,0 +1,41 @@
+<p class="well well-small">
+    Live Class Links are pre-recorded videos links or any url you can put it here,
+    We can add class section wise live class links here.
+</p>
+<div>
+
+  <label for="modules_for_filter">Classes</label>
+
+    <select name="module_id" id="modules_for_filter">
+        <option value="">All</option>
+        {{#each courseModules}}
+            <option value="{{id}}" >{{name}}</option>
+        {{/each}}
+    </select>
+
+  <label  for="live_class_sections_for_filter">Sections</label>
+    <select name="course_section_id" id="live_class_sections_for_filter">
+        <option value="">All</option>
+        <option value="0">All Sections</option>
+        {{#each courseSections}}
+            <option value="{{id}}" id={{id}} >{{name}}</option>
+        {{/each}}
+    </select>
+
+
+    <button class="btn btn-primary filter_live_class_links lm " style="margin-top: -9px;">
+        Filter
+    </button>
+
+  <button class="btn btn-primary add_live_class_link lm pull-right">
+    Add Live Class Link
+  </button>
+
+
+
+  <!--<input type="text" id="live_class_filter" class="input-large search-query pull-right" placeholder="{{#t "search_filter"}}Filter by name{{/t}}">-->
+</div>
+
+
+<div data-view="liveClassLinks"></div>
+

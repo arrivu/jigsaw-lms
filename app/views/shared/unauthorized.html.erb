@@ -51,7 +51,8 @@
     <% end %>
   </div>
 <% end %>
-<% if needs_login %>
-  <%= render :partial => "shared/login", :locals => {:hide_fft => true} %>
-<% end %>
+
 </div>
+<% if needs_login %>
+    <%= render :partial => "shared/login", :locals => {:hide_fft => true} %>
+<% end %>

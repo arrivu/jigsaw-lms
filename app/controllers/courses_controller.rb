@@ -1666,7 +1666,7 @@ class CoursesController < ApplicationController
   end
 
   def  last_user_access_course_report
-    @available_reports = AccountReport.available_reports(@domain_root_account) if @domain_root_account.grants_right?(@current_user, @session, :read_reports)
+    @available_reports = AccountReport.available_reports(@domain_root_account) if @context.grants_right?(@current_user, @session, :read_reports)
     if @available_reports
       @last_complete_reports = {}
       @last_reports = {}

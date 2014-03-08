@@ -1,0 +1,38 @@
+<fieldset>
+  <div class="control-group">
+    <label class="control-label" for="live_class_link_name">Name</label>
+    <div class="controls">
+      <input type="text" id="live_class_link_name" value="{{name}}" name="name">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="live_class_link_url">Link url</label>
+    <div class="controls">
+      <input type="text" id="live_class_link_url" value="{{link_url}}" name="link_url">
+    </div>
+  </div>
+  <div class="control-group">
+       <label class="control-label" for="modules">Classes</label>
+        <div class="controls">
+        <select name="module_id" id="modules">
+            {{#each courseModules}}
+                <option value="{{id}}" context_module_id={{../context_module_id}} {{#ifEqual id ../context_module_id}}selected{{/ifEqual}}>{{name}}</option>
+            {{/each}}
+        </select>
+      </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="live_class_sections">Sections</label>
+    <div class="controls">
+        <select name="course_section_id" id="live_class_sections">
+            <option value="0">All</option>
+            {{#each courseSections}}
+                <option value="{{id}}" id={{id}} course_section_id={{../course_section_id}} {{#ifEqual id ../course_section_id}}selected{{/ifEqual}}>{{name}}</option>
+            {{/each}}
+        </select>
+  </div>
+</div>
+
+
+
+</fieldset>

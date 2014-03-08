@@ -16,7 +16,11 @@
               line-height: 1;
                height:18px;">
         <%= image_tag "play_icon.png", :style=>"line-height:20px;height:35px;margin-top:-3px" %> &nbsp;&nbsp;&nbsp;&nbsp;
-        <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>" href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
+        <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
+        <% if is_managable or @authorized_for_user  %>
+           href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+        <% end %>
+        >
           <%= truncate(tag.title, length: 53, omission: '..') %>
         </a>
       </div>
