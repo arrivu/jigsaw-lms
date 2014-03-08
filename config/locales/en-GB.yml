@@ -6620,7 +6620,7 @@ en-GB:
     message_will_be_sent_to_all_the_teachers_tas_in_the_course: "Message will be sent to all the teachers / TA's in the course."
     please_select_one: "Please select one..."
     report_problem: "Report a problem"
-    report_problem_sub: "If Jigsaw Academy misbehaves, tell us about it"
+    report_problem_sub: "If Jigsaw LMS misbehaves, tell us about it"
     search_the_canvas_guides: "Search the Jigsaw Academy Guides"
     see_if_your_issue_is_addressed_in_the_canvas_guides: "See if your issue is addressed in the *Jigsaw Academy Guides*."
     send_message: "Send message"

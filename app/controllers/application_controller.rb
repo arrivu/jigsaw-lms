@@ -1690,7 +1690,7 @@ class ApplicationController < ActionController::Base
       if @check_terms.nil?
           render :template => "shared/terms_required", :layout => "application", :status => :authorized
       end
+     end
     end
-   end
   end
 end

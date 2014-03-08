@@ -2,7 +2,7 @@
   js_bundle :wiki
   jammit_css :tinymce
   content_for :page_title, join_title(@page.title.to_s, @context.name)
-  if  can_do(@page, @current_user, [:update_content,:manage_content])
+  if can_do(@page, @current_user, [:update_content,:manage_content])
    content_for :right_side, render(:partial => 'wiki_pages/wiki_right_side')
   end
 %>
