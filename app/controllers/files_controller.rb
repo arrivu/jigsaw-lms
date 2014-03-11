@@ -293,6 +293,7 @@ class FilesController < ApplicationController
       @attachment = Attachment.find(params[:id])
       @skip_crumb = true unless @context
     end
+    add_class_view_crumbs
     params[:download] ||= params[:preview]
     add_crumb(t('#crumbs.files', "Files"), named_context_url(@context, :context_files_url)) unless @skip_crumb
     if @attachment.deleted?

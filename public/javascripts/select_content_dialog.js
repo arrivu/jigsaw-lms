@@ -152,7 +152,8 @@ $(document).ready(function() {
             // discussion_topics will come from real api v1 and so wont be nested behind a `discussion_topic` root object
             if (item_data['item[type]'] === 'discussion_topic') {
               obj = data;
-            }else if (item_data['item[type]'] === 'wiki' || item_data['item[type]'] === 'faq' ||  item_data['item[type]'] === 'career' ||  item_data['item[type]'] === 'video' ||  item_data['item[type]'] === 'offer' ){
+            }else if (item_data['item[type]'] === 'wiki' || item_data['item[type]'] === 'faq' ||  item_data['item[type]'] === 'career'
+             ||  item_data['item[type]'] === 'video' ||  item_data['item[type]'] === 'offer' || item_data['item[type]'] === 'labs' ){
               obj = data['wiki_page']
             }
             else {

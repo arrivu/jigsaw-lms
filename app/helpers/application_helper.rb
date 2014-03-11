@@ -913,25 +913,27 @@ module ApplicationHelper
 
   #arrivu changes for favourite course redirect
   def favourites
-    if @current_user.enrollments.active.nil? or @current_user.enrollments.active.empty?
+    @user ||= @current_user
+    @pseudonym ||= @current_pseudonym
+    if @user.enrollments.active.nil? or @user.enrollments.active.empty?
       redirect_to root_url
     else
-      favourite_course_id = @current_pseudonym.settings[:favourite_course_id]
+      favourite_course_id = @pseudonym.settings[:favourite_course_id]
       if favourite_course_id.nil? || favourite_course_id.empty?
         first_enrollment
       else
         @context = Course.find(favourite_course_id)
-        if is_authorized_action?(@context, @current_user, :read)
+        if is_authorized_action?(@context, @user, :read)
           redirect_to course_url(@context)
         else
           first_enrollment
         end
-    end
+      end
     end
   end
 
   def first_enrollment
-    enrollment = @current_user.enrollments.active.first
+    enrollment = @user.enrollments.active.first
     unless enrollment.nil?
       @context = Course.find_by_id(enrollment.course_id)
       redirect_to course_url(@context)
@@ -939,5 +941,36 @@ module ApplicationHelper
       redirect_to  dashboard_url
     end
   end
+
+  def add_class_view_crumbs
+    @skip_crumb = true
+    add_crumb("Classes",named_context_url(@context, :context_context_modules_url))
+    if @context.is_a?(Course) and params[:module_item_id].present?
+      content_tag = ContentTag.find(params[:module_item_id])
+      @context_module = content_tag.context_module
+      add_crumb(@context_module.name,course_context_module_url(@context,@context_module))
+      add_category_crumb(content_tag)
+    end
+  end
+
+  def add_category_crumb(content_tag)
+    @context_module ||= @module
+   if @context and @context_module
+      if content_tag.category == ContentTag::PRE_CLASS_VIDEO
+        add_crumb(ContentTag::PRE_CLASS_VIDEO_NAME,course_context_module_url(@context,@context_module))
+      elsif content_tag.category == ContentTag::PRE_CLASS_RECORDING
+        add_crumb(ContentTag::PRE_CLASS_RECORDING_NAME,course_context_module_url(@context,@context_module))
+      elsif content_tag.category == ContentTag::PRE_CLASS_PRESENTATION
+        add_crumb(ContentTag::PRE_CLASS_PRESENTATION_NAME,course_context_module_url(@context,@context_module))
+      elsif content_tag.category == ContentTag::PRE_CLASS_ASSIGNMENTS
+        add_crumb(ContentTag::PRE_CLASS_ASSIGNMENTS_NAME,course_context_module_url(@context,@context_module))
+      elsif content_tag.category == ContentTag::PRE_CLASS_READING_MATERIALS
+        add_crumb(ContentTag::PRE_CLASS_READING_MATERIALS_NAME,course_context_module_url(@context,@context_module))
+      else
+        add_crumb(ContentTag::SUPPLEMENTARY_NAME,course_context_module_url(@context,@context_module))
+      end
+  end
+  end
+
   #arrivu changes
 end

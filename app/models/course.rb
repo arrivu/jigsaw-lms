@@ -2705,6 +2705,7 @@ class Course < ActiveRecord::Base
   TAB_BONUSVIDEOS=22
   TAB_LIVECLASSLINKS=23
   TAB_COMMENTS=24
+  TAB_LABS=25
 
   def self.default_tabs
     [
@@ -2729,6 +2730,7 @@ class Course < ActiveRecord::Base
       { :id => TAB_VIDEOS, :label => t('#tabs.videos', "Videos"), :css_class => 'videos',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_VIDEOS },
       { :id => TAB_OFFERS, :label => t('#tabs.offers', "Offers"), :css_class => 'offer',:href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_OFFERS },
       { :id => TAB_BONUSVIDEOS, :label => t('#tabs.bonusvideos', "Bonus Videos"), :css_class => 'bonus_videos', :href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_BONUS_VIDEOS },
+      { :id => TAB_LABS, :label => t('#tabs.labs', "Labs"), :css_class => 'labs', :href => :course_wiki_pages_path, :type => WikiPage::WIKI_TYPE_LABS },
       {:id => TAB_COMMENTS, :label => t('#tabs.testimonial', "Testimonial"), :css_class => 'comments', :href => :course_comments_path},
       {:id => TAB_LIVECLASSLINKS, :label => t('#tabs.live_class_links', "Live Class Links"), :css_class => 'live_class_links', :href => :course_live_class_links_path},
       { :id => TAB_SETTINGS, :label => t('#tabs.settings', "Settings"), :css_class => 'settings', :href => :course_settings_path }
@@ -2812,6 +2814,7 @@ class Course < ActiveRecord::Base
         tab[:hidden_unused] = true if tab[:id] == TAB_OFFERS && !active_record_types[:offers]
         tab[:hidden_unused] = true if tab[:id] == TAB_BONUSVIDEOS && !active_record_types[:bonus_videos]
         tab[:hidden_unused] = true if tab[:id] == TAB_COMMENTS && !active_record_types[:comments]
+        tab[:hidden_unused] = true if tab[:id] == TAB_LABS && !active_record_types[:lab]
       end
 
       # remove tabs that the user doesn't have access to

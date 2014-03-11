@@ -27,7 +27,7 @@ class AssignmentsController < ApplicationController
   include GoogleDocs
   include KalturaHelper
   before_filter :require_context
-  add_crumb(proc { t '#crumbs.assignments', "Assignments" }, :except => [:destroy, :syllabus, :index]) { |c| c.send :course_assignments_path, c.instance_variable_get("@context") }
+  add_crumb(proc { t '#crumbs.assignments', "Assignments" }, :except => [:destroy, :syllabus, :index,:show]) { |c| c.send :course_assignments_path, c.instance_variable_get("@context") }
   before_filter { |c| c.active_tab = "assignments" }
   before_filter :normalize_title_param, :only => [:new, :edit]
 
@@ -129,7 +129,7 @@ class AssignmentsController < ApplicationController
       begin
         @google_docs_token = google_docs_retrieve_access_token
       rescue RuntimeError => ex; end
-
+      add_class_view_crumbs
       add_crumb(@assignment.title, polymorphic_url([@context, @assignment]))
       log_asset_access(@assignment, "assignments", @assignment.assignment_group)
 

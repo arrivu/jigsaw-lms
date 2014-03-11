@@ -12345,7 +12345,9 @@ en-AU:
     quizzes: Quizzes
     settings: Settings
     syllabus: Syllabus
-  terms: 
+    labs: Labs
+    careers: Careers
+  terms:
     index: 
       date: 
         term_end: "term end"

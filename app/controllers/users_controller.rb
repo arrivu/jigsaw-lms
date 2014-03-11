@@ -376,8 +376,7 @@ class UsersController < ApplicationController
     clear_crumbs
 
     if request.path =~ %r{\A/dashboard\z}
-      favourites
-      #return redirect_to(dashboard_url, :status => :moved_permanently)
+      return redirect_to(dashboard_url, :status => :moved_permanently)
     end
     disable_page_views if @current_pseudonym && @current_pseudonym.unique_id == "pingdom@instructure.com"
 
@@ -385,6 +384,9 @@ class UsersController < ApplicationController
     @announcements = AccountNotification.for_user_and_account(@current_user, @domain_root_account)
     @pending_invitations = @current_user.cached_current_enrollments(:include_enrollment_uuid => session[:enrollment_uuid]).select { |e| e.invited? }
     @stream_items = @current_user.try(:cached_recent_stream_items) || []
+  end
+
+  def logo_root
     favourites
   end
 

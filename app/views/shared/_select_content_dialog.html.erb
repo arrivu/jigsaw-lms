@@ -49,6 +49,9 @@
         <% if !only || only.include?(:career) %>
             <option value="career" class="context_module_content"><%= t :career_item, "Careers" %></option>
         <% end %>
+        <% if !only || only.include?(:labs) %>
+            <option value="labs" class="context_module_content"><%= t :labs, "Labs" %></option>
+        <% end %>
       </select>
       <% }, :wrapper => '<span class="holder_name">\1</span>' %>
     </div>
@@ -226,7 +229,33 @@
           </div>
         </div>
     <% end %>
-      <!--for wikis-->
+
+    <!--for labs-->
+    <% if !only || only.include?(:labs) %>
+        <div id="labss_select" class="module_item_option" style="margin: 5px 20px;">
+          <div style="font-size: 0.8em;">
+            <i class="icon-document"></i>
+            <%= t :labs, "select a Lab from below to associated with this Module", :wrapper => '<span class="holder_type">\1</span>' %>
+          </div>
+          <div style="margin-top: 5px;">
+            <select class="module_item_select" multiple>
+              <optgroup label="Labs">
+                <% @context.wiki.wiki_pages.labs.active.each do |lab| %>
+                    <option value="<%= lab.id %>"><%= lab.title %></option>
+                <% end %>
+              </optgroup>
+              <option value="new"><%= t :new_lab_option, "[ New Lab ]" %></option>
+            </select>
+          </div>
+          <div class="new" style="margin-top: 5px;">
+            <%= before_label :labs, "New Lab WikiPage Name" %>
+            <input type="text" name="wiki_page[title]" class="item_title"/>
+            <a href="<%=  context_url(@context, :context_wiki_pages_url,:type => "labs") %>" style="display: none;" class="add_item_url">&nbsp;</a>
+          </div>
+        </div>
+    <% end %>
+
+    <!--for wikis-->
       <% if !only || only.include?(:wiki_pages) %>
       <div id="wikis_select" class="module_item_option" style="margin: 5px 20px;">
         <div style="font-size: 0.8em;">
@@ -255,7 +284,7 @@
         </div>
       </div>
       <% end %>
-      <% if !only || only.include?(:attachments) %>
+     <% if !only || only.include?(:attachments) %>
       <div id="attachments_select" class="module_item_option" style="margin: 5px 20px;">
         <div style="font-size: 0.8em;">
           <i class="icon-download"></i>

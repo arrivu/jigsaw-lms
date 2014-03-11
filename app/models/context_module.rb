@@ -266,6 +266,8 @@ class ContextModule < ActiveRecord::Base
       item = opts[:videos] || self.context.wiki.wiki_pages.videos.find_by_id(params[:id])
     elsif params[:type] == "offer"
       item = opts[:offers] || self.context.wiki.wiki_pages.offers.find_by_id(params[:id])
+    elsif params[:type] == "labs"
+      item = opts[:labs] || self.context.wiki.wiki_pages.labs.find_by_id(params[:id])
     elsif params[:type] == "attachment" || params[:type] == "file"
       item = opts[:attachment] || self.context.attachments.active.find_by_id(params[:id])
     elsif params[:type] == "assignment"
@@ -274,6 +276,7 @@ class ContextModule < ActiveRecord::Base
       item = opts[:discussion_topic] || self.context.discussion_topics.active.find_by_id(params[:id])
     elsif params[:type] == "quiz"
       item = opts[:quiz] || self.context.quizzes.active.find_by_id(params[:id])
+
     end
     workflow_state = item.workflow_state if item && item.respond_to?(:workflow_state) && ['active', 'unpublished'].include?(item.workflow_state)
     workflow_state ||= 'active'

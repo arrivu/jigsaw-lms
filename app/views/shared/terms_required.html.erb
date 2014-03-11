@@ -15,9 +15,9 @@
   <% form_for :terms_and_condition,:url=> account_terms_and_condition_url(@domain_root_account,@terms),:html=> {:method => :put} do |f|%>
 
       <div id="login_form" style="width:auto;margin-left: 28px">
-        <div class="error_box errorBox" style="display: block; position:relative; top: auto; left: auto; max-width: 400px">
-          <div class="error_text" style="text-align: center;margin-left: 97px;color: #131212;margin-top: 20px" >
-            <h4><%="Accept the Terms and Conditions" %></h4>
+        <div class="error_box errorBox" style="display: block; position:relative; top: auto;left:auto; margin-left: 35px; max-width: 400px">
+          <div class="error_text" style="text-align: center;margin-left:  130px;color: #131212;margin-top: 20px" >
+            <h5><%="Accept the Terms and Conditions" %></h5>
           </div>
         </div>
         <div style="color: #131212;">
@@ -31,18 +31,20 @@
           <%= @terms.terms_and_conditions.html_safe %>
         </div>
         <hr>
-        <div style="color: #131212;margin-left: 113px;width:auto">
+        <div style="width: 75%; margin: 0px auto;">
+        <div style="color: #131212;width:auto">
          <%= f.blabel :time_zone, :en => "Time Zone" %>
 
           <span class="edit_data"><%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, :model => I18nTimeZone, :default => ((@domain_root_account && @domain_root_account.default_time_zone.name) || "Mountain Time (US & Canada)") %></span>
         </div>
-        <div align="right" style="color: #131212;margin-right: 61px">
+        <div align="right" style="text-align: left;color: #131212;">
           <input type="checkbox"  id="enable_terms_and_conditions" value="1"    />
           <%= f.label :information, :en => "I want to receive information, news and tips from Jigsaw Academy"%>
         </div>
-        <div id="check_box" style="text-align: center;color: #131212;margin-right: 107px" class="<%= root_url %>">
+        <div id="check_box" style="text-align: left;color: #131212;" class="<%= root_url %>">
           <input type="checkbox"  id="agree_terms_and_conditions" value="1" class="<%= account_terms_and_condition_url(@domain_root_account,@terms) %>"   />
           <%= f.label :enable_terms_and_conditions, :en => " I Agree to the Terms of Jigsaw Academy" %>
+        </div>
         </div>
         <div>
           <button id="terms_accept_submit" type="submit" class="btn btn-primary submit_button"><%= "Accept"%></button>

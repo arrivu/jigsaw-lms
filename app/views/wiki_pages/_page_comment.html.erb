@@ -4,7 +4,7 @@
   <div style="float: right;">
     <span class="created_at" style="color: #888; font-size: 0.8em;"><%= datetime_string(comment.created_at) rescue nbsp %></span>
       <% owner_id = (comment.user_id) rescue nbsp %>
-       <% if owner_id == @current_user.id %>
+       <% if owner_id == @current_user.id or can_do(@context, @current_user, :manage_wiki) %>
         <a href="<%= course_wiki_page_comment_destroy_path(@context,@page.wiki_type,@page.title, comment ? comment.id : "{{ id }}") %>" class="delete_comment_link no-hover"><i class="icon-trash standalone-icon"></i></a>
        <%end %>
   </div>

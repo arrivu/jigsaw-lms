@@ -65,6 +65,7 @@ module SIS
       def add_user(user_id, login_id, first_name, last_name, email, status, provider, password=nil,  ssha_password=nil)
         @logger.debug("Processing User #{[user_id, login_id, password, first_name, last_name, email, status, provider, ssha_password].inspect}")
 
+        validate_provider(provider)
         raise ImportError, "No user_id given for a user" if user_id.blank?
         raise ImportError, "No login_id given for user #{user_id}" if login_id.blank?
         raise ImportError, "Improper status for user #{user_id}" unless status =~ /\A(active|deleted)/i
@@ -255,12 +256,21 @@ module SIS
 
               oaa = OmniauthAuthentication.find_by_user_id(user.id)
               oaa ||= OmniauthAuthentication.new(:user_id => user.id)
-              oaa.provider = provider
+              oaa.provider = provider.downcase
               oaa.save!
             end
           end
         end
       end
+
+    def validate_provider(provider)
+       if provider.present?
+        unless  OmniauthAuthentication::OMNIAUTH_PROVIDERS.include? (provider.downcase) #and provider.nil?
+            raise ImportError,"Invalid Provider only [facebook,google,linkedin] are accepted."
+        end
+       end
+    end
+
     end
   end
 end

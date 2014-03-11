@@ -313,6 +313,7 @@ class DiscussionTopicsController < ApplicationController
       nil
     end
     @context.assert_assignment_group rescue nil
+    add_class_view_crumbs
     add_discussion_or_announcement_crumb
     add_crumb(@topic.title, named_context_url(@context, :context_discussion_topic_url, @topic.id))
     if @topic.deleted?
@@ -532,10 +533,10 @@ class DiscussionTopicsController < ApplicationController
   protected
 
   def add_discussion_or_announcement_crumb
-    if  @topic.is_a? Announcement
+    if  @topic.is_a? Announcement and !@skip_crumb
       @active_tab = "announcements"
       add_crumb t('#crumbs.announcements', "Announcements"), named_context_url(@context, :context_announcements_url)
-    else
+    elsif !@skip_crumb
       @active_tab = "discussions"
       add_crumb t('#crumbs.discussions', "Discussions"), named_context_url(@context, :context_discussion_topics_url)
     end

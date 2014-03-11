@@ -1649,6 +1649,8 @@ class ApplicationController < ActionController::Base
       @context.wiki.wiki_pages.offers.count == 0
     elsif @wiki_type == WikiPage::WIKI_TYPE_BONUS_VIDEOS
       @context.wiki.wiki_pages.bonusvideos.count == 0
+    elsif @wiki_type == WikiPage::WIKI_TYPE_LABS
+      @context.wiki.wiki_pages.labs.count == 0
     else
        @context.wiki.wiki_pages.pages.count == 0
     end

@@ -157,7 +157,7 @@ FakeRails3Routes.draw do
     get 'pages/:wiki_page_id' => 'wiki_pages#show_page', :wiki_page_id => /[^\/]+/, :as => :named_page
     get 'pages/:wiki_page_id/edit' => 'wiki_pages#edit_page', :wiki_page_id => /[^\/]+/, :as => :edit_named_page
 
-    type_regexp = Regexp.new([:wiki, :faq, :career,:video,:offer,:bonus_video].join("|"))
+    type_regexp = Regexp.new([:wiki, :faq, :career,:video,:offer,:bonus_video, :labs].join("|"))
     resources :wiki_pages, path: ':type', constraints: { type: type_regexp } do
     match 'comments_create' => 'wiki_pages#comments_create' ,:as => :comments_create, :via => :post
     match 'comment_destroy/:id'=> 'wiki_pages#comment_destroy', :as => :comment_destroy,:only => [:destroy]
@@ -731,6 +731,7 @@ FakeRails3Routes.draw do
   match 'styleguide' => 'info#styleguide', :as => :styleguide, :via => :get
   match 'old_styleguide' => 'info#old_styleguide', :as => :old_styleguide, :via => :get
   root :to => 'users#user_dashboard', :as => :root, :via => :get
+  match 'logo_root' => 'users#logo_root',  :as => :logo_root ,:via => :get
   # backwards compatibility with the old /dashboard url
   match 'dashboard' => 'users#user_dashboard', :as => :dashboard_redirect, :via => :get
 

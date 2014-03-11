@@ -75,6 +75,13 @@ class ContentTag < ActiveRecord::Base
   PRE_CLASS_ASSIGNMENTS = "pre_class_assignments"
   PRE_CLASS_READING_MATERIALS = "pre_class_reading_materials"
 
+  PRE_CLASS_VIDEO_NAME = "Pre Class Videos"
+  PRE_CLASS_RECORDING_NAME = "Class Recordings"
+  PRE_CLASS_PRESENTATION_NAME = "Presentations"
+  PRE_CLASS_ASSIGNMENTS_NAME = "Assignments"
+  PRE_CLASS_READING_MATERIALS_NAME = "Pre Class Reading Materials"
+  SUPPLEMENTARY_NAME = "Supplementary Material"
+
 
   scope :active, where(:workflow_state => 'active')
   scope :not_deleted, where("content_tags.workflow_state<>'deleted'")
