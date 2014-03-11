@@ -62,7 +62,7 @@ namespace :deploy do
 
   task :cleanup, :except => { :no_release => true } do
     count = fetch(:keep_releases, 10).to_i
-    run "#{sudo} ls -1dt #{releases_path}/* | tail -n +#{count + 1} | xargs rm -rf"
+    run "#{sudo} ls -1dt #{releases_path}/* | tail -n +#{count + 1} | xargs #{sudo}  rm -rf"
   end
 end
 # Canavs-specific task after a deploy
