@@ -1027,6 +1027,7 @@ class ApplicationController < ActionController::Base
     page_name ||= WikiPage::DEFAULT_VIDEO_FRONT_PAGE_URL if (@wiki_type == WikiPage::WIKI_TYPE_VIDEOS)
     page_name ||= WikiPage::DEFAULT_OFFER_FRONT_PAGE_URL if (@wiki_type == WikiPage::WIKI_TYPE_OFFERS)
     page_name ||= WikiPage::DEFAULT_BONUS_VIDEO_FRONT_PAGE_URL if (@wiki_type == WikiPage::WIKI_TYPE_BONUS_VIDEOS)
+    page_name ||= WikiPage::DEFAULT_LAB_FRONT_PAGE_URL if (@wiki_type == WikiPage::WIKI_TYPE_LABS)
     page_name ||= (@wiki.get_front_page_url || Wiki::DEFAULT_FRONT_PAGE_URL) unless @context.draft_state_enabled?
     if(params[:format] && !['json', 'html'].include?(params[:format]))
       page_name += ".#{params[:format]}"
