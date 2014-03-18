@@ -1688,12 +1688,17 @@ class ApplicationController < ActionController::Base
 
   def check_for_terms_and_conditions
    if @domain_root_account.terms_and_condition and @current_user and @current_pseudonym
-    unless can_do(@domain_root_account, @current_user, :manage_account_settings)
-      @check_terms = @current_pseudonym.settings[:is_terms_and_conditions_accepted]
-      if @check_terms.nil?
-          render :template => "shared/terms_required", :layout => "application", :status => :authorized
-      end
+     if params[:action] == "masquerade"
+       session[:masquearding] = "masquerading"
      end
-    end
+     if session[:masquearding] != "masquerading"
+       unless can_do(@domain_root_account, @current_user, :manage_account_settings)
+          @check_terms = @current_pseudonym.settings[:is_terms_and_conditions_accepted]
+          if @check_terms.nil?
+              render :template => "shared/terms_required", :layout => "application", :status => :authorized
+          end
+       end
+     end
+   end
   end
 end

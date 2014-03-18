@@ -663,6 +663,7 @@ en-AU:
       global_announcements_title: "Global Announcements"
       global_js_and_css_includes_description: "These files will be included on all page loads for your account"
       global_js_and_css_includes_title: "Global JavaScript and CSS Includes"
+      videolink: "Video Link"
       headers: 
         report_last_run: "Last Run"
         report_name: Name

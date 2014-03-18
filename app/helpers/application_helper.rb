@@ -915,7 +915,7 @@ module ApplicationHelper
   def favourites
     @user ||= @current_user
     @pseudonym ||= @current_pseudonym
-    if @user.enrollments.active.nil? or @user.enrollments.active.empty?
+    if @user.nil? or @pseudonym.nil? or @user.enrollments.active.nil? or @user.enrollments.active.empty?
       redirect_to root_url
     else
       favourite_course_id = @pseudonym.settings[:favourite_course_id]
@@ -944,8 +944,8 @@ module ApplicationHelper
 
   def add_class_view_crumbs
     @skip_crumb = true
-    add_crumb("Classes",named_context_url(@context, :context_context_modules_url))
     if @context.is_a?(Course) and params[:module_item_id].present?
+      add_crumb("Classes",named_context_url(@context, :context_context_modules_url))
       content_tag = ContentTag.find(params[:module_item_id])
       @context_module = content_tag.context_module
       add_crumb(@context_module.name,course_context_module_url(@context,@context_module))

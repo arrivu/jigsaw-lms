@@ -12,8 +12,6 @@ define [
 
     className: 'validated-form-view form-horizontal bootstrap-form'
 
-    events:
-      'change #external_tool_config_type': 'onConfigTypeChange'
 
     initialize: ->
       @courseModules = @options.courseModules if @options.courseModules
@@ -50,10 +48,6 @@ define [
       this.$el.parent().find('.btn-primary').removeClass('ui-state-hover')
       super
 
-    onConfigTypeChange: ->
-      configType = @$('#external_tool_config_type').val()
-      @$('.config_type').hide().attr('aria-expanded', false)
-      @$(".config_type.#{configType}").show().attr('aria-expanded', true)
 
     showErrors: (errors) ->
       @removeErrors()

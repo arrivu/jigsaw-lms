@@ -32,16 +32,20 @@ class LiveClassLinksController < ApplicationController
 
   def create
     if authorized_action(@context, @current_user, :manage_content)
-      @live_class_link = @context.live_class_links.build(name: params[:name],link_url: params[:link_url],
-                                                        course_section_id: params[:course_section_id],
-                                                        context_module_id: params[:module_id] )
-
-      respond_to do |format|
-       if @live_class_link.save
-          format.json {render :json => @live_class_link.attributes}
-       else
-         format.json {render :json => @live_class_link.errors ,:status => :bad_request}
-       end
+      unless params[:course_section_id].nil?
+        params[:course_section_id].each do |section_id|
+          @live_class_link = @context.live_class_links.build(name: params[:name],link_url: params[:link_url],
+                                                            course_section_id: section_id,
+                                                            context_module_id: params[:module_id] )
+          @live_class_link.save
+          end
+          respond_to do |format|
+           if @live_class_link.save
+              format.json {render :json => @live_class_link.attributes}
+           else
+             format.json {render :json => @live_class_link.errors ,:status => :bad_request}
+           end
+          end
       end
     end
   end
@@ -49,11 +53,20 @@ class LiveClassLinksController < ApplicationController
   def update
     if authorized_action(@context, @current_user, :manage_content)
       @live_class_link = LiveClassLink.find(params[:id])
+      params[:course_section_id].each do |section_id|
+         if @live_class_link.course_section_id == section_id.to_i
+           @live_class_link.update_attributes(name: params[:name],link_url: params[:link_url],
+                                              course_section_id: section_id,
+                                              context_module_id: params[:module_id] )
+         else
+           @live_class_link = @context.live_class_links.build(name: params[:name],link_url: params[:link_url],
+                                                              course_section_id: section_id,
+                                                              context_module_id: params[:module_id] )
+           @live_class_link.save
+         end
+      end
       respond_to do |format|
-        @live_class_link.update_attributes(name: params[:name],link_url: params[:link_url],
-                                           course_section_id: params[:course_section_id],
-                                           context_module_id: params[:module_id] )
-       if @live_class_link.save
+        if @live_class_link.save
         format.json {render :json => @live_class_link.attributes}
        else
          format.json {render :json => @live_class_link.errors ,:status => :bad_request}

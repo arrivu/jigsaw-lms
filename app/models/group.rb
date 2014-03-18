@@ -22,6 +22,8 @@ class Group < ActiveRecord::Base
   include CustomValidations
   include UserFollow::FollowedItem
 
+  acts_as_tagger
+
   attr_accessible :name, :context, :max_membership, :group_category, :join_level, :default_view, :description, :is_public, :avatar_attachment, :storage_quota_mb
   validates_presence_of :context_id, :context_type, :account_id, :root_account_id, :workflow_state
   validates_allowed_transitions :is_public, false => true

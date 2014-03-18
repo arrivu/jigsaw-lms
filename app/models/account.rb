@@ -175,6 +175,7 @@ class Account < ActiveRecord::Base
   add_setting :large_course_rosters, :boolean => true, :root_only => true, :default => false
   add_setting :edit_institution_email, :boolean => true, :root_only => true, :default => false
   add_setting :enable_quiz_regrade, :boolean => true, :root_only => true, :default => false
+  add_setting :account_video_url
 
   def settings=(hash)
     if hash.is_a?(Hash)
