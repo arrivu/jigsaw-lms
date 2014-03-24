@@ -308,7 +308,7 @@ module ApplicationHelper
     includes = [:active_assignments, :active_discussion_topics, :active_quizzes, :active_context_modules]
     includes.each{|i| @wiki_sidebar_data[i] = @context.send(i).limit(150) if @context.respond_to?(i) }
     includes.each{|i| @wiki_sidebar_data[i] ||= [] }
-    @wiki_sidebar_data[:wiki_pages] = @context.wiki.wiki_pages.active.order(:title).limit(150) if @context.respond_to?(:wiki)
+    @wiki_sidebar_data[:wiki_pages] = @context.wiki.wiki_pages.active.order(:title).limit(900) if @context.respond_to?(:wiki)
     @wiki_sidebar_data[:wiki_pages] ||= []
     if can_do(@context, @current_user, :manage_files)
       @wiki_sidebar_data[:root_folders] = Folder.root_folders(@context)
