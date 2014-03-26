@@ -10,12 +10,32 @@
   </div>
 
   <%@module.content_tags.active.pre_class_videos.each do |tag|  %>
-      <div style="margin: 5px 15px; font-size: 120%;
+      <div style="margin: 5px 15px; font-size: 100%;
               font-weight: bold;
               color: #7f8c8d;
               line-height: 1;
                height:18px;">
-        <%= image_tag "play_icon.png", :style=>"line-height:20px;height:35px;margin-top:-3px" %> &nbsp;&nbsp;&nbsp;&nbsp;
+        <% if tag.content_type == "Assignment" %>
+          <%= image_tag "course_assignment.png", :style=>"line-height:20px;height:28px;margin-top:1px;margin-left:5px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+        <% elsif tag.content_type == "Attachment" %>
+          <%= image_tag "Attachment.png", :style=>"line-height:20px;height:30px;margin-top:1px;margin-left:5px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+        <% elsif tag.content_type == "DiscussionTopic" %>
+          <%= image_tag "discussion_icon.png", :style=>"line-height:20px;height:27px;margin-top:-3px;margin-left: 10px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+        <% elsif tag.content_type == "ContextModuleSubHeader" %>
+          <%= image_tag "context_icon.png", :style=>"line-height:20px;height:27px;margin-top:-3px;margin-left: 10px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+        <% elsif tag.content_type == "ExternalUrl" %>
+           <%= image_tag "fancy_link_url.png",:style=>"line-height:20px;height:28px;margin-top:-3px;margin-left: 10px;border-radius:20px;"%> &nbsp;&nbsp;&nbsp;&nbsp;
+        <% elsif tag.content_type == "WikiPage" %>
+            <% if tag.content.wiki_type == "video" %>
+              <%= image_tag "play_icon.png", :style=>"line-height:20px;height:34px;margin-top:-3px;margin-left: 3px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+            <% else %>
+              <%= image_tag "wiki_pages.png", :style=>"line-height:20px;height:26px;margin-top:-3px;margin-left: 10px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+            <% end %>
+        <% elsif tag.content_type == "ContextExternalTool" %>
+            <%= image_tag "badges.png", :style=>"line-height:28px;;height:26px;margin-top:-3px;margin-left: 10px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+        <% elsif tag.content_type == "Quiz" %>
+            <%= image_tag "class_quiz.jpg", :style=>"line-height:28px;height:29px;margin-top:-3px;margin-left:6px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+        <% end %>
         <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
         <% if is_managable or @authorized_for_user  %>
            href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
@@ -28,7 +48,7 @@
 
 <% end %>
 
-  <div id="class_preview_blank" style="margin: 10px 15px; font-size: 130%;
+  <div id="class_preview_blank" style="margin: 10px 15px; font-size: 100%;
           font-weight: normal;
           color: #7f8c8d;
           line-height: 1;display: none">

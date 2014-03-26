@@ -495,7 +495,15 @@ Allowing Draft State here will allow teachers to enable it in their individual c
             <% end %>
           </fieldset>
         <% end %>
-
+        <fieldset>
+          <legend><%= t(:videolink, "Video Link") %></legend>
+          <% f.fields_for :settings do |settings| %>
+            <div>
+              <td><%= settings.blabel :videolink, :en => "Video URL" %></td>
+              <td><%= settings.text_field :videolink, :rows => "8",:class => "VideoURL",:value => @account.settings[:account_video_url]%></td>
+            </div>
+          <% end %>
+        </fieldset>
         <div class="button-container">
           <button type="submit" class="btn btn-primary"><%= t(:update_settings_button, "Update Settings") %></button>
         </div>

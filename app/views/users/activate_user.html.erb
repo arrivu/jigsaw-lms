@@ -1,5 +1,9 @@
-<% add_crumb t('crumbs.users', "Activate Users") %>
-<% @active_tab = "users" %>
+
+<%
+   js_bundle :user_provider_activation
+   add_crumb t('crumbs.users', "Activate Users")
+   @active_tab = "users"
+%>
 <% content_for :page_title do %>
   <% if @query %>
     <%= t('search_for_user', 'User Search results for %{user_name}', :user_name => (params[:user][:name] rescue '')) %>
@@ -42,6 +46,7 @@
    <th>Profile</th>
    <th >Name</th>
    <th >Email</th>
+   <th>Provider</th>
    <th >State</th>
    </thead>
        <% @users.each_with_index do |user,i| %>
@@ -49,6 +54,17 @@
            <td><%= image_tag(user.avatar_image_url,:size=>"30x30") unless user.avatar_image_url.nil?%></td>
            <td><%= user.name %></td>
            <td><%= user.pseudonyms.first.email unless user.pseudonyms.first.nil?%></td>
+          <td width="150px">
+            <% if OmniauthAuthentication.find_by_user_id(user.id)  != nil %>
+              <% @provider = OmniauthAuthentication.find_by_user_id(user.id).provider %>
+            <% end %>
+            <select class="provider_select" style="width: 140px"  name="<%= user.id %>">
+              <option value="facebook" <%= 'selected' if @provider == "facebook"%>><%= "Facebook" %></option>
+              <option value="google" <%= 'selected' if @provider == "google"%>><%= "Google" %></option>
+              <option value="linkedin" <%= 'selected' if @provider == "linkedin"%>><%= "LinkedIN" %></option>
+              <option value="" <%= 'selected' if OmniauthAuthentication.find_by_user_id(user.id) == nil %>><%= "Corporate Login" %></option>
+            </select>
+          </td>
                 <% form_for user,  :url => url_for(:controller => 'users', :action => 'activate_user')  ,
                    :html => {:id => "user"} do |f| %>
 
@@ -64,35 +80,3 @@
 </table>
 
 <%= will_paginate(@users, :style=>"margin-top: 1em;") %>
-
-<% js_block do %>
-<script type="text/javascript">
-    require([
-        'jquery' /* $ */
-    ], function($) {
-       var check_box_state;
-        $(".activate").click(function() {
-            var $self = $(this);
-           if ($(this).is(':checked')) {
-              check_box_state = 'checked';
-           } else {
-               check_box_state = 'unchecked';
-           }
-            $.ajax({
-                type: 'POST',
-                url: 'update_user',
-                data: {
-                    'id': $self.attr('id'),
-                    'state': check_box_state
-                },
-                complete: function(msg){
-                    $.flashMessage('User status updated!')
-                }
-
-
-            });
-        });
-    });
-</script>
-<% end %>
-

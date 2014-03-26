@@ -214,6 +214,7 @@ FakeRails3Routes.draw do
     resources :rewards
     resources :comments ,:path => :testimonial
     resources :live_class_links
+    resources :leaderboards ,:path => :leaderboard
     concerns :users
     match 'statistics' => 'courses#statistics', :as => :statistics
     match 'unenroll/:id' => 'courses#unenroll_user', :as => :unenroll, :via => :delete
@@ -1043,6 +1044,13 @@ FakeRails3Routes.draw do
         post "#{context}s/:#{context}_id/live_class_links", :action => :create, :path_name => "#{context}_live_class_links_create"
         put "#{context}s/:#{context}_id/live_class_links/:live_class_link_id", :action => :update, :path_name => "#{context}_live_class_links_update"
         delete "#{context}s/:#{context}_id/live_class_links/:live_class_link_id", :action => :destroy, :path_name => "#{context}_live_class_links_delete"
+      end
+      et_routes("course")
+    end
+
+    scope(:controller => :leaderboards) do
+      def et_routes(context)
+        get "#{context}s/:#{context}_id/leaderboards", :action => :index, :path_name => "#{context}_leaderboard"
       end
       et_routes("course")
     end

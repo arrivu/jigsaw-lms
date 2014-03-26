@@ -1,44 +1,33 @@
-<% if @resource_url.nil?  %>
+<%
+   @current_user_badges = get_user_badges_for_header
+%>
+<% if @current_user_badges and !@current_user_badges.empty?  %>
+    <div class="main_navigation_badges" style="background: #ffffff;">
+      <div style="float: left;margin-top: 3px;padding: 10px 15px;background-image: url('../../images/grey_divider.png');background-repeat: no-repeat;background-position: right;width: 20%;"> Badges </div>
+      <div style="float: right;margin-top: 7px; text-align: center;">
+                         <% @current_user_badges.each do |key, value| %>
+              <div style="float: left;margin-left: 5px;">
+        <img src=<%= value['badge_url'] %>  width="34" height="34"  title="<%= value['badge_description']%>" data-tooltip>
+        <div style="color: #fff;font-weight:bolder;text-align:center;margin-top: -25px;"><%= value['badge_count'] %></div>
+                  </div>
+    <% end %>
+      </div>
+    </div>
+<% end  %>
 
-        <% unless @tool.nil? %>
-        <% js_block do %>
-            <script>
-                require(['jquery','tool_inline'], function($) {
-                $(document).ready(function() {
-                    $("#content").removeClass('padless');
-                });
-               });
-            </script>
-        <% end %>
+<style>
+    .main_navigation_badges{
+        height: 47px;
+        width: 290px;
+        list-style: none;
+        float: left;
+        font-size: 12px;
+        margin-bottom: 3px;
+        padding: 0 11px;
+        border: 1px solid #DFDADA;
+        border-radius: 25px;
+        margin-left: 10px;
 
-        <form action="<%= @resource_url_for_main_nav %>"
-              method="POST" <%= raw("target='#{@target || 'main_nav_tool_content'}'") unless @self_target %>
-              id="tool_form"
-              data-tool-id="<%= @tool_id %>"
-              data-tool-path="<%= @tool_path %>">
-          <% @tool_settings.each do |key, value| %>
-              <%= hidden_field_tag key, value %>
-          <% end %>
+    }
 
-          <button class="btn" type="submit"><%= t :load_tool_button, "Load %{tool}", :tool => @tool.name %></button>
-          <style>
-            .main_navigation_iframe{
-                height: 53px;
-                margin: 0;
-                max-width: 500px;
-                list-style: none;
-                float: right;
-                font-size: 12px;
-                margin-right: 10px;
-                margin-bottom: 3px;
-                padding: 0 11px;
-                border: none;
-            }
-
-          </style>
-
-        </form>
-          <%= iframe("about:blank", :name => 'main_nav_tool_content', :id => 'main_nav_tool_content',:class => "main_navigation_iframe") %>
-        <% end %>
-
-<% end %>
+</style>

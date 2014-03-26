@@ -58,7 +58,7 @@
         <%- if show_home_menu? -%>
           <%= render(:partial => 'shared/home_menu') %>
         <%- else  -%>
-          <a href="<%= dashboard_path %>" class="menu-item-no-drop"><%= t 'links.home', 'Home' %></a>
+            <%= render(:partial => "shared/menu_courses", :locals => menu_courses_locals) %>
         <%- end -%>
       </li>
       <%- end -%>
@@ -114,8 +114,12 @@
       <li id="calendar_menu_item" class="menu-item">
         <a href="<%= calendar_path %>" class="menu-item-no-drop"><%= t('menu.calendar', 'Calendar') %></a>
       </li>
+      <li id="leaderboard_menu_item" class="menu-item">
+        <%= render(:partial => 'shared/leaderboard_home_menu') %>
+      </li>
       <!--current user login count-->
         <!--<a href="" id="section-tabs-header-subtitle" class="ellipsis"><%#= @totalcount %></a>-->
+      <%= render :partial => 'shared/context_progression' %>
       <%= render :partial => 'shared/user_badges' %>
     </ul>
     <% end %>

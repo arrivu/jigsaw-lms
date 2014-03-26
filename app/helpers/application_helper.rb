@@ -308,7 +308,7 @@ module ApplicationHelper
     includes = [:active_assignments, :active_discussion_topics, :active_quizzes, :active_context_modules]
     includes.each{|i| @wiki_sidebar_data[i] = @context.send(i).limit(150) if @context.respond_to?(i) }
     includes.each{|i| @wiki_sidebar_data[i] ||= [] }
-    @wiki_sidebar_data[:wiki_pages] = @context.wiki.wiki_pages.active.order(:title).limit(150) if @context.respond_to?(:wiki)
+    @wiki_sidebar_data[:wiki_pages] = @context.wiki.wiki_pages.active.order(:title).limit(900) if @context.respond_to?(:wiki)
     @wiki_sidebar_data[:wiki_pages] ||= []
     if can_do(@context, @current_user, :manage_files)
       @wiki_sidebar_data[:root_folders] = Folder.root_folders(@context)
@@ -915,7 +915,7 @@ module ApplicationHelper
   def favourites
     @user ||= @current_user
     @pseudonym ||= @current_pseudonym
-    if @user.enrollments.active.nil? or @user.enrollments.active.empty?
+    if @user.nil? or @pseudonym.nil? or @user.enrollments.active.nil? or @user.enrollments.active.empty?
       redirect_to root_url
     else
       favourite_course_id = @pseudonym.settings[:favourite_course_id]
@@ -944,8 +944,8 @@ module ApplicationHelper
 
   def add_class_view_crumbs
     @skip_crumb = true
-    add_crumb("Classes",named_context_url(@context, :context_context_modules_url))
     if @context.is_a?(Course) and params[:module_item_id].present?
+      add_crumb("Classes",named_context_url(@context, :context_context_modules_url))
       content_tag = ContentTag.find(params[:module_item_id])
       @context_module = content_tag.context_module
       add_crumb(@context_module.name,course_context_module_url(@context,@context_module))
@@ -972,5 +972,71 @@ module ApplicationHelper
   end
   end
 
+  def get_badges(for_leader_board=nil,user_ids=[])
+    unless @current_user.nil?
+      context_external_tool = ContextExternalTool.find_by_tool_id_and_workflow_state('canvabadges',['anonymous','name_only','email_only','public']).try(:id)
+      unless context_external_tool.nil?
+        @tool = ContextExternalTool.find_for(context_external_tool, @domain_root_account, :main_navigation)
+        unless @tool.nil?
+          @resource_title = @tool.label_for(:main_navigation)
+          @resource_url_for_main_nav = @tool.main_navigation(:url)
+          @opaque_id = @current_user.opaque_identifier(:asset_string)
+          @resource_type = 'main_navigation'
+          @return_url = user_profile_url(@current_user, :include_host => true)
+          if for_leader_board
+            badge_context = @context
+          else
+            badge_context = @domain_root_account
+          end
+          @launch = BasicLTI::ToolLaunch.new(:url => @resource_url_for_main_nav, :tool => @tool, :user => @current_user, :context => badge_context, :link_code => @opaque_id, :return_url => @return_url, :resource_type => @resource_type)
+          unless user_ids.empty?
+            @tool_settings = @launch.generate(user_ids)
+          else
+            @tool_settings = @launch.generate
+         end
+        end
+      end
+    end
+  end
+
+  def get_user_badges
+      @current_user ||= @user
+      if @current_user
+        get_badges
+        base_url = URI(@tool.url)
+        uri = URI("#{base_url.scheme}://#{base_url.host}:#{base_url.port}/api/v1/#{@current_user.id}/badges.json")
+        begin
+          res = Net::HTTP.post_form(uri, @tool_settings)
+        rescue => e
+          @badge_error = true
+          logger.error("Error while getting badges for user #{@current_user.name}:#{e}")
+        end
+    end
+  end
+
+  def get_user_badges_for_header
+    response = get_user_badges
+    @response_ok = (!@badge_error && (response.code == '200'|| '304'))
+    if @response_ok
+      @badges_array = JSON.parse(response.body)
+    end
+  end
+
+  def calc_progression_percentage(context,user)
+    context_modules = context.context_modules.active
+    progressions = context_modules.map{|m| m.evaluate_for(user, true, true) }
+    possible = context_modules.size
+    score = progressions.select { |progression| progression.workflow_state == 'completed' }
+    calculate_percentage(score.size,possible)
+  end
+
+  def calculate_percentage(score,possible)
+    begin
+      res = (Float(score) / possible * 100).ceil
+    rescue => e
+      logger.error("Error While Calculating Percentage:#{e}")
+      res= 0
+    end
+  end
   #arrivu changes
 end

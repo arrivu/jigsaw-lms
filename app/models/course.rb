@@ -63,7 +63,10 @@ class Course < ActiveRecord::Base
                   :hide_final_grades,
                   :hide_distribution_graphs,
                   :lock_all_announcements,
-                  :public_syllabus
+                  :public_syllabus,
+  #               arrivu changes for course section privilege for students
+                  :section_privilege_to_students
+  #               end of arrivu changes for course section privilege for students
 
   serialize :tab_configuration
   serialize :settings, Hash
@@ -2663,13 +2666,25 @@ class Course < ActiveRecord::Base
     granted_permissions = self.grants_rights?(user, nil, *permissions).select {|key, value| value}.keys
     if granted_permissions.empty?
       :restricted # e.g. observer, can only see admins in the course
-    elsif visibilities.present? && visibility_limited_to_course_sections?(user, visibilities)
+    # arrivu changes for course section privilege for students
+    elsif (visibilities.present? && visibility_limited_to_course_sections?(user, visibilities)) && (user_has_been_student?(user) && self.settings[:section_privilege_to_students] ==true )
       :sections
+    elsif user_has_been_student?(user)
+      if !(visibilities.present? && visibility_limited_to_course_sections?(user, visibilities)) && (self.settings[:section_privilege_to_students] ==true || self.settings[:section_privilege_to_students].nil?)
+        :sections
+      elsif (visibilities.present? && visibility_limited_to_course_sections?(user, visibilities)) && (self.settings[:section_privilege_to_students] == false)
+        :sections
+      elsif (visibilities.present? && visibility_limited_to_course_sections?(user, visibilities))
+        :sections
+      else
+        :limited
+      end
     elsif granted_permissions.eql? [:read_roster]
       :limited
     else
       :full
     end
+    #end of arrivu changes for course section privilege for students
   end
 
   def unpublished?
@@ -2972,7 +2987,9 @@ class Course < ActiveRecord::Base
   add_setting :large_roster, :boolean => true, :default => lambda { |c| c.root_account.large_course_rosters? }
   add_setting :public_syllabus, :boolean => true, :default => false
   add_setting :enable_draft, boolean: true, default: false
-
+  # arrivu changes for section wise privilege for students
+  add_setting :section_privilege_to_students, :boolean => true
+  # end of arrivu changes for section wise privilege for students
   def user_can_manage_own_discussion_posts?(user)
     return true if allow_student_discussion_editing?
     return true if user_is_instructor?(user)

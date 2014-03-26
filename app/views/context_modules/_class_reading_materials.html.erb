@@ -6,7 +6,7 @@
   </div>
   <% @module.content_tags.pre_class_reading_materials.active.each_with_index do |tag , idx|  %>
       <% if tag.content && (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[image/jpeg image/pjpeg image/png image/gif image/x-psd].include?(tag.content.content_type) %>
-          <div style="margin: 14px 10px 17px; font-size: 130%;
+          <div style="margin: 14px 10px 17px; font-size: 100%;
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1.2;background-color: #e4f1d5;border-radius:5px;">
@@ -34,7 +34,7 @@
             </div>
           </div>
       <% elsif tag.content && (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[application/rtf text/rtf application/vnd.oasis.opendocument.text application/vnd.openxmlformats-officedocument.wordprocessingml.document application/x-docx application/msword ].include?(tag.content.content_type) %>
-          <div style="margin: 14px 10px 17px; font-size: 130%;
+          <div style="margin: 14px 10px 17px; font-size: 100%;
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1.2;background-color: #e1f3fd;border-radius:5px;">
@@ -61,11 +61,11 @@
             </div>
           </div>
       <% elsif tag.content && (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[application/pdf].include?(tag.content.content_type) %>
-          <div style="margin: 14px 10px 10px; font-size: 130%;
+          <div style="margin: 14px 10px 10px; font-size: 100%;
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1;background-color: #fee8dd;border-radius:5px;">
-            <div style="width:auto;padding: 13px 21px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;line-height:20px;margin-top:-8px;width:33px"  %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <div style="width:auto;padding: 12px 21px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;line-height:20px;margin-top:-8px;width:33px"  %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
                         <% if is_managable or @authorized_for_user  %>
@@ -87,7 +87,7 @@
             </div>
           </div>
       <% elsif  tag && tag.content_type == 'ExternalUrl'%>
-          <div style="margin: 14px 10px 17px; font-size: 130%;
+          <div style="margin: 14px 10px 17px; font-size: 100%;
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1.2;background-color: #fcfbdf;border-radius:5px;">
@@ -114,7 +114,7 @@
             </div>
           </div>
       <% elsif tag.content &&  (tag.content_type == 'ExternalUrl' || tag.content_type == 'Attachment') && %w[application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.oasis.opendocument.spreadsheet].include?(tag.content.content_type) %>
-          <div style="margin: 14px 10px 17px; font-size: 130%;
+          <div style="margin: 14px 10px 17px; font-size: 100%;
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1.2;background-color: #e4f1d5;border-radius:5px;">
@@ -140,12 +140,40 @@
               <% end  %>
             </div>
           </div>
+      <% elsif  tag && tag.content_type == 'ContextExternalTool'%>
+          <div style="margin: 14px 10px 17px; font-size: 100%;
+                    font-weight: bold;
+                    color: #7f8c8d;
+                    line-height: 1.2;background-color: #fcfbdf;border-radius:5px;">
+            <div style="width:auto;padding : 6px 17px;float:left;"><%= image_tag "badges.png" , :style=> "padding:5px;border-radius: 35px;height: 38px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <div style="width:95%;padding:10px;">
+              <span ><a class="title"
+                        <% if is_managable or @authorized_for_user  %>
+                        href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+                        <%  end  %>
+                        style="color:#d4811b;"> Badge</a></span><br>
+
+                Format:<%= truncate(tag.title, length: 53, omission: '..') %>
+                <% if is_managable or @authorized_for_user  %>
+                    <a class="title"
+                       href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
+                      <button style="background-color: #d4811b;border: none;
+                              border-radius: 4px;
+                              float: right;
+                              padding: 3px;
+                              color: #FFF;
+                              width: 130PX;margin-top: -10px; ">Download</button>
+                    </a>
+                <% end  %>
+
+            </div>
+          </div>
       <% else %>
-          <div style="margin: 14px 10px 17px; font-size: 130%;
+          <div style="margin: 14px 10px 17px; font-size: 100%;
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1;background-color: #fcfbdf;border-radius:5px;">
-            <div style="width:auto;padding : 18px 17px;float:left;"><%= image_tag "un_categorized.png" ,:width=> 34, :style=> "padding:5px;border-radius: 35px;margin-top:-12px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <div style="width:auto;padding : 6px 8px;float:left;"><%= image_tag "un_categorized.png" ,:width=> 34, :style=> "padding:14px;border-radius: 35px;margin-top:-15px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
                         <% if is_managable or @authorized_for_user  %>

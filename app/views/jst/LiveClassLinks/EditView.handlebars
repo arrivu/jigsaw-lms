@@ -24,7 +24,7 @@
   <div class="control-group">
     <label class="control-label" for="live_class_sections">Sections</label>
     <div class="controls">
-        <select name="course_section_id" id="live_class_sections">
+        <select name="course_section_id[]" id="live_class_sections" multiple="true">
             <option value="0">All</option>
             {{#each courseSections}}
                 <option value="{{id}}" id={{id}} course_section_id={{../course_section_id}} {{#ifEqual id ../course_section_id}}selected{{/ifEqual}}>{{name}}</option>

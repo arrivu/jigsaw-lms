@@ -1,0 +1,18 @@
+<%
+   if @context and @context.class == Course and @current_user and !can_do(@context, @current_user, :manage)
+        @current_user_progression = calc_progression_percentage(@context,@current_user)
+    end
+%>
+<% if @current_user_progression %>
+    <div style="border: 1px solid #DFDADA;border-radius: 25px;float: left;width: 367px;height: 47px;margin-bottom: 10px;background: #ffffff;">
+    <div style="float: left;margin-top: 3px;padding: 10px 15px;background-image: url('../../images/grey_divider.png');background-repeat: no-repeat;background-position: right;width: 20%"> Progress </div>
+      <div style="width: 66%;float: right;">
+      <div id="progressbar" class="ui-progressbar ui-widget ui-widget-content ui-corner-all" role="progressbar"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="37" style="border-radius: 25px;padding: 5px;
+              height: 20px;margin-right: 10px;margin-top: 8px;background: 100%;background-image: url('../../images/progress_bar_top_grey.png');">
+        <div class="striped_progressbar" style="width: <%= @current_user_progression %>%;
+                border-radius: 25px;height: 20px;"></div>
+      </div>
+    </div>
+    </div>
+<% end %>

@@ -1,0 +1,24 @@
+<% @headers = false
+%>
+<form id="test_dialog" style="display:none;width:400px" title="Jigsaw Academy Introduction Video" rel="<%= logo_root_url %>">
+  <iframe style="margin-left: 28px;" width="855" height="480" src="<%= @domain_root_account.settings[:account_video_url] %>" frameborder="0" allowfullscreen></iframe>
+</form>
+
+<% js_block do %>
+    <script type="text/javascript">
+        require([
+            'jquery' /* $ */,
+            'jqueryui/dialog'
+            ], function($) {
+            $("#test_dialog").dialog({
+                width:930,
+                height:560,
+                closeOnEscape: false
+            });
+            $(".ui-icon-closethick").click(function(data) {
+              document.location.href = $("#test_dialog").attr('rel');
+          });
+        });
+    </script>
+<%end %>
+

@@ -36,7 +36,7 @@ module Api::V1::User
     end
   end
 
-  def user_json(user, current_user, session, includes = [], context = @context, enrollments = nil)
+  def user_json(user, current_user, session, includes = [], context = @context, enrollments = nil,badges=[])
     includes ||= []
     api_json(user, current_user, session, API_USER_JSON_OPTS).tap do |json|
       if user_json_is_admin?(context, current_user)
@@ -72,13 +72,64 @@ module Api::V1::User
         end
         json[:last_login] = last_login.try(:iso8601)
       end
+
+      if includes.include?('user_progression')
+        json[:progression] = "#{calc_progression_percentage(@context,user)}%"
+      end
+
+      if includes.include?('get_badges')
+        json[:badges] = badges
+      end
+
     end
   end
 
   def users_json(users, current_user, session, includes = [], context = @context, enrollments = nil)
-    users.map{ |user| user_json(user, current_user, session, includes, context, enrollments) }
+    if includes.include?('get_badges')
+      user_ids=[]
+      users.map do |user|
+        user_ids << user.id
+      end
+     response = get_course_badges(user_ids)
+     @response_ok = (!@error && (response.code == '200'|| '304'))
+       if @response_ok
+         @badges_array = JSON.parse(response.body)
+       end
+    end
+    users.map do |user|
+      badges =[]
+      if includes.include?('get_badges') and @response_ok
+        @badges_array.each do |key, value|
+          if value['user_id'].to_i == user.id
+            badges << {:badge_url => value['badge_url'],:badge_count => value['badge_count'],
+                                           :badge_description => value['badge_description']}
+          end
+        end
+      end
+      user_json(user, current_user, session, includes, context, enrollments,badges)
+    end
   end
 
+
+  def get_course_badges(user_ids)
+    get_badges(true,user_ids)
+    if @tool.nil?
+      print_badge_error
+     else
+      base_url = URI(@tool.url)
+      uri = URI("#{base_url.scheme}://#{base_url.host}:#{base_url.port}/api/v1/courses/#{@tool_settings['custom_canvas_course_id']}/badges.json")
+      begin
+        res = Net::HTTP.post_form(uri, @tool_settings)
+      rescue => e
+        print_badge_error(e)
+      end
+    end
+  end
+
+  def print_badge_error(error=nil)
+    @error = true
+    logger.error("Error while getting badges:#{error}")
+  end
   # this mini-object is used for secondary user responses, when we just want to
   # provide enough information to display a user.
   # for instance, discussion entries return this json as a sub-object.

@@ -1,0 +1,10 @@
+<a href="<%= dashboard_path %>" class="menu-item-title">
+ <%=  t('menu.leadeboard', "LeaderBoard")%>
+  <span class="menu-item-title-icon"></span> <i class="icon-mini-arrow-down"></i>
+</a>
+
+<div class="menu-item-drop">
+  <table cellspacing="0">
+    <%= render(:partial => "shared/leader_board_menu_courses", :locals => menu_courses_locals) %>
+  </table>
+</div>

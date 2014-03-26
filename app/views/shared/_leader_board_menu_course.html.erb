@@ -1,0 +1,11 @@
+<li class="customListItem"  data-id="<%= leader_board_menu_course[:id] %>">
+
+  <a href="<%= leader_board_menu_course[:href] %>/leaderboard">
+    <span class="name ellipsis" title="<%= leader_board_menu_course[:longName] %>"><%= leader_board_menu_course[:shortName] %></span>
+    <% if defined? leader_board_menu_course[:term] %>
+        <span class="subtitle ellipsis enrollment_term menu-item-drop-float-right"><%= leader_board_menu_course[:term] %></span>
+    <% end %>
+    <span class="subtitle ellipsis"><%= leader_board_menu_course[:subtitle] %></span>
+  </a>
+
+</li>

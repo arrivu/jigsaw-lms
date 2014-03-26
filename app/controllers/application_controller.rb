@@ -52,7 +52,6 @@ class ApplicationController < ActionController::Base
   after_filter :set_response_headers
   after_filter :update_enrollment_last_activity_at
   before_filter :get_wiki_type
-  before_filter :get_badges
   #before_filter :currently_logged_in_user_count
   before_filter :check_for_terms_and_conditions
 
@@ -1657,24 +1656,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def get_badges
-    unless @current_user.nil?
-        context_external_tool = ContextExternalTool.find_by_tool_id_and_workflow_state('canvabadges',['anonymous','name_only','email_only','public']).try(:id)
-        unless context_external_tool.nil?
-        @tool = ContextExternalTool.find_for(context_external_tool, @domain_root_account, :main_navigation)
-          unless @tool.nil?
-            @resource_title = @tool.label_for(:main_navigation)
-            @resource_url_for_main_nav = @tool.main_navigation(:url)
-            @opaque_id = @current_user.opaque_identifier(:asset_string)
-            @resource_type = 'main_navigation'
-            @return_url = user_profile_url(@current_user, :include_host => true)
-            @launch = BasicLTI::ToolLaunch.new(:url => @resource_url_for_main_nav, :tool => @tool, :user => @current_user, :context => @domain_root_account, :link_code => @opaque_id, :return_url => @return_url, :resource_type => @resource_type)
-            @tool_settings = @launch.generate
-          end
-        end
-    end
-  end
-
   def currently_logged_in_user_count
     @users = User.currently_logged_in
     @totalcount = 0
@@ -1687,13 +1668,18 @@ class ApplicationController < ActionController::Base
   end
 
   def check_for_terms_and_conditions
-   if @domain_root_account.terms_and_condition and @current_user and @current_pseudonym
-    unless can_do(@domain_root_account, @current_user, :manage_account_settings)
-      @check_terms = @current_pseudonym.settings[:is_terms_and_conditions_accepted]
-      if @check_terms.nil?
-          render :template => "shared/terms_required", :layout => "application", :status => :authorized
-      end
+   if @domain_root_account.terms_and_condition and @current_user and @current_pseudonym and !api_request?
+     if params[:action] == "masquerade"
+       session[:masquearding] = "masquerading"
      end
-    end
+     if session[:masquearding] != "masquerading"
+       unless can_do(@domain_root_account, @current_user, :manage_account_settings)
+          @check_terms = @current_pseudonym.settings[:is_terms_and_conditions_accepted]
+          if @check_terms.nil?
+              render :template => "shared/terms_required", :layout => "application", :status => :authorized
+          end
+       end
+     end
+   end
   end
 end

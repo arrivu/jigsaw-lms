@@ -1,15 +1,15 @@
 <div class="class_preview_box">
   <div class="classes_header" > <b class="classes_header_text">Class Recordings & Presentations</b>
-  <div class="admin_link" >
-    <!--add video link-->
-  </div>
+    <div class="admin_link" >
+      <!--add video link-->
+    </div>
   </div>
   <% @live_class_links.each_with_index do |live_class_link,idx|  %>
-      <div style="margin: 10px 17px; font-size: 130%;
+      <div style="margin: 10px 17px; font-size: 100%;
               font-weight: bold;
               color: #7f8c8d;
               line-height: 1.3;background-color: #e1f3fd;border-radius:5px;">
-        <div style="width:auto;padding:17px;float:left;"><%= image_tag "class_recordings.png" , :style=> "padding:1px;line-height:20px;height:33px;margin-top:-8px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <div style="width:auto;padding:12px 17px;float:left;"><%= image_tag "class_recordings.png" , :style=> "padding:1px;line-height:20px;height:33px;margin-top:-8px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
         <div style="width:85%;padding:5px;">
         <span ><a class="title "
                   <% if is_managable or @authorized_for_user  %>
@@ -21,22 +21,29 @@
         </div>
       </div>
 
-
   <% end %>
   <% @module.content_tags.pre_class_presentation.active.each_with_index do |tag,idx|  %>
-      <div style="margin: 14px 17px 10px; font-size: 130%;
+      <div style="margin: 14px 17px 10px; font-size: 100%;
               font-weight: bold;
               color: #7f8c8d;
               line-height: 1.1;background-color: #fee8dd;border-radius:5px;">
-        <div style="width:auto;padding:17px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;margin-top:-8px;width:33px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <% if tag.content_type == "ContextExternalTool" %>
+            <div style="width:auto;padding:12px 17px;float:left;"><%= image_tag "badges.png" , :style=> "padding:0px;border-radius:35px;margin-top:-8px;width:33px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <%else %>
+          <div style="width:auto;padding:17px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:0px;border-radius:35px;margin-top:-8px;width:33px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <%end %>
+
         <div style="width:85%;padding:10px;">
-          <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
+          <span ><a class="title"
                     <% if is_managable or @authorized_for_user  %>
                         href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
                     <% end %>
-                    style="color:#c2401c;"> class  Presentation&nbsp;<%=sprintf '%02d',idx + 1%></a></span><br>
-
-          <%= truncate(tag.title, length: 53, omission: '..') %>
+                    <% if tag.content_type == "ContextExternalTool" %>
+                      style="color:#c2401c;"> Badge </a></span><br>
+                    <% else %>
+                      style="color:#c2401c;"> Class  Presentation&nbsp;<%=sprintf '%02d',idx + 1%></a></span><br>
+                    <%end %>
+                   <%= truncate(tag.title, length: 53, omission: '..') %>
 
         </div>
       </div>

@@ -229,6 +229,12 @@
               <span class="aside checklabelfix"><%= t('help.public_course', %{(student data will remain private)}) %></span>
             </span>
         </div>
+       <!--arrivu changes for course section privilege for students-->
+        <span class="course_form">
+              <%= f.check_box :section_privilege_to_students,:checked => true %>
+              <%= f.label :section_privilege_to_students , :en => "Students can only view users in their assigned course section(s)"%>
+        </span>
+       <!--end of arrivu changes for course section privilege for students-->
         <span class="course_info is_public"><%= @context.is_public ? t('public_course', 'Public') : t('private_course', 'Private') %></span>
         <div class="public_options">
             <span class="course_form">

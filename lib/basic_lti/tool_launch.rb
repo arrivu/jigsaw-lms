@@ -65,7 +65,7 @@ class ToolLaunch < Struct.new(:url, :tool, :user, :context, :link_code, :return_
       hash['custom_canvas_assignment_id'] = assignment.id if tool.public?
     end
 
-    def generate
+    def generate(user_ids=[])
       hash['lti_message_type'] = 'basic-lti-launch-request'
       hash['lti_version'] = 'LTI-1p0'
       hash['resource_link_id'] = link_code
@@ -135,6 +135,10 @@ class ToolLaunch < Struct.new(:url, :tool, :user, :context, :link_code, :return_
         hash['ext_content_return_url'] = return_url
       end
       hash['oauth_callback'] = 'about:blank'
+
+      unless user_ids.empty?
+        hash['user_ids'] = user_ids.join(",")
+      end
 
       VariableSubstitutor.new(self).substitute!
       BasicLTI.generate_params(hash, url, tool.consumer_key, tool.shared_secret)
