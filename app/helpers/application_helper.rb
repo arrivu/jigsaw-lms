@@ -1015,7 +1015,6 @@ module ApplicationHelper
       end
     end
   end
-  end
 
   def get_user_badges_for_header
     response = get_user_badges
