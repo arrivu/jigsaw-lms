@@ -91,7 +91,7 @@ module Api::V1::User
         user_ids << user.id
       end
       response = get_course_badges(user_ids)
-      @response_ok = (!@error && (response.code == '200'|| '304'))
+      @response_ok = (!@error && response && (response.code == '200'|| '304'))
       if @response_ok
         @badges_array = JSON.parse(response.body)
       end

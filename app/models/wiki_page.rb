@@ -598,7 +598,7 @@ class WikiPage < ActiveRecord::Base
   WIKI_TYPE_BONUS_VIDEOS = 'bonus_video'
   WIKI_TYPE_LABS = 'labs'
 
-  DEFAULT_FAQ_FRONT_PAGE_URL = 'faq-front-page'
+  DEFAULT_FAQ_FRONT_PAGE_URL = 'FAQ'
   DEFAULT_CAREER_FRONT_PAGE_URL = 'career-front-page'
   DEFAULT_VIDEO_FRONT_PAGE_URL = 'video-front-page'
   DEFAULT_OFFER_FRONT_PAGE_URL = 'offer-front-page'
