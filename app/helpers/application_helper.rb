@@ -1000,23 +1000,25 @@ module ApplicationHelper
   end
 
   def get_user_badges
-      @current_user ||= @user
-      if @current_user
-        get_badges
+    @current_user ||= @user
+    if @current_user
+      get_badges
+      unless @tool.nil?
         base_url = URI(@tool.url)
         uri = URI("#{base_url.scheme}://#{base_url.host}:#{base_url.port}/api/v1/#{@current_user.id}/badges.json")
         begin
-          res = Net::HTTP.post_form(uri, @tool_settings)
+        post_to_badge(uri)
         rescue => e
           @badge_error = true
           logger.error("Error while getting badges for user #{@current_user.name}:#{e}")
         end
+      end
     end
   end
 
   def get_user_badges_for_header
     response = get_user_badges
-    @response_ok = (!@badge_error && (response.code == '200'|| '304'))
+    @response_ok = (!@badge_error && response && (response.code == '200'|| '304'))
     if @response_ok
       @badges_array = JSON.parse(response.body)
     end
@@ -1026,7 +1028,7 @@ module ApplicationHelper
     context_modules = context.context_modules.active
     progressions = context_modules.map{|m| m.evaluate_for(user, true, true) }
     possible = context_modules.size
-    score = progressions.select { |progression| progression.workflow_state == 'completed' }
+    score = progressions.select { |progression| progression.workflow_state == 'completed' unless progression.nil? }
     calculate_percentage(score.size,possible)
   end
 
@@ -1038,5 +1040,18 @@ module ApplicationHelper
       res= 0
     end
   end
+
+  def post_to_badge(uri)
+    req = Net::HTTP::Post.new(uri.path)
+    req.set_form_data(@tool_settings)
+    sock = Net::HTTP.new(uri.host, uri.port)
+    if uri.scheme == 'https'
+      sock.use_ssl = true
+      sock.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
+    res = sock.start {|http| http.request(req) }
+  end
+
+
   #arrivu changes
-end
+  end

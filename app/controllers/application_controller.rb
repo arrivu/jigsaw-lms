@@ -1040,10 +1040,17 @@ class ApplicationController < ActionController::Base
               @wiki.wiki_pages.find_by_id(page_name.to_i)
     end
 
-    @page ||= @wiki.wiki_pages.new(
-      :title => page_name.titleize,
-      :url => page_name.to_url, :wiki_type => @wiki_type
-    )
+    if @wiki_type == "faq"
+      @page ||= @wiki.wiki_pages.new(
+          :title => page_name,
+          :url => page_name.to_url, :wiki_type => @wiki_type
+      )
+    else
+      @page ||= @wiki.wiki_pages.new(
+        :title => page_name.titleize,
+        :url => page_name.to_url, :wiki_type => @wiki_type
+      )
+    end
     if @page.new_record?
       @page.wiki = @wiki
       initialize_wiki_page
@@ -1125,7 +1132,7 @@ class ApplicationController < ActionController::Base
         if @assignment
           @launch.for_assignment!(@tag.context, lti_grade_passback_api_url(@tool), blti_legacy_grade_passback_api_url(@tool))
         end
-        @tool_settings = @launch.generate
+        @tool_settings = @launch.generate([],@tag.context_module.id)
         render :template => 'external_tools/tool_show'
       end
     else

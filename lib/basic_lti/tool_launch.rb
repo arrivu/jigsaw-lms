@@ -65,7 +65,7 @@ class ToolLaunch < Struct.new(:url, :tool, :user, :context, :link_code, :return_
       hash['custom_canvas_assignment_id'] = assignment.id if tool.public?
     end
 
-    def generate(user_ids=[])
+    def generate(user_ids=[],context_module_id=nil)
       hash['lti_message_type'] = 'basic-lti-launch-request'
       hash['lti_version'] = 'LTI-1p0'
       hash['resource_link_id'] = link_code
@@ -138,6 +138,10 @@ class ToolLaunch < Struct.new(:url, :tool, :user, :context, :link_code, :return_
 
       unless user_ids.empty?
         hash['user_ids'] = user_ids.join(",")
+      end
+
+      unless context_module_id.nil?
+        hash['context_module_id'] = context_module_id
       end
 
       VariableSubstitutor.new(self).substitute!

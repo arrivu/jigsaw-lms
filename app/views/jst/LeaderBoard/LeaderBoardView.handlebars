@@ -1,20 +1,21 @@
 <div style="width: 100%;float: left;padding:15px 0px; border-bottom:1px solid #DDDDDD;">
-<div style="width: 20%;float: left;margin-right:10px;"><img src="{{avatar_url}}" alt="{{name}}" class= 'img-circle'>
-    <span style="float: right;word-wrap: break-word;width: 74%;margin-top: 16px;">{{short_name}}</span></div>
-<div style="width: 50%;float: left;">
-<div id="progressbar" class="ui-progressbar ui-widget ui-widget-content ui-corner-all" role="progressbar"
-     aria-valuemin="0" aria-valuemax="100" aria-valuenow="37" style="border-radius: 25px;padding: 8px 10px;
+    <div style="width: 20%;float: left;margin-right:10px;"><img src="{{avatar_url}}" alt="{{name}}" width="50" height="50" class= 'img-circle'>
+        <span style="float: right;word-wrap: break-word;width: 74%;margin-top: 16px;">{{short_name}}</span></div>
+    <div style="width: 50%;float: left;">
+        <div id="progressbar" class="ui-progressbar ui-widget ui-widget-content ui-corner-all" role="progressbar"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="37" style="border-radius: 25px;padding: 8px 10px;
 height: 20px; margin-top: 8px;background-size: 100% 100%;background-image: url('../../images/Progress_bar_grey.png');">
-    <div class="striped_progressbar" style="width: {{progression}} ;border-radius: 25px;height: 20px;"></div>
-</div>
-</div>
-<div style="width: 20%;float: left;margin: 10px 4%;">
-{{#each badges}}
-<div style="width: 25%;float: left;text-align: center">
-    <img src="{{this.badge_url}}" width="34" height="34"  title="{{this.badge_description}}" data-tooltip>
-    <div style="color: #fff;font-weight:bolder;text-align:center;margin-top: -25px;">{{this.badge_count}}</div>
-</div>
-{{/each}}
+            <div class="striped_progressbar" style="width: {{progression}} ;border-radius: 25px;height: 20px;"
+                 title="{{progression}}" data-tooltip></div>
+        </div>
+    </div>
+    <div style="width: 20%;float: left;margin: 10px 4%;">
+        {{#each badges}}
+            <div style="width: 25%;float: left;text-align: center">
+                <img src="{{this.badge_url}}" width="34" height="34"  title="{{this.badge_description}}" data-tooltip>
+                <div style="color: #fff;font-weight:bolder;text-align:center;margin-top: -25px;">{{this.badge_count}}</div>
+            </div>
+        {{/each}}
 
-</div>
+    </div>
 </div>
