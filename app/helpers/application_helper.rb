@@ -1003,6 +1003,7 @@ module ApplicationHelper
     @current_user ||= @user
     if @current_user
       get_badges
+      unless @tool.nil?
       base_url = URI(@tool.url)
       uri = URI("#{base_url.scheme}://#{base_url.host}:#{base_url.port}/api/v1/#{@current_user.id}/badges.json")
       begin
@@ -1013,10 +1014,11 @@ module ApplicationHelper
       end
     end
   end
+  end
 
   def get_user_badges_for_header
     response = get_user_badges
-    @response_ok = (!@badge_error && (response.code == '200'|| '304'))
+    @response_ok = (!@badge_error && response && (response.code == '200'|| '304'))
     if @response_ok
       @badges_array = JSON.parse(response.body)
     end
