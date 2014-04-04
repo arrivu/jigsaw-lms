@@ -3,7 +3,7 @@
 %>
 <% if @current_user_badges and !@current_user_badges.empty?  %>
     <div class="main_navigation_badges" style="background: #ffffff;">
-      <div style="float: left;margin-top: 3px;padding: 10px 15px;background-image: url('../../images/grey_divider.png');background-repeat: no-repeat;background-position: right;width: 20%;"> Badges </div>
+      <div class="progress-divider"> Badges </div>
       <div style="float: right;margin-top: 7px; text-align: center;">
                          <% @current_user_badges.each do |key, value| %>
               <div style="float: left;margin-left: 5px;">
@@ -14,20 +14,3 @@
       </div>
     </div>
 <% end  %>
-
-<style>
-    .main_navigation_badges{
-        height: 47px;
-        width: 260px;
-        list-style: none;
-        float: left;
-        font-size: 12px;
-        margin-bottom: 3px;
-        padding: 0 11px;
-        border: 1px solid #DFDADA;
-        border-radius: 25px;
-        margin-left: 10px;
-
-    }
-
-</style>
