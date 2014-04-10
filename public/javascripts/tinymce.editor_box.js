@@ -131,13 +131,13 @@ define([
         instructure_buttons = instructure_buttons + ",wistia";
     }
     }
-    if (ENV.FAQ_button_disable)
-    {
+//    if (ENV.FAQ_button_disable)
+//    {
     INST.allowfaq = true
     if(INST && INST.allowfaq) {
         instructure_buttons = instructure_buttons + ",faq";
     }
-    }
+//    }
     if(INST && INST.allowMediaComments) {
       instructure_buttons = instructure_buttons + ",instructure_record";
     }

@@ -41,6 +41,7 @@ define [
 
     editLiveClassLink: (event) ->
       view = @$(event.currentTarget).closest('.live_class_link_item').data('view')
+      delete view.model.url
       link = view.model
       link.on 'sync', @onLinkSync
       @editView = new EditView(model: link,courseModules: ENV.course_modules ,courseSections: ENV.course_sections).render()
@@ -54,6 +55,7 @@ define [
 
     deleteLiveClassLink: (event) ->
       view = @$(event.currentTarget).closest('.live_class_link_item').data('view')
+      delete view.model.url
       link = view.model
       msg = "Are you sure you want to remove this Live Class Link?"
       dialog = $("<div>#{msg}</div>").dialog

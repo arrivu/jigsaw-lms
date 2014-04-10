@@ -102,7 +102,7 @@ class ApplicationController < ActionController::Base
         :current_user_roles => @current_user.try(:roles),
         :AUTHENTICITY_TOKEN => form_authenticity_token,
         :files_domain => HostUrl.file_host(@domain_root_account || Account.default, request.host_with_port),
-        :FAQ_button_disable => @wiki_type == 'faq' ? true :false,
+        #:FAQ_button_disable => @wiki_type == 'faq' ? true :false,
         :Wistia_Plugin_disable => check_wistia_status
       }
       @js_env[:lolcalize] = true if ENV['LOLCALIZE']
