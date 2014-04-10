@@ -9,11 +9,13 @@
               font-weight: bold;
               color: #7f8c8d;
               line-height: 1.2;background-color: #fcfbdf;border-radius:5px;">
+        <a href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>">
         <% if tag.content_type == "ContextExternalTool" %>
          <div style="width:auto;padding:6px 17px;float:left;"><%= image_tag "badges.png" , :style=> "height: 40px;padding:5px;border-radius:35px;margin-left:-1px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
         <% else %>
          <div style="width:auto;padding:6px 17px;float:left;"><%= image_tag "course_assignment.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
         <% end %>
+        </a>
         <div style="width:85%;padding:10px;">
           <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
                     <% if is_managable or @authorized_for_user  %>

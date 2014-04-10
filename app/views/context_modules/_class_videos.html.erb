@@ -15,6 +15,11 @@
               color: #7f8c8d;
               line-height: 1;
                height:18px;">
+        <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
+           <% if is_managable or @authorized_for_user  %>
+           href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+           <% end %>
+           style="text-decoration: none;" >
         <% if tag.content_type == "Assignment" %>
           <%= image_tag "course_assignment.png", :style=>"line-height:20px;height:28px;margin-top:1px;margin-left:5px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
         <% elsif tag.content_type == "Attachment" %>
@@ -36,11 +41,7 @@
         <% elsif tag.content_type == "Quiz" %>
             <%= image_tag "class_quiz.jpg", :style=>"line-height:28px;height:29px;margin-top:-3px;margin-left:6px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
         <% end %>
-        <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
-        <% if is_managable or @authorized_for_user  %>
-           href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
-        <% end %>
-        >
+
           <%= truncate(tag.title, length: 53, omission: '..') %>
         </a>
       </div>

@@ -170,12 +170,12 @@ require [
     #
     # Returns a string.
     _modelBucket: (model) ->
-      if model.attributes
-        return 'pinned' if model.get('pinned')
-        return 'locked' if model.get('locked') || model.get('locked_for_user')
-      else
-        return 'pinned' if model.pinned
-        return 'locked' if model.locked || model.locked_for_user
+#      if model.attributes
+#        return 'pinned' if model.get('pinned')
+#        return 'locked' if model.get('locked') || model.get('locked_for_user')
+#      else
+#        return 'pinned' if model.pinned
+#        return 'locked' if model.locked || model.locked_for_user
       'open'
 
     # Internal: Move a model from one collection to another.

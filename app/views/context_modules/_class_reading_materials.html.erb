@@ -10,9 +10,15 @@
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1.2;background-color: #e4f1d5;border-radius:5px;">
+            <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
+               <% if is_managable or @authorized_for_user  %>
+               href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+               <% end  %>
+               style="color:#6d7d3f;">
             <div style="width:auto;padding : 6px 17px;float:left;">
               <%= image_tag "image-icon.png" ,:width=> 38, :style=> "padding:5px;border-radius: 35px;" %>
               &nbsp;&nbsp;&nbsp;&nbsp;</div>
+              </a>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
                         <% if is_managable or @authorized_for_user  %>
@@ -38,7 +44,15 @@
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1.2;background-color: #e1f3fd;border-radius:5px;">
-            <div style="width:auto;padding : 6px 17px;float:left;"><%= image_tag "word_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
+               <% if is_managable or @authorized_for_user  %>
+               href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+               <% end %>
+               style="color:#0092b9;">
+                <div style="width:auto;padding : 6px 17px;float:left;">
+                  <%= image_tag "word_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+            </a>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
                         <% if is_managable or @authorized_for_user  %>
@@ -65,7 +79,15 @@
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1;background-color: #fee8dd;border-radius:5px;">
-            <div style="width:auto;padding: 12px 21px;float:left;"><%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;line-height:20px;margin-top:-8px;width:33px"  %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
+               <% if is_managable or @authorized_for_user  %>
+               href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+               <% end  %>
+               style="color:#c2401c;">
+                    <div style="width:auto;padding: 12px 21px;float:left;">
+                      <%= image_tag "pdf_icon.png" , :style=> "padding:5px;border-radius:35px;line-height:20px;margin-top:-8px;width:33px"  %> &nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+            </a>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
                         <% if is_managable or @authorized_for_user  %>
@@ -91,7 +113,15 @@
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1.2;background-color: #fcfbdf;border-radius:5px;">
-            <div style="width:auto;padding : 6px 17px;float:left;"><%= image_tag "external_link_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
+               <% if is_managable or @authorized_for_user  %>
+               href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+               <%  end  %>
+               style="color:#d4811b;">
+                <div style="width:auto;padding : 6px 17px;float:left;">
+                  <%= image_tag "external_link_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+            </a>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
                         <% if is_managable or @authorized_for_user  %>
@@ -118,7 +148,15 @@
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1.2;background-color: #e4f1d5;border-radius:5px;">
-            <div style="width:auto;padding : 6px 17px;float:left;"><%= image_tag "practice_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
+               <% if is_managable or @authorized_for_user  %>
+               href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+               <% end  %>
+               style="color:#6d7d3f;">
+                <div style="width:auto;padding : 6px 17px;float:left;">
+                  <%= image_tag "practice_icon.png" , :style=> "padding:5px;border-radius: 35px;" %> &nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+            </a>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
                         <% if is_managable or @authorized_for_user  %>
@@ -145,7 +183,15 @@
                     font-weight: bold;
                     color: #7f8c8d;
                     line-height: 1.2;background-color: #fcfbdf;border-radius:5px;">
-            <div style="width:auto;padding : 6px 17px;float:left;"><%= image_tag "badges.png" , :style=> "padding:5px;border-radius: 35px;height: 38px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <a class="title"
+               <% if is_managable or @authorized_for_user  %>
+               href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+               <%  end  %>
+               style="color:#d4811b;">
+                <div style="width:auto;padding : 6px 17px;float:left;">
+                  <%= image_tag "badges.png" , :style=> "padding:5px;border-radius: 35px;height: 38px" %> &nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+            </a>
             <div style="width:95%;padding:10px;">
               <span ><a class="title"
                         <% if is_managable or @authorized_for_user  %>
@@ -173,7 +219,15 @@
                   font-weight: bold;
                   color: #7f8c8d;
                   line-height: 1;background-color: #fcfbdf;border-radius:5px;">
-            <div style="width:auto;padding : 6px 8px;float:left;"><%= image_tag "un_categorized.png" ,:width=> 34, :style=> "padding:14px;border-radius: 35px;margin-top:-15px" %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
+               <% if is_managable or @authorized_for_user  %>
+               href="<%= context_url(@context, :context_url) %>/modules/items/<%= tag ? tag.id : "{{ id }}" %>"
+               <% end  %>
+               style="color:#d4811b;">
+                <div style="width:auto;padding : 6px 8px;float:left;">
+                  <%= image_tag "un_categorized.png" ,:width=> 34, :style=> "padding:14px;border-radius: 35px;margin-top:-15px" %> &nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+            </a>
             <div style="width:95%;padding:10px;">
               <span ><a class="title <%= '_explicit_external_link' if tag && tag.content_type == 'ExternalUrl' %>"
                         <% if is_managable or @authorized_for_user  %>

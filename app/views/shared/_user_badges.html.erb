@@ -3,8 +3,8 @@
 %>
 <% if @current_user_badges and !@current_user_badges.empty?  %>
     <div class="main_navigation_badges" style="background: #ffffff;">
-      <div class="progress-divider"> Badges </div>
-      <div style="float: right;margin-top: 7px; text-align: center;">
+      <div class="progress-divider" style="margin-left: -11px;"> Badges </div>
+      <div style="float: right;margin-top: 1.5px; text-align: center;">
                          <% @current_user_badges.each do |key, value| %>
               <div style="float: left;margin-left: 5px;">
         <img src=<%= value['badge_url'] %>  width="34" height="34"  title="<%= value['badge_description']%>" data-tooltip>
