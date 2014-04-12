@@ -153,5 +153,30 @@ define([
             }
         });
     });
+
+    $(".approve_comment_link").click(function(event) {
+        event.preventDefault();
+        console.log($(event.target).text().replace(/\s/g, ''));
+        $approve_link = event.target;
+        if ($(event.target).text().replace(/\s/g, '') == 'Approve'){
+            approval_status = true
+        }else{
+            approval_status = false
+        }
+
+          url = $(this).attr('href');
+        $(this).parents(".comment").disableWhileLoading ($.ajaxJSON(url, 'GET', {approval_status: approval_status}, function(data) {
+
+            if (data.page_comment.is_approved == true){
+                $($approve_link).text("Disapprove");
+            }else{
+                $($approve_link).text("Approve");
+            }
+
+        }, function(data) {
+            $link.text(I18n.t('loading_error', "error"));
+        }) );
+     });
+
   return wikiPage;
 });

@@ -21,7 +21,7 @@
   <h2 style=""><%= t 'headings.page_comments', 'Comments' %></h2>
   <% if  @page_comments %>
     <div id="page_comments" style="padding: 5px 20px;">
-      <%= t(:no_comments, "No Comments") if @page.allow_comments && @page_comments.count == 0 %>
+      <%= t(:no_comments, "No Comments") if @page.allow_comments && @page_comments && @page_comments.count == 0 %>
       <%= render :partial => "wiki_pages/page_comment",:collection =>  @page_comments %>
     </div>
     <%= render :partial => "wiki_pages/page_comment", :object => nil %>
@@ -37,7 +37,7 @@
             </div>
      <%end %>
 </div>
-<% elsif !@page.allow_comments && @page_comments.count > 0%>
+<% elsif !@page.allow_comments && @page_comments && @page_comments.count > 0%>
     <h2 style=""><%= t 'headings.page_comments', 'Comments' %></h2>
     <%= render :partial => "wiki_pages/page_comment",:collection =>  @page_comments %>
     <div id="pagination"  style ="margin-top: 1em;text-align: center;">
