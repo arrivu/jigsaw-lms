@@ -10059,7 +10059,7 @@ en:
         password_for: "Password For"
         purpose: Purpose
         short_name: "Display Name"
-        show_user_services: "Let fellow course/group members see which services I've linked to my profile"
+        show_user_services: "Let fellow course/group members see my details in the LeaderBoard and which services I've linked to my profile"
         skype_name: "Skype Name"
         sortable_name: "Sortable Name"
         time_zone: "Time Zone"

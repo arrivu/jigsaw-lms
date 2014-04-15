@@ -31,6 +31,9 @@ class AuthenticationController < ApplicationController
       elsif pseudonym.present? and @authentication.nil?
         flash[:error] = " Sorry,You are not registered with social login."
         redirect_to root_url
+      elsif auth[:info] && ((auth[:info][:email].nil?) ||(auth[:info][:email] == '') || (auth[:info][:email].empty?) )
+        flash[:error] = " Sorry,Your #{auth['provider']} account is invalid,Please contact admin."
+        redirect_to root_url
       else
       password = (0...10).map{ ('a'..'z').to_a[rand(26)] }.join
       @user = User.create!(:name => auth[:info][:name],

@@ -278,6 +278,8 @@ class User < ActiveRecord::Base
     where("#{wildcard('users.name', 'users.short_name', name)} OR EXISTS (#{Pseudonym.select("1").where(wildcard('pseudonyms.sis_user_id', 'pseudonyms.unique_id', name)).where("pseudonyms.user_id=users.id").active.to_sql})")
   }
   scope :active, where("users.workflow_state<>'deleted'")
+  scope :users_set_public_profile, where("show_user_services = 'true'")
+  scope :users_set_public_profile, where(:show_user_services => true)
 
   scope :has_current_student_enrollments, where("EXISTS (SELECT * FROM enrollments JOIN courses ON courses.id=enrollments.course_id AND courses.workflow_state='available' WHERE enrollments.user_id=users.id AND enrollments.workflow_state IN ('active','invited') AND enrollments.type='StudentEnrollment')")
 

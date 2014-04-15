@@ -8,7 +8,11 @@
     </div>
 
     <div class="discussion-title">
-      <a href="{{html_url}}" class="title">{{title}}</a>
+      <a href="{{html_url}}" class="title"
+      {{#if locked}}
+        style="color: #696969;"
+      {{/if}}
+          >{{title}}</a>
       <small>Last post {{tDateToString last_reply_at "medium"}}</small>
     </div>
 

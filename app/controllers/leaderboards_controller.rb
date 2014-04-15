@@ -10,17 +10,17 @@ class LeaderboardsController < ApplicationController
       course_sections = @context.sections_visible_to(@current_user)
       if params[:search_term]
         if params[:course_section_id].empty? or (params[:course_section_id].to_i == 0)
-          @students = @context.students.active.order_by_sortable_name
+          @students = @context.students.active.users_set_public_profile.order_by_sortable_name
         else
-          @students = @context.course_sections.active.find(params[:course_section_id]).students.active
+          @students = @context.course_sections.active.find(params[:course_section_id]).students.active.users_set_public_profile
         end
       else
         if can_manage_students
-          @students = @context.students.active.order_by_sortable_name
+          @students = @context.students.active.users_set_public_profile
         else
           @students = []
           course_sections.each do |course_section|
-            @context.course_sections.active.find(course_section.id).students.active.each do |student|
+            @context.course_sections.active.find(course_section.id).students.active.users_set_public_profile.each do |student|
               @students << student
             end
           end

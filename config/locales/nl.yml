@@ -6343,7 +6343,7 @@ nl:
     errors: 
       4xx_feedback: "Klik hier om ons te vertellen wat je zoekt."
       feedback: "Klik hier om ons te laten weten wat er gebeurd is"
-    help: Help
+    help: Help!
     show_me_where: "Laat me zien waar"
     switch_views: "Wissel weergaven"
   locales: 
