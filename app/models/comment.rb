@@ -1,7 +1,7 @@
 class Comment < ActiveRecord::Base
 
   include ActsAsCommentable::Comment
-  attr_accessible :title, :comment
+  attr_accessible :title, :comment,:is_approved
   validates_presence_of  :comment
   belongs_to :commentable, :polymorphic => true
 
@@ -14,5 +14,7 @@ class Comment < ActiveRecord::Base
   # NOTE: Comments belong to a user
   belongs_to :user
   belongs_to :course
+
+  scope :approved, where(:is_approved => true)
 
 end

@@ -77,12 +77,14 @@
                 <span class="created_at" style="color: #888; font-size: 0.8em;">
                   <%= datetime_string(comment.updated_at) rescue nbsp %></span>
           <% owner_id = (comment.user_id) rescue nbsp %>
+          <% if can_do(@context, @current_user, :manage)  %>
+              <a href="<%= comment_approve_course_comment_path(@context,comment)%>" class="approve_comment_link"><%=(comment.is_approved ? "Disapprove" : "Approve") unless comment.nil? %> </a>
+          <% end  %>
           <% if owner_id == @current_user.id %>
-
               <%= link_to "Delete",course_comment_path(@context,@comment, :destroy => true),
                           :confirm =>"Are you sure delete this testimonial?", :method => :delete %>
 
-          <%end %>
+          <% end %>
         </div>
 
         <div class="clear" style="border-top: 1px solid #ccc;"></div>
@@ -91,13 +93,51 @@
 
     </table>
 <%end %>
+
+<% if !@comment.new_record? and @comment &&  !@comment.is_approved %>
+
+    <table>
+
+      <div class="comment" id="comment_<%= @comment ? @comment.id : "{{ blank }}" %>" style="<%= hidden unless @comment %> border: 0px solid #aaa; margin-bottom: 10px;">
+        <div style="float: left;" class="user_name">
+
+          <% if service_enabled?(:avatars) %>
+              <%= avatar_image(@comment.user_id) %>
+          <% end  %>
+          <%= @comment.user_name rescue nbsp %></div>
+        <%= @comment.user.name  %> &nbsp;, <em>This testimonial not yet approved (So others cannot see this). </em>
+        <br>
+        <%= @comment.comment  %>
+
+        <div style="float: right;">
+                <span class="created_at" style="color: #888; font-size: 0.8em;">
+                  <%= datetime_string(@comment.updated_at) rescue nbsp %></span>
+          <% owner_id = (@comment.user_id) rescue nbsp %>
+          <% if can_do(@context, @current_user, :manage)  %>
+              <a href="<%= comment_approve_course_comment_path(@context,@comment)%>" class="approve_comment_link"><%=(@comment.is_approved ? "Disapprove" : "Approve") unless @comment.nil? %> </a>
+          <% end  %>
+          <% if owner_id == @current_user.id %>
+              <%= link_to "Delete",course_comment_path(@context,@comment, :destroy => true),
+                          :confirm =>"Are you sure delete this testimonial?", :method => :delete %>
+
+          <% end %>
+        </div>
+
+        <div class="clear" style="border-top: 1px solid #ccc;"></div>
+        <!--<div class="message message-eportfolios"><%= @comment.message rescue nbsp %></div>-->
+      </div>
+
+    </table>
+
+<% end  %>
 <%= will_paginate(@comments, :style=>"text-align: center;") %>
 
 <% js_block do %>
     <script type="text/javascript">
 
         require([
-            'jquery'
+            'jquery',
+            'jquery.ajaxJSON' /* ajaxJSON */,
         ], function($) {
             $('#add_comment_submit').click(function(event) {
 
@@ -116,6 +156,31 @@
                     alert('Comment required');
                 }
             });
+
+            $(".approve_comment_link").click(function(event) {
+                event.preventDefault();
+                console.log($(event.target).text().replace(/\s/g, ''));
+                $approve_link = event.target;
+                if ($(event.target).text().replace(/\s/g, '') == 'Approve'){
+                    approval_status = true
+                }else{
+                    approval_status = false
+                }
+
+                url = $(this).attr('href');
+                $(this).parents(".comment").disableWhileLoading ($.ajaxJSON(url, 'GET', {approval_status: approval_status}, function(data) {
+
+                    if (data.comment.is_approved == true){
+                        $($approve_link).text("Disapprove");
+                    }else{
+                        $($approve_link).text("Approve");
+                    }
+
+                }, function(data) {
+                    $link.text(I18n.t('loading_error', "error"));
+                }) );
+            });
+
 
         });
 

@@ -1,13 +1,23 @@
 <% comment = page_comment || nil %>
-<div class="comment" id="comment_<%= comment ? comment.id : "{{ blank }}" %>" style="<%= hidden unless comment %> border: 0px solid #aaa; margin-bottom: 10px;">
-  <div style="float: left;" class="user_name"><% if service_enabled?(:avatars) %> <%= avatar_image(comment.user_id) rescue nbsp %> <%end %>  <%= comment.user_name rescue nbsp %></div>
-  <div style="float: right;">
-    <span class="created_at" style="color: #888; font-size: 0.8em;"><%= datetime_string(comment.created_at) rescue nbsp %></span>
-      <% owner_id = (comment.user_id) rescue nbsp %>
-       <% if owner_id == @current_user.id or can_do(@context, @current_user, :manage_wiki) %>
-        <a href="<%= course_wiki_page_comment_destroy_path(@context,@page.wiki_type,@page.title, comment ? comment.id : "{{ id }}") %>" class="delete_comment_link no-hover"><i class="icon-trash standalone-icon"></i></a>
-       <%end %>
-  </div>
-  <div class="clear" style="border-top: 1px solid #ccc;"></div>
-  <div class="message message-eportfolios"><%= comment.message rescue nbsp %></div>
-</div>
+<% if  comment && (can_do(@context, @current_user, :manage_wiki) || (comment.is_approved || (comment.user_id == @current_user.id))) %>
+    <div class="comment" id="comment_<%= comment ? comment.id : "{{ blank }}" %>" style="<%= hidden unless comment %> border: 0px solid #aaa; margin-bottom: 10px;">
+      <div style="float: left;" class="user_name"><% if service_enabled?(:avatars) %> <%= avatar_image(comment.user_id) rescue nbsp %> <%end %>  <%= comment.user_name rescue nbsp %>
+      <%if !comment.is_approved && (comment.user_id == @current_user.id) %>
+         ,<em>comment is waiting for approval (others cannot see)</em>
+      <% end  %>
+      </div>
+      <div style="float: right;">
+        <span class="created_at" style="color: #888; font-size: 0.8em;"><%= datetime_string(comment.created_at) rescue nbsp %></span>
+          <% owner_id = (comment.user_id) rescue nbsp %>
+           <% if owner_id == @current_user.id or can_do(@context, @current_user, :manage_wiki) %>
+           <% if can_do(@context, @current_user, :manage_wiki)  %>
+            <a href="<%= course_wiki_page_comment_approve_path(@context,@page.wiki_type,@page.title, comment ? comment.id : "{{ id }}") %>" class="approve_comment_link"><%=(comment.is_approved ? "Disapprove" : "Approve") unless comment.nil? %> </a>
+           <% end  %>
+            <a href="<%= course_wiki_page_comment_destroy_path(@context,@page.wiki_type,@page.title, comment ? comment.id : "{{ id }}") %>" class="delete_comment_link no-hover"><i class="icon-trash standalone-icon"></i></a>
+           <%end %>
+      </div>
+      <div class="clear" style="border-top: 1px solid #ccc;"></div>
+      <div class="message message-eportfolios"><%= comment.message rescue nbsp %></div>
+    </div>
+
+<% end  %>

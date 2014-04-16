@@ -259,6 +259,8 @@ define [
       $element.attr('title', $.trim("#{timeString}\n#{$element.find('.fc-event-title').text()}\n\n#{I18n.t('calendar_title', 'Calendar:')} #{event.contextInfo.name}"))
       $element.find('.fc-event-inner').prepend($("<span class='screenreader-only'>#{I18n.t('calendar_title', 'Calendar:')} #{event.contextInfo.name}</span>"));
       $element.find('.fc-event-title').prepend($("<span class='screenreader-only'>#{screenReaderTitleHint}</span>"))
+      unless ($('.fc-event-time:contains("m")').length > 0)
+        $('.fc-event-time').append(/\/?$/, 'm')
       true
 
     eventAfterRender: (event, element, view) =>

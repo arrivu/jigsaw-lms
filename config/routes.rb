@@ -161,6 +161,7 @@ FakeRails3Routes.draw do
     resources :wiki_pages, path: ':type', constraints: { type: type_regexp } do
     match 'comments_create' => 'wiki_pages#comments_create' ,:as => :comments_create, :via => :post
     match 'comment_destroy/:id'=> 'wiki_pages#comment_destroy', :as => :comment_destroy,:only => [:destroy]
+    match 'comment_approve/:id'=> 'wiki_pages#comment_approve', :as => :comment_approve
     #resources :wiki_pages, :path => :wiki do
       match 'revisions/latest' => 'wiki_page_revisions#latest_version_number', :as => :latest_version_number
       resources :wiki_page_revisions, :path => :revisions
@@ -212,7 +213,11 @@ FakeRails3Routes.draw do
     # this needs to come before the users concern, or users/:id will preempt it
     match 'users/prior' => 'context#prior_users', :as => :prior_users
     resources :rewards
-    resources :comments ,:path => :testimonial
+    resources :comments ,:path => :testimonial do
+      member do
+        get :comment_approve
+      end
+    end
     resources :live_class_links
     resources :leaderboards ,:path => :leaderboard
     concerns :users
