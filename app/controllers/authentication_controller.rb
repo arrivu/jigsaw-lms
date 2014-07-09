@@ -13,7 +13,7 @@ class AuthenticationController < ApplicationController
     end
     # Try to find authentication first
       if !!@authentication
-        if @authentication.provider == provider
+        if @authentication.provider.downcase.to_s == provider.downcase.to_s
           if @authentication.user.workflow_state != "inactive"
             update_user_info(@authentication,auth)
             reset_session_for_login
