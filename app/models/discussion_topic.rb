@@ -33,6 +33,7 @@ class DiscussionTopic < ActiveRecord::Base
     :plaintext_message, :podcast_enabled, :podcast_has_student_posts,
     :require_initial_post, :threaded, :discussion_type, :context, :pinned, :locked
 
+  validates_presence_of :title
 
   module DiscussionTypes
     SIDE_COMMENT = 'side_comment'
@@ -94,7 +95,7 @@ class DiscussionTopic < ActiveRecord::Base
 
   def default_values
     self.context_code = "#{self.context_type.underscore}_#{self.context_id}"
-    self.title ||= t '#discussion_topic.default_title', "No Title"
+    # self.title ||= t '#discussion_topic.default_title', "No Title"
     self.discussion_type = DiscussionTypes::SIDE_COMMENT if !read_attribute(:discussion_type)
     @content_changed = self.message_changed? || self.title_changed?
     if self.assignment_id != self.assignment_id_was
