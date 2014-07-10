@@ -22,7 +22,12 @@ class TermsAndConditionsController < ApplicationController
   end
 
   def show
-    @terms = TermsAndCondition.find_by_account_id(@account.id)
+    @terms = @account.terms_and_condition
+    if @current_pseudonym.settings[:is_terms_and_conditions_accepted]
+      redirect_to root_url
+    else
+      render :template => "shared/terms_required", :layout => "application", :status => :authorized
+    end
   end
 
   def update

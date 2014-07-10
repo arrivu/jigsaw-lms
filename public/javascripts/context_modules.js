@@ -76,12 +76,23 @@ define([
                 });
             },
 
-            updateModuleItemPositions: function(event, ui) {
-                var $module = ui.item.parents(".context_module");
-                var $draggedItemId =  ui.item.data('id');
-                console.log(ui);
-                var $category = ui.item.closest("#category").attr('class');
-                var url = $module.find(".reorder_items_url").attr('href');
+            updateModuleItemPositions: function(event, ui,for_category,item_id) {
+                if (for_category){
+                    var $module = ui.parents(".context_module");
+                    var $draggedItemId =  item_id;
+                    console.log($draggedItemId);
+                    var $category = ui.closest("#category").attr('class');
+                    var url = $module.find(".reorder_items_url").attr('href');
+                    console.log(url);
+
+                }else{
+                    console.log("else");
+                    var $module = ui.item.parents(".context_module");
+                    var $draggedItemId =  ui.item.data('id');
+                    var $category = ui.item.closest("#category").attr('class');
+                    var url = $module.find(".reorder_items_url").attr('href');
+                }
+
                 var items = [];
                 $module.find(".context_module_items .context_module_item").each(function() {
                     items.push($(this).getTemplateData({textValues: ['id']}).id);
@@ -864,11 +875,14 @@ define([
                     var url = $module.find(".add_module_item_link").attr('rel');
                     $module.disableWhileLoading(
                         $.ajaxJSON(url, 'POST', item_data, function(data) {
-                            $item.remove();
+
                             data.content_tag.type = item_data['item[type]'];
                             modules.addItemToModule($module, data.content_tag);
                             $module.find(".context_module_items.ui-sortable").sortable('enable').sortable('refresh');
                             modules.updateAssignmentData();
+                            modules.updateModuleItemPositions(event,$item,true,data.content_tag.id);
+                            $item.remove();
+
                         })
                     );
                 };

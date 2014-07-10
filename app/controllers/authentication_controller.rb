@@ -9,11 +9,11 @@ class AuthenticationController < ApplicationController
     pseudonym = @domain_root_account.pseudonyms.active.custom_find_by_unique_id(auth[:info][:email])
     unless pseudonym.nil?
     @user = pseudonym.user
-    @authentication = OmniauthAuthentication.find_by_user_id(@user.id)
+    @authentication = @user.omniauth_authentication
     end
     # Try to find authentication first
       if !!@authentication
-        if @authentication.provider == provider
+        if @authentication.provider.downcase.to_s == provider.downcase.to_s
           if @authentication.user.workflow_state != "inactive"
             update_user_info(@authentication,auth)
             reset_session_for_login
@@ -46,12 +46,12 @@ class AuthenticationController < ApplicationController
       @pseudonym = @user.pseudonyms.create!(:unique_id => auth[:info][:email],
                                             :account => @domain_root_account)
       @user.communication_channels.create!(:path => auth[:info][:email]) { |cc| cc.workflow_state = 'active' }
+      provider = set_provider(auth)
+      @user.build_omniauth_authentication(:provider => provider,
+                                          :token => auth[:credentials][:token],
+                                          :uid => auth['uid'])
       @user.save!
       @pseudonym.save!
-      provider = set_provider(auth)
-      @omniauth_authentication= OmniauthAuthentication.create!(:provider => provider,
-                                                              :token => auth[:credentials][:token],
-                                                              :uid => auth['uid'], :user_id=>@user.id)
       un_successful_login
     end
  end
