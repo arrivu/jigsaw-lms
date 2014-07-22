@@ -1,4 +1,4 @@
-server "162.243.117.179", :app, :web, :db, :primary => true
+server "162.243.231.184", :app, :web, :db, :primary => true
 set :deploy_to, "/var/deploy/capistrano/jigsaw"
 set :branch,    "deploy"
 set :scm_passphrase, ""
