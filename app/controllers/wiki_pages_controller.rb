@@ -91,6 +91,8 @@ class WikiPagesController < ApplicationController
         redirect_to named_context_url(@context, :context_wiki_page_url, @page.wiki_type, WikiPage::DEFAULT_OFFER_FRONT_PAGE_URL)
       elsif @page.wiki_type == WikiPage::WIKI_TYPE_LABS
         redirect_to named_context_url(@context, :context_wiki_page_url, @page.wiki_type, WikiPage::DEFAULT_LAB_FRONT_PAGE_URL)
+      elsif @page.wiki_type == WikiPage::WIKI_TYPE_BONUS_VIDEOS
+        redirect_to named_context_url(@context, :context_wiki_page_url, @page.wiki_type, WikiPage::DEFAULT_BONUS_VIDEO_FRONT_PAGE_URL)
       else
         redirect_to named_context_url(@context, :context_wiki_page_url, @page.wiki_type, @context.wiki.get_front_page_url || Wiki::DEFAULT_FRONT_PAGE_URL)
        end

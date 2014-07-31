@@ -597,10 +597,10 @@ define([
                 $module.attr('id', 'context_module_' + data.context_module.id);
                 console.log("here");
                 // Set this module up with correct data attributes
-                $module.find('.add_module_item_link').attr('rel',"/courses/6/classes/"+data.context_module.id+"/items")
-                $module.attr('data-module-id',data.context_module.id);
-                $module.attr('data-module-url', "/courses/" + data.context_module.context_id + "/modules/" + data.context_module.id);
+                $module.find('.add_module_item_link').attr('rel',"/courses/" + data.context_module.context_id + "/classes/" + data.context_module.id + "/items");
+                $module.attr('data-module-url', "/courses/" + data.context_module.context_id + "/classes/" + data.context_module.id);
                 $module.attr('data-workflow-state', data.context_module.workflow_state);
+                $module.attr('data-module-id', data.context_module.id);
                 if(data.context_module.workflow_state == "unpublished"){
                     $module.find('.workflow-state-action').text("Publish");
                     $module.find('.workflow-state-icon').addClass('publish-module-link')
