@@ -29,7 +29,7 @@
     <%= will_paginate(@page_comments) %>
 </div>
   <% end %>
-  <% form_for :page_comment,:url => course_wiki_page_comments_create_path(@context,@page.wiki_type,@page.title),:html => {:id => "add_page_comment_form", :style => "margin-top: 20px;"} do |f| %>
+  <% form_for :page_comment,:url => course_wiki_page_comments_create_path(@context,@page.wiki_type,@page),:html => {:id => "add_page_comment_form", :style => "margin-top: 20px;"} do |f| %>
         <h3><%= before_label(:add_comment, "Add a New Comment") %></h3>
             <%= f.text_area :message, :style => "width: 400px; height: 75px;", :maxlength=>"250"%>
             <div class="button-container">

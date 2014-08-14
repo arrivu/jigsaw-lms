@@ -1040,7 +1040,7 @@ class ApplicationController < ActionController::Base
               @wiki.wiki_pages.find_by_id(page_name.to_i)
     end
 
-    if @wiki_type == "faq"
+    if WikiPage::Wiki_TYPE_ARRAY.include?(@wiki_type)
       @page ||= @wiki.wiki_pages.new(
           :title => page_name,
           :url => page_name.to_url, :wiki_type => @wiki_type

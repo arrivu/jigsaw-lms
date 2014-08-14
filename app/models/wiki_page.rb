@@ -40,7 +40,7 @@ class WikiPage < ActiveRecord::Base
 
   TITLE_LENGTH = WikiPage.columns_hash['title'].limit rescue 255
   SIMPLY_VERSIONED_EXCLUDE_FIELDS = [:workflow_state, :hide_from_students, :editing_roles, :notify_of_update]
-  has_many :page_comments
+  has_many :page_comments, :foreign_key => 'page_id'
 
   def validate_front_page_visibility
     if self.hide_from_students && self.is_front_page?
@@ -597,6 +597,9 @@ class WikiPage < ActiveRecord::Base
   WIKI_TYPE_OFFERS ='offer'
   WIKI_TYPE_BONUS_VIDEOS = 'bonus_video'
   WIKI_TYPE_LABS = 'labs'
+
+  Wiki_TYPE_ARRAY = [WIKI_TYPE_FAQS,WIKI_TYPE_CAREERS,WIKI_TYPE_PAGES,WIKI_TYPE_VIDEOS,WIKI_TYPE_OFFERS,
+                     WIKI_TYPE_BONUS_VIDEOS,WIKI_TYPE_LABS]
 
   DEFAULT_FAQ_FRONT_PAGE_URL = 'FAQ'
   DEFAULT_CAREER_FRONT_PAGE_URL = 'career-front-page'
